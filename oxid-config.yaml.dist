@@ -23,6 +23,13 @@ i18n:
   fallback_locale: en
   locales: [en, de] # more than one -> a language switcher appears in the header
 
+# Theme of this instance (resources/themes/<id>/, see docs/theming.md).
+#   default: fallback theme, used when `active` cannot be loaded
+#   active:  the theme this instance runs (omit = the default)
+theme:
+  default: default
+  active: default
+
 # Plugins of this instance. Key = plugin name.
 #   enabled: false            -> not loaded (no routes, no nav entry)
 #   source: bundled (default) -> compiled into the app bundle

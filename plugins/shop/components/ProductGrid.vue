@@ -30,8 +30,8 @@ defineProps<{ products: ProductListItem[] }>();
 }
 .grid__card a {
   display: block;
-  border: 1px solid #e2e2e2;
-  border-radius: 8px;
+  border: 1px solid var(--oxfe-color-border, #e2e2e2);
+  border-radius: var(--oxfe-radius-lg, 8px);
   padding: 12px;
   text-decoration: none;
   color: inherit;
@@ -47,7 +47,7 @@ defineProps<{ products: ProductListItem[] }>();
 }
 .grid__card p {
   font-size: 13px;
-  color: #555;
+  color: var(--oxfe-color-text-muted, #555);
   margin: 0 0 8px;
 }
 </style>

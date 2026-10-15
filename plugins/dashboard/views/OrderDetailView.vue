@@ -63,6 +63,6 @@ onMounted(async () => {
 .items td {
   text-align: left;
   padding: 8px;
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid var(--oxfe-color-border, #e2e2e2);
 }
 </style>

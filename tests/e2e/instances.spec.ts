@@ -52,6 +52,18 @@ test.describe('instance A — the defaults', () => {
     expect(robots).toContain('Disallow: /dashboard');
   });
 
+  test('runs the default theme', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByTestId('home-hero')).toBeVisible();
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
+      'rgb(255, 255, 255)',
+    );
+    await expect(page.getByTestId('theme-logo')).toHaveAttribute(
+      'src',
+      /\/themes\/default\/images\/logo\.png/,
+    );
+  });
+
   test('offers PayPal, Stripe and Mollie at checkout', async ({ page, request }) => {
     await openCheckoutPayments(page, request, A!);
     await expect(page.getByTestId('payment-oe_payments_paypal')).toBeVisible();
@@ -95,6 +107,18 @@ test.describe('instance B — same bundle, its own configuration', () => {
     await openCheckoutPayments(page, request, B!);
     await expect(page.getByTestId('payment-oe_payments_paypal')).toHaveCount(0);
     await expect(page.getByTestId('payment-oe_payments_mollie')).toHaveCount(0);
+  });
+
+  test('runs the dark child theme from its config', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByTestId('home-hero')).toBeVisible();
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
+      'rgb(18, 18, 18)',
+    );
+    await expect(page.getByTestId('theme-logo')).toHaveAttribute(
+      'src',
+      /\/themes\/dark\/images\/logo-dark\.png/,
+    );
   });
 
   test('serves its own oxid-config.yaml', async ({ request }) => {

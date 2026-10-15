@@ -79,10 +79,10 @@ label {
 }
 input {
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--oxfe-color-input-border, #ccc);
+  border-radius: var(--oxfe-radius-sm, 4px);
 }
 .login__error {
-  color: #b00020;
+  color: var(--oxfe-color-danger, #b00020);
 }
 </style>

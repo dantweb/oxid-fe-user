@@ -10,6 +10,7 @@ browser ──► nginx (prod) / vite dev server
 oxid-fe-user (host app)
   src/            bootstrap, core wiring, router+guards, i18n, layout, login
   plugins/<name>/ IPlugin: routes, nav, i18n, config, setup()   ← shop today;
+  resources/themes  themes (LESS + images + config.json) → /themes/<id>/ ; chosen per instance
   oxid-config.yaml  the INSTANCE: shop name, languages, which plugins load + their config
                     (+ public/ overlay, plugins/ folder) — see instance-configuration.md
 

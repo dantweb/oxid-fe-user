@@ -90,8 +90,8 @@ function pending(): boolean {
   margin: 16px 0;
 }
 .tiles a {
-  border: 1px solid #e2e2e2;
-  border-radius: 8px;
+  border: 1px solid var(--oxfe-color-border, #e2e2e2);
+  border-radius: var(--oxfe-radius-lg, 8px);
   padding: 16px 24px;
   text-decoration: none;
 }

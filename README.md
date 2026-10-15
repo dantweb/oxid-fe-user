@@ -11,6 +11,8 @@ GraphQL API (`graphql-base` + `graphql-storefront`). Modelled on
 src/            host: bootstrap, core wiring, router, i18n, layout, login
 plugins/shop/   first-party shop plugin: catalog, product detail, guest cart
 oxid-config.yaml.dist   template of the per-instance configuration (docs/instance-configuration.md)
+resources/themes/       themes: <id>/config.json + styles/styles.less + images/ (docs/theming.md)
+Makefile                theme, compile, build, run, dev, debug, … — `make help`
 instances/      example instance folders (oxid-config.yaml + public/ + plugins/)
 docs/           architecture, instance configuration, sprints, dev_log
 tests/e2e/      Playwright flows (run against the SDK shop or a deployed instance)
@@ -37,6 +39,10 @@ npm run dev                      # http://localhost:5173, /graphql proxied to th
 
 Inside the OXID Docker SDK the `oxid-fe-user` service (port 5173) has both repos mounted:
 `make file=services/oxid-fe-user.yml addservice && make up`.
+
+## Commands
+
+`make help` lists them: `theme` (rebuild themes), `compile`, `build` / `run` / `stop` (Docker, per instance), `dev`, `debug`, `debug-e2e`, `logs`, `nginx-config`, `gate`.
 
 ## Quality gate (same locally and in CI)
 

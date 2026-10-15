@@ -2,7 +2,7 @@
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { coreKey } from '../core';
+import { coreKey, themeKey } from '../core';
 import LocaleSwitcher from './LocaleSwitcher.vue';
 
 const core = inject(coreKey);
@@ -10,6 +10,8 @@ if (!core) {
   throw new Error('AppHeader needs the app core');
 }
 const { t } = useI18n();
+const theme = inject(themeKey, null);
+const logoUrl = theme?.images.logo ?? null;
 const router = useRouter();
 const authStore = core.useAuthStore();
 
@@ -26,7 +28,11 @@ function logout(): void {
 <template>
   <header class="header">
     <nav class="header__nav">
-      <router-link to="/" class="header__brand">{{ t('app.title') }}</router-link>
+      <router-link to="/" class="header__brand">
+        <img v-if="logoUrl" :src="logoUrl" alt="" class="theme-logo" data-testid="theme-logo" />{{
+          t('app.title')
+        }}
+      </router-link>
       <router-link v-for="item in navItems" :key="item.to" :to="item.to">
         {{ t(item.labelKey) }}
       </router-link>
@@ -53,7 +59,7 @@ function logout(): void {
   align-items: center;
   gap: 16px;
   padding: 12px 24px;
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid var(--oxfe-color-border, #e2e2e2);
 }
 .header__nav {
   display: flex;

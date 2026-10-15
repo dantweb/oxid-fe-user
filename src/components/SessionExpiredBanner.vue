@@ -32,7 +32,7 @@ onBeforeUnmount(unsubscribe);
   align-items: center;
   justify-content: center;
   padding: 10px;
-  background: #fff3cd;
-  border-bottom: 1px solid #e0c668;
+  background: var(--oxfe-color-warning-bg, #fff3cd);
+  border-bottom: 1px solid var(--oxfe-color-warning-border, #e0c668);
 }
 </style>

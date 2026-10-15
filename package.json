@@ -1,7 +1,7 @@
 {
   "name": "@dantweb/oxid-fe-user",
   "version": "0.1.0",
-  "description": "Standalone Vue 3 storefront for headless OXID eShop — plugin-host app on @dantweb/oxid-fe-core.",
+  "description": "Standalone Vue 3 storefront for headless OXID eShop \u2014 plugin-host app on @dantweb/oxid-fe-core.",
   "license": "BUSL-1.1",
   "private": true,
   "type": "module",
@@ -18,7 +18,11 @@
     "format": "prettier --write .",
     "knip": "knip",
     "evaluate": "node scripts/evaluate.mjs",
-    "build:seo": "npm run build && node scripts/generate-sitemap.mjs && node scripts/prerender.mjs"
+    "build:seo": "npm run build && node scripts/generate-sitemap.mjs && node scripts/prerender.mjs",
+    "build:themes": "node scripts/build-themes.mjs",
+    "watch:themes": "node scripts/build-themes.mjs --watch",
+    "predev": "npm run build:themes",
+    "prebuild": "npm run build:themes"
   },
   "dependencies": {
     "@dantweb/oxid-fe-core": "file:../oxid-fe-core",
@@ -41,6 +45,7 @@
     "eslint-plugin-vue": "^9.32.0",
     "happy-dom": "^17.1.0",
     "knip": "^5.44.0",
+    "less": "^4.9.1",
     "prettier": "^3.5.0",
     "typescript": "~5.7.3",
     "typescript-eslint": "^8.24.0",

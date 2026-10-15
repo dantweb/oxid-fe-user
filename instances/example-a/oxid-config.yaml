@@ -8,6 +8,9 @@ i18n:
   default_locale: en
   fallback_locale: en
   locales: [en, de]
+theme:
+  default: default
+  active: default
 plugins:
   shop:
     config:

@@ -70,7 +70,7 @@ const currencyName = computed(() => cart.items[0]?.currencyName ?? 'EUR');
 .cart td {
   text-align: left;
   padding: 8px;
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid var(--oxfe-color-border, #e2e2e2);
 }
 .cart__amount {
   display: inline-block;
@@ -80,9 +80,9 @@ const currencyName = computed(() => cart.items[0]?.currencyName ?? 'EUR');
 .cart__checkout {
   display: inline-block;
   padding: 10px 20px;
-  border-radius: 6px;
-  background: #0a5d9c;
-  color: #fff;
+  border-radius: var(--oxfe-radius-md, 6px);
+  background: var(--oxfe-color-primary, #0a5d9c);
+  color: var(--oxfe-color-primary-contrast, #fff);
   text-decoration: none;
 }
 </style>

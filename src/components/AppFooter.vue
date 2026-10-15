@@ -13,8 +13,8 @@ const { t } = useI18n();
 <style scoped>
 .footer {
   padding: 16px 24px;
-  border-top: 1px solid #e2e2e2;
-  color: #666;
+  border-top: 1px solid var(--oxfe-color-border, #e2e2e2);
+  color: var(--oxfe-color-text-muted, #555);
   font-size: 14px;
 }
 </style>

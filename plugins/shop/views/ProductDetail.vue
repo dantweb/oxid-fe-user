@@ -106,14 +106,14 @@ function addToCart(): void {
 }
 .product__long {
   white-space: pre-line;
-  color: #444;
+  color: var(--oxfe-color-text-muted, #555);
 }
 button {
   padding: 10px 20px;
   border: none;
-  border-radius: 6px;
-  background: #0a5d9c;
-  color: #fff;
+  border-radius: var(--oxfe-radius-md, 6px);
+  background: var(--oxfe-color-primary, #0a5d9c);
+  color: var(--oxfe-color-primary-contrast, #fff);
   margin-right: 12px;
 }
 @media (max-width: 700px) {

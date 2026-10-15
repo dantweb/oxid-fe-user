@@ -1,11 +1,12 @@
-import type { IPlugin } from '@dantweb/oxid-fe-core';
+import '@dantweb/oxid-fe-core/styles/variables.css';
+import { loadTheme, type IPlugin } from '@dantweb/oxid-fe-core';
 import { createHead } from '@unhead/vue';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import App from './App.vue';
 import { loadInstanceConfig } from './config/load';
 import { loadConfiguredPlugins } from './config/plugins';
-import { coreKey, createCore } from './core';
+import { coreKey, createCore, themeKey } from './core';
 import { createAppI18n } from './i18n';
 import { createAppRouter } from './router';
 
@@ -23,11 +24,11 @@ async function bootstrap(): Promise<void> {
   const config = await loadInstanceConfig();
   const core = createCore(config.shop.graphql_url);
 
-  const plugins = await loadConfiguredPlugins(
-    config,
-    bundledPlugins,
-    (path) => import(/* @vite-ignore */ path),
-  );
+  // the theme (config + parent chain + stylesheet) loads while the plugins resolve
+  const [theme, plugins] = await Promise.all([
+    loadTheme({ active: config.theme.active, fallback: config.theme.default }),
+    loadConfiguredPlugins(config, bundledPlugins, (path) => import(/* @vite-ignore */ path)),
+  ]);
   for (const { plugin, config: pluginConfig } of plugins) {
     core.registry.register(plugin, pluginConfig);
   }
@@ -42,6 +43,7 @@ async function bootstrap(): Promise<void> {
   app.use(createPinia());
   app.use(createHead());
   app.provide(coreKey, core);
+  app.provide(themeKey, theme);
   app.use(createAppI18n(core.registry, config));
   app.use(createAppRouter(core.registry, core.auth));
   app.mount('#app');

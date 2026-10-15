@@ -1,5 +1,5 @@
 # Example instance B — same compiled app, a different shop:
-# German only, smaller pages, no PayPal/Mollie, its own robots.txt (public/) and an
+# German only, dark theme, smaller pages, no PayPal/Mollie, its own robots.txt (public/) and an
 # external plugin (plugins/promo) adding a navigation entry.
 instance:
   id: example-b
@@ -10,6 +10,9 @@ i18n:
   default_locale: de
   fallback_locale: de
   locales: [de]
+theme:
+  default: default
+  active: dark
 plugins:
   shop:
     config:

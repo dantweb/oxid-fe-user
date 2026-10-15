@@ -318,18 +318,18 @@ function messageOf(cause: unknown): string {
 input[type='text'],
 .address input {
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--oxfe-color-input-border, #ccc);
+  border-radius: var(--oxfe-radius-sm, 4px);
 }
 button {
   padding: 10px 20px;
   border: none;
-  border-radius: 6px;
-  background: #0a5d9c;
-  color: #fff;
+  border-radius: var(--oxfe-radius-md, 6px);
+  background: var(--oxfe-color-primary, #0a5d9c);
+  color: var(--oxfe-color-primary-contrast, #fff);
   margin-top: 12px;
 }
 button:disabled {
-  background: #9bb8cc;
+  background: var(--oxfe-color-primary-disabled, #9bb8cc);
 }
 </style>

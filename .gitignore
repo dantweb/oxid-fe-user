@@ -7,3 +7,6 @@ test-results/
 playwright-report/
 .env
 /oxid-config.yaml
+
+# compiled themes (npm run build:themes)
+/public/themes/

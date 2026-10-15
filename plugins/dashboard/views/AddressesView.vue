@@ -195,8 +195,8 @@ async function removeDelivery(id: string): Promise<void> {
 }
 .address input {
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--oxfe-color-input-border, #ccc);
+  border-radius: var(--oxfe-radius-sm, 4px);
 }
 li {
   margin: 6px 0;

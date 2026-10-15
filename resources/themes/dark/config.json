@@ -1,0 +1,25 @@
+{
+  "id": "dark",
+  "name": "Dark",
+  "description": "Dark child theme of Default",
+  "version": "1.0.0",
+  "parent": "default",
+  "tokens": {
+    "--oxfe-color-primary": "#4aa3e0",
+    "--oxfe-color-primary-contrast": "#0b1b2b",
+    "--oxfe-color-primary-disabled": "#35566e",
+    "--oxfe-color-text": "#e8e8e8",
+    "--oxfe-color-text-muted": "#a0a0a0",
+    "--oxfe-color-border": "#333333",
+    "--oxfe-color-input-border": "#555555",
+    "--oxfe-color-background": "#121212",
+    "--oxfe-color-surface": "#1e1e1e",
+    "--oxfe-color-link": "#6db8ee",
+    "--oxfe-color-danger": "#ff6b81",
+    "--oxfe-color-warning-bg": "#3a3320",
+    "--oxfe-color-warning-border": "#6b5b1f"
+  },
+  "images": {
+    "logo": "logo-dark.png"
+  }
+}

@@ -18,3 +18,4 @@
 types, CLI plugin manager, refresh tokens deferred (named in the done-reports).
 | 06 e2e catalog/category/checkout | ✅ done | 17/17 incl. completed Stripe payment, local + public ([report](done/sprint-06-e2e-catalog-category-checkout.md)) |
 | 07 instance configuration | ✅ done | one image, two instances differ in name/language/plugins/robots ([report](done/sprint-07-instance-configuration.md)) |
+| 08 theming | ✅ done | default + dark child theme per instance, make targets all executed ([report](done/sprint-08-theming.md)) |

@@ -1,0 +1,78 @@
+// Default theme — the reference look.
+// The tokens are declared from LESS variables, so a child theme re-declares a variable and
+// imports this file (LESS evaluates variables lazily: the last definition wins).
+
+@color-primary: #0a5d9c;
+@color-primary-contrast: #ffffff;
+@color-primary-disabled: #9bb8cc;
+@color-text: #1a1a1a;
+@color-text-muted: #555555;
+@color-border: #e2e2e2;
+@color-input-border: #cccccc;
+@color-background: #ffffff;
+@color-surface: #f7f7f7;
+@color-link: #0a5d9c;
+@color-danger: #b00020;
+@color-warning-bg: #fff3cd;
+@color-warning-border: #e0c668;
+@hero-image: url('../images/hero.jpg');
+
+:root {
+  --oxfe-color-primary: @color-primary;
+  --oxfe-color-primary-contrast: @color-primary-contrast;
+  --oxfe-color-primary-disabled: @color-primary-disabled;
+  --oxfe-color-text: @color-text;
+  --oxfe-color-text-muted: @color-text-muted;
+  --oxfe-color-border: @color-border;
+  --oxfe-color-input-border: @color-input-border;
+  --oxfe-color-background: @color-background;
+  --oxfe-color-surface: @color-surface;
+  --oxfe-color-link: @color-link;
+  --oxfe-color-danger: @color-danger;
+  --oxfe-color-warning-bg: @color-warning-bg;
+  --oxfe-color-warning-border: @color-warning-border;
+}
+
+// base look
+body {
+  font-family: var(--oxfe-font-family);
+  color: var(--oxfe-color-text);
+  background: var(--oxfe-color-background);
+}
+
+a {
+  color: var(--oxfe-color-link);
+}
+
+// header logo
+.theme-logo {
+  height: 28px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+// the home page hero banner: markup comes from the app, the look from the theme
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 180px;
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  border-radius: var(--oxfe-radius-lg);
+  background: @hero-image center / cover no-repeat;
+  color: #ffffff;
+
+  h1 {
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin: 0 0 12px;
+  }
+
+  a {
+    color: #ffffff;
+    font-weight: 600;
+  }
+}

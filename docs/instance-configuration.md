@@ -37,6 +37,8 @@ their settings, extra files, extra plugins. The app bundle is identical for all 
 | `i18n.locales`           | `[en, de]`        | languages offered by this instance; **more than one** shows a language switcher; bundled catalogs: `en`, `de`       |
 | `i18n.default_locale`    | `en`              | initial language (must be in `locales`); the browser language wins if it is in `locales`                            |
 | `i18n.fallback_locale`   | `en`              | catalog used for missing keys                                                                                       |
+| `theme.default`          | `default`         | fallback theme when `active` cannot be loaded (see `theming.md`)                                                    |
+| `theme.active`           | = `theme.default` | the theme this instance runs: `resources/themes/<id>/`                                                              |
 | `plugins.<name>.enabled` | `true`            | `false` → plugin not loaded: no routes, no nav entry                                                                |
 | `plugins.<name>.source`  | `bundled`         | `bundled` = compiled into the app; `external` = loaded at runtime from `<instance>/plugins/<name>/index.js`         |
 | `plugins.<name>.config`  | `{}`              | merged over the plugin's `defaultConfig` (e.g. `products_per_page`)                                                 |
@@ -81,4 +83,3 @@ back to `oxid-config.yaml.dist`). `oxid-config.yaml` is gitignored; copy the `.d
 - **Prerendered SEO snapshots** (`npm run build:seo`, ADR-003) are generated with the config
   present at build time. Instances with different languages/names need their own SEO build
   (run it with that instance's config) — an SSR move (ADR-001/003 upgrade path) removes this.
-- The `theme` section arrives with sprint 08.
