@@ -1,4 +1,5 @@
 import type { IPlugin } from '@dantweb/oxid-fe-core';
+import { createHead } from '@unhead/vue';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import pluginState from '../plugins.json';
@@ -32,6 +33,7 @@ async function bootstrap(): Promise<void> {
 
   const app = createApp(App);
   app.use(createPinia());
+  app.use(createHead());
   app.provide(coreKey, core);
   app.use(createAppI18n(core.registry));
   app.use(createAppRouter(core.registry, core.auth));

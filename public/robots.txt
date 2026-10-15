@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /shop/cart
+Disallow: /login
+
+Sitemap: /sitemap.xml

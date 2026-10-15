@@ -9,8 +9,8 @@
 | 00c GitHub repos            | ✅ done, 1 open | repos pushed; **core CI green**; fe-user CI needs `REPO_READ_TOKEN` ([report](done/sprint-00c-github-repos.md))    |
 | 01 oxid-fe-core             | ✅ done         | 39/39 tests, 94.4% lines, full gate green, CI green ([report](done/sprint-01-oxid-fe-core.md))                     |
 | 02 oxid-fe-user             | ✅ done         | 7/7 unit, **Playwright 2/2 against the live shop**, gate green ([report](done/sprint-02-oxid-fe-user-host-app.md)) |
-| 03 SEO                      | ⬜ next         | [plan](sprints/sprint-03-seo-spa.md)                                                                               |
-| 04 checkout/payment plugins | ⬜              | [plan](sprints/sprint-04-checkout-payment-plugins.md)                                                              |
+| 03 SEO                      | ✅ done         | prerender+JSON-LD verified crawler-side ([report](done/sprint-03-seo-spa.md))                                      |
+| 04 checkout/payment plugins | ⬜ next         | [plan](sprints/sprint-04-checkout-payment-plugins.md)                                                              |
 | 05 /dashboard               | ⬜              | [plan](sprints/sprint-05-user-dashboard.md)                                                                        |
 
 **Violations ledger:** 0 suppressions/any-casts in both codebases (`npm run evaluate`).

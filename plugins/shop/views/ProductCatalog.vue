@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { formatPrice } from '@dantweb/oxid-fe-core';
+import { useHead } from '@unhead/vue';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useShopContext } from '../index';
 import { PRODUCTS_QUERY, type ProductListItem } from '../api/queries';
 
 const { t } = useI18n();
+useHead({ title: () => `${t('shop.catalog.headline')} · OXID Storefront` });
 const { client, config } = useShopContext();
 const pageSize = Number(config.products_per_page ?? 12);
 

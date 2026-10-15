@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { formatPrice } from '@dantweb/oxid-fe-core';
+import { useHead } from '@unhead/vue';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useShopContext } from '../index';
@@ -15,6 +16,37 @@ const cart = useCartStore();
 const product = ref<ProductDetail | null>(null);
 const failed = ref(false);
 const added = ref(false);
+
+useHead({
+  title: () => (product.value ? `${product.value.title} · OXID Storefront` : 'OXID Storefront'),
+  meta: [
+    { name: 'description', content: () => product.value?.shortDescription ?? '' },
+    { property: 'og:title', content: () => product.value?.title ?? '' },
+    { property: 'og:type', content: 'product' },
+    { property: 'og:image', content: () => product.value?.imageGallery.thumb ?? '' },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: () =>
+        product.value
+          ? JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Product',
+              name: product.value.title,
+              description: product.value.shortDescription,
+              image: product.value.imageGallery.thumb,
+              offers: {
+                '@type': 'Offer',
+                price: product.value.price.price,
+                priceCurrency: product.value.price.currency.name,
+                availability: 'https://schema.org/InStock',
+              },
+            })
+          : '',
+    },
+  ],
+});
 
 onMounted(async () => {
   try {

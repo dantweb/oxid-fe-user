@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { GraphqlError } from '@dantweb/oxid-fe-core';
+import { useHead } from '@unhead/vue';
 import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -10,6 +11,10 @@ if (!core) {
   throw new Error('LoginView needs the app core');
 }
 const { t } = useI18n();
+useHead({
+  title: () => `${t('login.headline')} · ${t('app.title')}`,
+  meta: [{ name: 'robots', content: 'noindex,nofollow' }],
+});
 const route = useRoute();
 const router = useRouter();
 const authStore = core.useAuthStore();

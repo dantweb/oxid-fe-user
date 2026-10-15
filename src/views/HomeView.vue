@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+useHead({
+  title: () => t('app.title'),
+  meta: [{ name: 'description', content: () => t('home.intro') }],
+});
 </script>
 
 <template>

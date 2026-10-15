@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { formatPrice } from '@dantweb/oxid-fe-core';
+import { useHead } from '@unhead/vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCartStore } from '../stores/cart';
 
 const { t } = useI18n();
+useHead({ meta: [{ name: 'robots', content: 'noindex,nofollow' }] });
 const cart = useCartStore();
 
 const currencyName = computed(() => cart.items[0]?.currencyName ?? 'EUR');
