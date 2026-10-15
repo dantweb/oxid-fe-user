@@ -9,6 +9,7 @@ describe('shop plugin', () => {
 
     expect(registry.routes.map((route) => route.path)).toEqual([
       '/shop',
+      '/shop/category/:id',
       '/shop/product/:id',
       '/shop/cart',
     ]);
