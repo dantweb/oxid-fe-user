@@ -11,27 +11,27 @@ with a redirect-back.
 
 ## Routes & features (all over graphql-storefront, via core's typed client)
 
-| Route | Feature | Storefront API |
-|---|---|---|
-| `/dashboard` | overview: customer greeting, last orders, newsletter status | `customer`, `orders` |
-| `/dashboard/orders`, `/dashboard/orders/:id` | order history + detail (positions, prices, delivery, payment used, order files/downloads if present) | `customer { orders }` |
-| `/dashboard/addresses` | invoice address edit; delivery addresses list/add/delete | `customerInvoiceAddressSet`, `customerDeliveryAddressAdd/Delete` |
-| `/dashboard/profile` | customer data, email change, password change | `customerEmailUpdate`, `customerPasswordChange` |
-| `/dashboard/newsletter` | subscribe/unsubscribe | `newsletterOptIn/Unsubscribe` |
-| `/dashboard/reviews` (optional) | my reviews, delete | `reviewSet/Delete` |
-| `/dashboard/wishlist` (optional) | wished prices | `wishedPriceSet/Delete` |
+| Route                                        | Feature                                                                                              | Storefront API                                                   |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `/dashboard`                                 | overview: customer greeting, last orders, newsletter status                                          | `customer`, `orders`                                             |
+| `/dashboard/orders`, `/dashboard/orders/:id` | order history + detail (positions, prices, delivery, payment used, order files/downloads if present) | `customer { orders }`                                            |
+| `/dashboard/addresses`                       | invoice address edit; delivery addresses list/add/delete                                             | `customerInvoiceAddressSet`, `customerDeliveryAddressAdd/Delete` |
+| `/dashboard/profile`                         | customer data, email change, password change                                                         | `customerEmailUpdate`, `customerPasswordChange`                  |
+| `/dashboard/newsletter`                      | subscribe/unsubscribe                                                                                | `newsletterOptIn/Unsubscribe`                                    |
+| `/dashboard/reviews` (optional)              | my reviews, delete                                                                                   | `reviewSet/Delete`                                               |
+| `/dashboard/wishlist` (optional)             | wished prices                                                                                        | `wishedPriceSet/Delete`                                          |
 
 ## Stories
 
-| # | Story |
-|---|---|
-| S1 | Dashboard plugin scaffold: routes (all `requiresAuth`), layout with account navigation, nav entry contributed to the host header for logged-in users |
-| S2 | Orders list + detail (pagination; re-order = copy positions into the basket as a nice-to-have) |
-| S3 | Addresses (zod validation from core, country list from the `countries` query) |
-| S4 | Profile + password + newsletter |
-| S5 | **SEO exclusion verified**: `noindex,nofollow` meta on every `/dashboard` route, robots.txt disallow, absent from sitemap and from the sprint-03 prerender route list — covered by an automated test so a later route addition cannot leak into the index |
-| S6 | Session behavior: JWT auto-refresh (core), expiry modal preserving the in-progress form, logout clears tokens + guest-cart state correctly |
-| S7 | Playwright: register → order (reuses sprint-04 flow) → see it under `/dashboard/orders`; address CRUD; password change re-login |
+| #   | Story                                                                                                                                                                                                                                                     |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S1  | Dashboard plugin scaffold: routes (all `requiresAuth`), layout with account navigation, nav entry contributed to the host header for logged-in users                                                                                                      |
+| S2  | Orders list + detail (pagination; re-order = copy positions into the basket as a nice-to-have)                                                                                                                                                            |
+| S3  | Addresses (zod validation from core, country list from the `countries` query)                                                                                                                                                                             |
+| S4  | Profile + password + newsletter                                                                                                                                                                                                                           |
+| S5  | **SEO exclusion verified**: `noindex,nofollow` meta on every `/dashboard` route, robots.txt disallow, absent from sitemap and from the sprint-03 prerender route list — covered by an automated test so a later route addition cannot leak into the index |
+| S6  | Session behavior: JWT auto-refresh (core), expiry modal preserving the in-progress form, logout clears tokens + guest-cart state correctly                                                                                                                |
+| S7  | Playwright: register → order (reuses sprint-04 flow) → see it under `/dashboard/orders`; address CRUD; password change re-login                                                                                                                           |
 
 ## Constraints
 

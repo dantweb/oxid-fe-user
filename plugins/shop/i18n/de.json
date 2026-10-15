@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "catalog": "Shop",
+    "cart": "Warenkorb"
+  },
+  "catalog": {
+    "headline": "Katalog",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "empty": "Keine Produkte gefunden.",
+    "loadFailed": "Der Katalog konnte nicht geladen werden."
+  },
+  "product": {
+    "addToCart": "In den Warenkorb",
+    "added": "Zum Warenkorb hinzugefügt",
+    "back": "Zurück zum Katalog",
+    "loadFailed": "Das Produkt konnte nicht geladen werden."
+  },
+  "cart": {
+    "headline": "Ihr Warenkorb",
+    "empty": "Ihr Warenkorb ist leer.",
+    "product": "Produkt",
+    "amount": "Menge",
+    "price": "Preis",
+    "remove": "Entfernen",
+    "subtotal": "Zwischensumme",
+    "checkoutPending": "Der Checkout kommt mit den Payment-Plugins (Sprint 04)."
+  }
+}

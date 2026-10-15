@@ -8,7 +8,7 @@ import {
 } from '@dantweb/oxid-fe-core';
 import type { InjectionKey } from 'vue';
 
-export interface AppCore {
+interface AppCore {
   client: GraphqlClient;
   auth: AuthService;
   events: EventBus;

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: oxid-fe-user
+      # file:../oxid-fe-core — sibling checkout, same layout as the SDK root.
+      # Needs the REPO_READ_TOKEN secret (fine-grained PAT, read access to dantweb/oxid-fe-core).
+      - uses: actions/checkout@v4
+        with:
+          repository: dantweb/oxid-fe-core
+          token: ${{ secrets.REPO_READ_TOKEN || github.token }}
+          path: oxid-fe-core
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build oxid-fe-core
+        working-directory: oxid-fe-core
+        run: npm ci && npm run build
+      - name: Install
+        working-directory: oxid-fe-user
+        run: npm ci
+      - name: Lint
+        working-directory: oxid-fe-user
+        run: npm run lint
+      - name: Type-check
+        working-directory: oxid-fe-user
+        run: npm run type-check
+      - name: Knip
+        working-directory: oxid-fe-user
+        run: npm run knip
+      - name: Unit tests
+        working-directory: oxid-fe-user
+        run: npm run test:coverage
+      - name: Build
+        working-directory: oxid-fe-user
+        run: npm run build
+      - name: Evaluate violations
+        working-directory: oxid-fe-user
+        run: npm run evaluate

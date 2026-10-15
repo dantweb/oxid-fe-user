@@ -9,14 +9,14 @@ are recorded where the VBWD repos record theirs (README + docs/ + per-day dev_lo
 
 ## Deliverables
 
-| # | Deliverable | Content |
-|---|---|---|
-| D1 | `oxid-fe-user/README.md`, `oxid-fe-core/README.md` | purpose, quickstart (SDK container from sprint 00a), commands, repo map |
-| D2 | `docs/architecture.md` (in oxid-fe-user) | the big picture: host app + PluginRegistry + plugins; OXID GraphQL Storefront as the only backend API; payment-base headless checkout contract; diagram of the request flow (browser → nginx → `/graphql` proxy → shop) |
-| D3 | `docs/plugin-contract.md` | the `IPlugin` interface (routes, Pinia stores, i18n messages, nav items, config.json / admin-config.json), modelled on vbwd-fe-user-plugin-shop; versioning rules between core and plugins |
-| D4 | `docs/adr/` + template | ADR-001: SPA-first, SSR/prerender decision deferred to sprint 03. ADR-002: how oxid-fe-user consumes oxid-fe-core — npm package (GitHub Packages) vs git submodule (the VBWD way); decide in sprint 00c |
-| D5 | `docs/dev_log/` convention | same convention as the payment modules: `dev_log/<YYYYMMDD>/{status.md,done/,reports/,sprints/}`; this sprint plan and the research report are the first entries |
-| D6 | `docs/quality-gates.md` | lint (ESLint+Prettier), `vue-tsc` type-check, Vitest coverage target, Playwright e2e, pre-commit script — mirrored in CI (sprint 00c) |
+| #   | Deliverable                                        | Content                                                                                                                                                                                                                 |
+| --- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | `oxid-fe-user/README.md`, `oxid-fe-core/README.md` | purpose, quickstart (SDK container from sprint 00a), commands, repo map                                                                                                                                                 |
+| D2  | `docs/architecture.md` (in oxid-fe-user)           | the big picture: host app + PluginRegistry + plugins; OXID GraphQL Storefront as the only backend API; payment-base headless checkout contract; diagram of the request flow (browser → nginx → `/graphql` proxy → shop) |
+| D3  | `docs/plugin-contract.md`                          | the `IPlugin` interface (routes, Pinia stores, i18n messages, nav items, config.json / admin-config.json), modelled on vbwd-fe-user-plugin-shop; versioning rules between core and plugins                              |
+| D4  | `docs/adr/` + template                             | ADR-001: SPA-first, SSR/prerender decision deferred to sprint 03. ADR-002: how oxid-fe-user consumes oxid-fe-core — npm package (GitHub Packages) vs git submodule (the VBWD way); decide in sprint 00c                 |
+| D5  | `docs/dev_log/` convention                         | same convention as the payment modules: `dev_log/<YYYYMMDD>/{status.md,done/,reports/,sprints/}`; this sprint plan and the research report are the first entries                                                        |
+| D6  | `docs/quality-gates.md`                            | lint (ESLint+Prettier), `vue-tsc` type-check, Vitest coverage target, Playwright e2e, pre-commit script — mirrored in CI (sprint 00c)                                                                                   |
 
 ## Source material
 

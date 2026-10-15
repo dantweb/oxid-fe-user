@@ -10,13 +10,13 @@ A dedicated container in which `oxid-fe-core` is developed, built and tested, ad
 
 ## Stories
 
-| # | Story | Done when |
-|---|---|---|
-| S1 | **Dockerfile** `containers/node-fe/Dockerfile`: `node:22-alpine`, non-root `node` user, workdir `/app`, git (for submodules/codegen) | image builds |
-| S2 | **Service definition** `services/oxid-fe-core.yml`: builds S1, mounts `./oxid-fe-core:/app` and `./data/npm:/home/node/.npm` (npm cache survives rebuilds, same pattern as `data/composer`), exposes `5173` for the Vite dev/preview server, default command keeps the container idle (`sleep infinity`) so it serves as a shell + CI-like runner | `make file=services/oxid-fe-core.yml addservice && make up` starts it |
-| S3 | **Makefile targets**: `make fe-core` (shell into the container, like `make php` / `make node`) | target works |
-| S4 | **Smoke inside the container**: `npm ci && npm run build && npm test && npm run lint` all green (against the sprint-01 scaffold; until then, against an empty Vite lib scaffold) | commands documented and green |
-| S5 | **Docs**: section in the SDK `README` + `oxid-fe-core/README` quickstart (clone location at SDK root, addservice, make target) | reviewed |
+| #   | Story                                                                                                                                                                                                                                                                                                                                             | Done when                                                             |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| S1  | **Dockerfile** `containers/node-fe/Dockerfile`: `node:22-alpine`, non-root `node` user, workdir `/app`, git (for submodules/codegen)                                                                                                                                                                                                              | image builds                                                          |
+| S2  | **Service definition** `services/oxid-fe-core.yml`: builds S1, mounts `./oxid-fe-core:/app` and `./data/npm:/home/node/.npm` (npm cache survives rebuilds, same pattern as `data/composer`), exposes `5173` for the Vite dev/preview server, default command keeps the container idle (`sleep infinity`) so it serves as a shell + CI-like runner | `make file=services/oxid-fe-core.yml addservice && make up` starts it |
+| S3  | **Makefile targets**: `make fe-core` (shell into the container, like `make php` / `make node`)                                                                                                                                                                                                                                                    | target works                                                          |
+| S4  | **Smoke inside the container**: `npm ci && npm run build && npm test && npm run lint` all green (against the sprint-01 scaffold; until then, against an empty Vite lib scaffold)                                                                                                                                                                  | commands documented and green                                         |
+| S5  | **Docs**: section in the SDK `README` + `oxid-fe-core/README` quickstart (clone location at SDK root, addservice, make target)                                                                                                                                                                                                                    | reviewed                                                              |
 
 ## Constraints
 

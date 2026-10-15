@@ -28,17 +28,17 @@ mean: install its OXID module **and** install its frontend plugin — no host-ap
 
 ## Stories
 
-| # | Story |
-|---|---|
-| S1 | `PaymentPlugin` interface + registry support in oxid-fe-core (minor release) |
-| S2 | Checkout plugin: steps, state machine, address/delivery over storefront mutations, terms checkbox (`confirmTermsAndConditions`) |
-| S3 | **stripe plugin**: hosted (redirect to `redirectUrl`) and `uiMode: embedded` (mount embedded Checkout with `clientSecret`); return view polls `stripeCheckoutReturn` until `committed`/`failed` |
-| S4 | **paypal plugin**: hosted approval-page redirect (`uiMode: hosted` is all the backend offers today); return view calls `paypalCheckoutReturn(contractId, contractToken)`; **follow-up ticket, not this sprint**: Smart Buttons require a new backend `uiMode` in the paypal module |
-| S5 | **mollie plugin**: hosted redirect; optional `method` pre-selection (`ideal`, `creditcard`, …) surfaced as sub-options in payment selection |
-| S6 | Classic path: `basketSetPayment` + `placeOrder` for non-contract payments; shared confirmation page (order number from either path) |
-| S7 | **Guest checkout**: the checkout mutations are `#[Logged]` — design and verify the guest path (anonymous-token basket → register/login step before pay, basket carried over); document findings against graphql-base's anonymous-token rights |
-| S8 | **Ops**: the frontend origin goes into the shop setting `sPaymentBaseHeadlessReturnOrigins` (otherwise `return_url_rejected`); documented in the SDK setup; webhook reachability (tunnel) documented for local dev |
-| S9 | **E2E**: Playwright per provider against sandbox credentials, reproducing each module's `bin/graph-ql-cli-test.sh demo` flow in the browser: start → pay at PSP (test mode) → return shows committed order; cancel path; wrong-token path shows the error page |
+| #   | Story                                                                                                                                                                                                                                                                              |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S1  | `PaymentPlugin` interface + registry support in oxid-fe-core (minor release)                                                                                                                                                                                                       |
+| S2  | Checkout plugin: steps, state machine, address/delivery over storefront mutations, terms checkbox (`confirmTermsAndConditions`)                                                                                                                                                    |
+| S3  | **stripe plugin**: hosted (redirect to `redirectUrl`) and `uiMode: embedded` (mount embedded Checkout with `clientSecret`); return view polls `stripeCheckoutReturn` until `committed`/`failed`                                                                                    |
+| S4  | **paypal plugin**: hosted approval-page redirect (`uiMode: hosted` is all the backend offers today); return view calls `paypalCheckoutReturn(contractId, contractToken)`; **follow-up ticket, not this sprint**: Smart Buttons require a new backend `uiMode` in the paypal module |
+| S5  | **mollie plugin**: hosted redirect; optional `method` pre-selection (`ideal`, `creditcard`, …) surfaced as sub-options in payment selection                                                                                                                                        |
+| S6  | Classic path: `basketSetPayment` + `placeOrder` for non-contract payments; shared confirmation page (order number from either path)                                                                                                                                                |
+| S7  | **Guest checkout**: the checkout mutations are `#[Logged]` — design and verify the guest path (anonymous-token basket → register/login step before pay, basket carried over); document findings against graphql-base's anonymous-token rights                                      |
+| S8  | **Ops**: the frontend origin goes into the shop setting `sPaymentBaseHeadlessReturnOrigins` (otherwise `return_url_rejected`); documented in the SDK setup; webhook reachability (tunnel) documented for local dev                                                                 |
+| S9  | **E2E**: Playwright per provider against sandbox credentials, reproducing each module's `bin/graph-ql-cli-test.sh demo` flow in the browser: start → pay at PSP (test mode) → return shows committed order; cancel path; wrong-token path shows the error page                     |
 
 ## Error handling
 
