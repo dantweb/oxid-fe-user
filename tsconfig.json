@@ -22,7 +22,7 @@
     "plugins/**/*.ts",
     "plugins/**/*.vue",
     "tests/**/*.ts",
-    "e2e/**/*.ts",
+
     "vite.config.ts",
     "playwright.config.ts"
   ]

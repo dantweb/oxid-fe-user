@@ -65,3 +65,49 @@ export const PRODUCT_QUERY = /* GraphQL */ `
     }
   }
 `;
+
+export interface CategoryItem {
+  id: string;
+  title: string;
+}
+
+export const CATEGORIES_QUERY = /* GraphQL */ `
+  query categories {
+    categories {
+      id
+      title
+    }
+  }
+`;
+
+export const CATEGORY_QUERY = /* GraphQL */ `
+  query category($id: ID!) {
+    category(categoryId: $id) {
+      id
+      title
+    }
+  }
+`;
+
+export const CATEGORY_PRODUCTS_QUERY = /* GraphQL */ `
+  query categoryProducts($categoryId: String!, $offset: Int!, $limit: Int!) {
+    products(
+      filter: { category: { equals: $categoryId } }
+      pagination: { offset: $offset, limit: $limit }
+    ) {
+      id
+      title
+      shortDescription
+      price {
+        price
+        currency {
+          name
+          sign
+        }
+      }
+      imageGallery {
+        thumb
+      }
+    }
+  }
+`;

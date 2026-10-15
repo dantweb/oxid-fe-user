@@ -8,7 +8,8 @@
     "prev": "Previous",
     "next": "Next",
     "empty": "No products found.",
-    "loadFailed": "The catalog could not be loaded."
+    "loadFailed": "The catalog could not be loaded.",
+    "categories": "Categories"
   },
   "product": {
     "addToCart": "Add to cart",
@@ -25,5 +26,10 @@
     "remove": "Remove",
     "subtotal": "Subtotal",
     "toCheckout": "Proceed to checkout"
+  },
+  "category": {
+    "back": "All products",
+    "empty": "No products found.",
+    "loadFailed": "The catalog could not be loaded."
   }
 }

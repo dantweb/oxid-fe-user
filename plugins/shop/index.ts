@@ -18,6 +18,11 @@ const plugin: IPlugin = {
   routes: [
     { path: '/shop', component: () => import('./views/ProductCatalog.vue') },
     {
+      path: '/shop/category/:id',
+      component: () => import('./views/CategoryView.vue'),
+      props: true,
+    },
+    {
       path: '/shop/product/:id',
       component: () => import('./views/ProductDetail.vue'),
       props: true,

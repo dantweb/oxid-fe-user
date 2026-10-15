@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: 'happy-dom',
       include: ['tests/unit/**/*.spec.ts'],
-      exclude: [...configDefaults.exclude, 'e2e/**'],
+      exclude: [...configDefaults.exclude, 'tests/e2e/**'],
       coverage: {
         provider: 'v8',
         include: ['src/**', 'plugins/**'],
