@@ -1,0 +1,42 @@
+{
+  "headline": "Kasse",
+  "address": {
+    "headline": "1 · Rechnungsadresse",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "street": "Straße",
+    "streetNumber": "Nr.",
+    "zipCode": "PLZ",
+    "city": "Stadt",
+    "country": "Land",
+    "save": "Adresse speichern",
+    "saved": "Adresse gespeichert"
+  },
+  "delivery": {
+    "headline": "2 · Versand",
+    "loading": "Versandarten werden geladen…"
+  },
+  "payment": {
+    "headline": "3 · Zahlung",
+    "terms": "Ich bestätige die AGB",
+    "pay": "Jetzt bezahlen",
+    "redirecting": "Weiterleitung zum Zahlungsanbieter…"
+  },
+  "return": {
+    "checking": "Zahlung wird geprüft…",
+    "committed": "Vielen Dank! Ihre Bestellnummer ist {orderNumber}.",
+    "pending": "Die Zahlung wird noch bestätigt — die Bestellung wird automatisch abgeschlossen.",
+    "failed": "Die Zahlung wurde nicht abgeschlossen.",
+    "backToCart": "Zurück zum Warenkorb",
+    "toShop": "Weiter einkaufen"
+  },
+  "cancel": {
+    "headline": "Zahlung abgebrochen",
+    "done": "Der Zahlungsversuch wurde abgebrochen.",
+    "retry": "Erneut versuchen"
+  },
+  "errors": {
+    "basket": "Der Warenkorb konnte nicht vorbereitet werden: {message}",
+    "start": "Die Zahlung konnte nicht gestartet werden: {message}"
+  }
+}

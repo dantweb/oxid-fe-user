@@ -1,0 +1,42 @@
+{
+  "headline": "Checkout",
+  "address": {
+    "headline": "1 · Invoice address",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "street": "Street",
+    "streetNumber": "No.",
+    "zipCode": "ZIP",
+    "city": "City",
+    "country": "Country",
+    "save": "Save address",
+    "saved": "Address saved"
+  },
+  "delivery": {
+    "headline": "2 · Delivery",
+    "loading": "Loading delivery options…"
+  },
+  "payment": {
+    "headline": "3 · Payment",
+    "terms": "I confirm the terms and conditions",
+    "pay": "Pay now",
+    "redirecting": "Taking you to the payment provider…"
+  },
+  "return": {
+    "checking": "Checking your payment…",
+    "committed": "Thank you! Your order number is {orderNumber}.",
+    "pending": "Your payment is still being confirmed — the order will complete automatically.",
+    "failed": "The payment did not complete.",
+    "backToCart": "Back to cart",
+    "toShop": "Continue shopping"
+  },
+  "cancel": {
+    "headline": "Payment cancelled",
+    "done": "The payment attempt was cancelled.",
+    "retry": "Try again"
+  },
+  "errors": {
+    "basket": "The basket could not be prepared: {message}",
+    "start": "The payment could not start: {message}"
+  }
+}

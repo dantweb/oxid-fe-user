@@ -24,6 +24,6 @@
     "price": "Preis",
     "remove": "Entfernen",
     "subtotal": "Zwischensumme",
-    "checkoutPending": "Der Checkout kommt mit den Payment-Plugins (Sprint 04)."
+    "toCheckout": "Zur Kasse"
   }
 }

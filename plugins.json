@@ -2,5 +2,21 @@
   "shop": {
     "enabled": true,
     "config": {}
+  },
+  "checkout": {
+    "enabled": true,
+    "config": {}
+  },
+  "payment-paypal": {
+    "enabled": true,
+    "config": {}
+  },
+  "payment-stripe": {
+    "enabled": true,
+    "config": {}
+  },
+  "payment-mollie": {
+    "enabled": true,
+    "config": {}
   }
 }

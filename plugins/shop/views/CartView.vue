@@ -54,7 +54,9 @@ const currencyName = computed(() => cart.items[0]?.currencyName ?? 'EUR');
           >{{ t('shop.cart.subtotal') }}: {{ formatPrice(cart.subtotal, currencyName) }}</strong
         >
       </p>
-      <p class="cart__note">{{ t('shop.cart.checkoutPending') }}</p>
+      <router-link to="/checkout" class="cart__checkout" data-testid="go-checkout">{{
+        t('shop.cart.toCheckout')
+      }}</router-link>
     </template>
   </section>
 </template>
@@ -75,8 +77,12 @@ const currencyName = computed(() => cart.items[0]?.currencyName ?? 'EUR');
   min-width: 32px;
   text-align: center;
 }
-.cart__note {
-  color: #666;
-  font-style: italic;
+.cart__checkout {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 6px;
+  background: #0a5d9c;
+  color: #fff;
+  text-decoration: none;
 }
 </style>

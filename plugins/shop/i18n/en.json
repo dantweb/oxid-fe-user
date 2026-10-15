@@ -24,6 +24,6 @@
     "price": "Price",
     "remove": "Remove",
     "subtotal": "Subtotal",
-    "checkoutPending": "Checkout arrives with the payment plugins (sprint 04)."
+    "toCheckout": "Proceed to checkout"
   }
 }

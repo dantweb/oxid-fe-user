@@ -11,6 +11,10 @@ import { createAppRouter } from './router';
 /** Plugins compiled into this app; `plugins.json` decides which ones load. */
 const availablePlugins: Record<string, () => Promise<{ default: IPlugin }>> = {
   shop: () => import('../plugins/shop'),
+  checkout: () => import('../plugins/checkout'),
+  'payment-paypal': () => import('../plugins/payment-paypal'),
+  'payment-stripe': () => import('../plugins/payment-stripe'),
+  'payment-mollie': () => import('../plugins/payment-mollie'),
 };
 
 interface PluginState {
@@ -29,7 +33,12 @@ async function bootstrap(): Promise<void> {
     const { default: plugin } = await loader();
     core.registry.register(plugin, state.config ?? {});
   }
-  await core.registry.setupAll({ client: core.client, auth: core.auth, events: core.events });
+  await core.registry.setupAll({
+    client: core.client,
+    auth: core.auth,
+    events: core.events,
+    registry: core.registry,
+  });
 
   const app = createApp(App);
   app.use(createPinia());
