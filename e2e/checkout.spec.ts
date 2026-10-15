@@ -11,7 +11,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 test.describe.configure({ mode: 'serial' });
 
-const SHOP_GRAPHQL = 'http://localhost:5173/graphql/'; // dev-server proxy to the shop
+const SHOP_GRAPHQL = `${process.env.E2E_BASE_URL ?? 'http://localhost:5173'}/graphql/`;
 const ORDERABLE_PRODUCT = '066e3ce119c43c81cc0e46d4f1681eed'; // "Destiny" (demo data)
 
 const email = `fe-e2e-${Date.now()}@oxid-test.local`;
@@ -65,7 +65,7 @@ test('checkout reaches the PayPal sandbox and cancel retires the attempt', async
   await page.waitForURL(/sandbox\.paypal\.com/, { timeout: 60_000 });
 
   // back on the storefront: the cancel leg retires the attempt (needs the stored token)
-  await page.goto('http://localhost:5173/checkout/cancel/payment-paypal');
+  await page.goto('/checkout/cancel/payment-paypal');
   await expect(page.getByTestId('cancel-done')).toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId('cancel-retry')).toBeVisible();
 });
@@ -84,6 +84,6 @@ test('stripe start reaches the Stripe-hosted checkout', async ({ page }) => {
 
   await page.waitForURL(/checkout\.stripe\.com/, { timeout: 60_000 });
 
-  await page.goto('http://localhost:5173/checkout/cancel/payment-stripe');
+  await page.goto('/checkout/cancel/payment-stripe');
   await expect(page.getByTestId('cancel-done')).toBeVisible({ timeout: 30_000 });
 });

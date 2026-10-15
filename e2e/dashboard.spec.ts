@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 test.describe.configure({ mode: 'serial' });
 
-const SHOP_GRAPHQL = 'http://localhost:5173/graphql/';
+const SHOP_GRAPHQL = `${process.env.E2E_BASE_URL ?? 'http://localhost:5173'}/graphql/`;
 
 const email = `fe-dash-${Date.now()}@oxid-test.local`;
 const password = 'fe-dash-Pass1!';

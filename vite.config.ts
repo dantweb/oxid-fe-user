@@ -8,6 +8,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [vue()],
+    resolve: {
+      // @dantweb/oxid-fe-core is consumed as a file: link; without dedupe the
+      // bundler resolves its externalized vue/pinia/vue-router imports to the
+      // library's OWN node_modules copy -> two pinia instances, broken stores.
+      dedupe: ['vue', 'pinia', 'vue-router', 'zod'],
+    },
     server: {
       host: true,
       port: 5173,
