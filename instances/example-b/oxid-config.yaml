@@ -1,0 +1,21 @@
+# Example instance B — same compiled app, a different shop:
+# German only, smaller pages, no PayPal/Mollie, its own robots.txt (public/) and an
+# external plugin (plugins/promo) adding a navigation entry.
+instance:
+  id: example-b
+  name: Shop Zwei
+shop:
+  graphql_url: /graphql/
+i18n:
+  default_locale: de
+  fallback_locale: de
+  locales: [de]
+plugins:
+  shop:
+    config:
+      products_per_page: 6
+  checkout: {}
+  payment-stripe: {}
+  dashboard: {}
+  promo:
+    source: external

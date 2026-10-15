@@ -3,6 +3,7 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { coreKey } from '../core';
+import LocaleSwitcher from './LocaleSwitcher.vue';
 
 const core = inject(coreKey);
 if (!core) {
@@ -31,6 +32,7 @@ function logout(): void {
       </router-link>
     </nav>
     <nav class="header__nav">
+      <LocaleSwitcher />
       <span v-if="authStore.authenticated" data-testid="header-username">
         {{ authStore.username }}
       </span>

@@ -12,7 +12,7 @@ import {
 } from '../api/queries';
 
 const { t } = useI18n();
-useHead({ title: () => `${t('shop.catalog.headline')} · OXID Storefront` });
+useHead({ title: () => `${t('shop.catalog.headline')} · ${t('app.title')}` });
 const { client, config } = useShopContext();
 const pageSize = Number(config.products_per_page ?? 12);
 

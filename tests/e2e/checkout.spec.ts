@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { registerCustomer, signIn, type Credentials } from './helpers/session';
 
 /**
  * Full headless checkout against the SDK shop: a fresh customer registers
@@ -11,29 +12,16 @@ import { expect, test, type Page } from '@playwright/test';
 
 test.describe.configure({ mode: 'serial' });
 
-const SHOP_GRAPHQL = `${process.env.E2E_BASE_URL ?? 'http://localhost:5173'}/graphql/`;
 const ORDERABLE_PRODUCT = '066e3ce119c43c81cc0e46d4f1681eed'; // "Destiny" (demo data)
 
-const email = `fe-e2e-${Date.now()}@oxid-test.local`;
-const password = 'fe-e2e-Pass1!';
+let user: Credentials;
 
 test.beforeAll(async ({ request }) => {
-  const response = await request.post(SHOP_GRAPHQL, {
-    data: {
-      query: `mutation { customerRegister(customer: { email: "${email}", password: "${password}" }) { id } }`,
-    },
-    headers: { 'User-Agent': 'Mozilla/5.0 (playwright)' },
-  });
-  const body = await response.json();
-  expect(body.data.customerRegister.id).toBeTruthy();
+  user = await registerCustomer(request, 'fe-e2e');
 });
 
 async function signInAndFillCart(page: Page): Promise<void> {
-  await page.goto('/login');
-  await page.locator('input[name=email]').fill(email);
-  await page.locator('input[name=password]').fill(password);
-  await page.getByTestId('login-form').locator('button[type=submit]').click();
-  await expect(page.getByTestId('nav-logout')).toBeVisible({ timeout: 20_000 });
+  await signIn(page, user);
 
   await page.goto(`/shop/product/${ORDERABLE_PRODUCT}`);
   await page.getByTestId('add-to-cart').click();

@@ -21,3 +21,6 @@ One source of truth for local work and CI — the same commands, byte-identical
   day's dev_log (see the engineering requirements).
 - E2E in CI is pending a reachable shop (sandbox/stage URL as a CI variable) — currently it runs
   locally against the SDK shop.
+- The two-instance proof (`tests/e2e/instances.spec.ts`) skips unless both containers run:
+  `E2E_BASE_URL=http://localhost:8090 E2E_INSTANCE_A_URL=http://localhost:8090 E2E_INSTANCE_B_URL=http://localhost:8091 npx playwright test instances`
+  (SDK services `oxid-fe-user-prod` / `oxid-fe-user-prod-b`, built from one image).

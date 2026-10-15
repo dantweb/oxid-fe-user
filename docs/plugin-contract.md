@@ -25,9 +25,10 @@ export default plugin;
 1. **Views never import from the host (`src/`).** They reach the GraphQL client, auth, events
    and config through the context the plugin kept in `setup()` (see `useShopContext()` in the
    shop plugin) — plugins stay host-independent.
-2. **Enablement and overrides** live in `plugins.json`:
-   `{ "<name>": { "enabled": true, "config": { ... } } }`. The host only loads plugins listed
-   in its compiled `availablePlugins` map (`src/main.ts`).
+2. **Enablement and overrides** live in the instance's `oxid-config.yaml` (`plugins:` section,
+   see `instance-configuration.md`): `enabled`, `source` (`bundled` plugins are in the compiled
+   `bundledPlugins` map in `src/main.ts`; `external` ones are loaded from the instance's
+   `plugins/<name>/index.js`) and `config` merged over the plugin's `defaultConfig`.
 3. **i18n keys** are namespaced by plugin name: `t('shop.cart.headline')`.
 4. **Stores** are ordinary Pinia stores inside the plugin (`useCartStore`); the host provides
    the Pinia instance.

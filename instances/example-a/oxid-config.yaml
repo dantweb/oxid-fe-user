@@ -1,0 +1,19 @@
+# Example instance A — the defaults: English + German, every bundled plugin.
+instance:
+  id: example-a
+  name: OXID Storefront
+shop:
+  graphql_url: /graphql/
+i18n:
+  default_locale: en
+  fallback_locale: en
+  locales: [en, de]
+plugins:
+  shop:
+    config:
+      products_per_page: 12
+  checkout: {}
+  payment-paypal: {}
+  payment-stripe: {}
+  payment-mollie: {}
+  dashboard: {}

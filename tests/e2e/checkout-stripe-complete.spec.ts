@@ -5,6 +5,7 @@ import {
   STRIPE_TEST_CARDS,
   TEST_USER,
 } from './fixtures/test-data';
+import { signIn } from './helpers/session';
 
 /**
  * A completed payment, end to end: storefront checkout → Stripe's hosted page
@@ -13,14 +14,6 @@ import {
  */
 test.describe.configure({ mode: 'serial' });
 test.setTimeout(180_000);
-
-async function signIn(page: Page): Promise<void> {
-  await page.goto('/login');
-  await page.locator('input[name=email]').fill(TEST_USER.email);
-  await page.locator('input[name=password]').fill(TEST_USER.password);
-  await page.getByTestId('login-form').locator('button[type=submit]').click();
-  await expect(page.getByTestId('nav-logout')).toBeVisible({ timeout: 20_000 });
-}
 
 async function ensureAddress(page: Page): Promise<void> {
   const form = page.getByTestId('address-form');
@@ -64,7 +57,7 @@ async function payOnStripeHostedPage(page: Page, cardNumber: string): Promise<vo
 test('pays with a Stripe test card, the order is committed and live in the dashboard', async ({
   page,
 }) => {
-  await signIn(page);
+  await signIn(page, { email: TEST_USER.email, password: TEST_USER.password });
 
   await page.goto(`/shop/product/${ORDERABLE_PRODUCT_ID}`);
   await page.getByTestId('add-to-cart').click();
@@ -98,7 +91,7 @@ test('pays with a Stripe test card, the order is committed and live in the dashb
 });
 
 test('a declined card keeps the shopper on Stripe with the decline message', async ({ page }) => {
-  await signIn(page);
+  await signIn(page, { email: TEST_USER.email, password: TEST_USER.password });
 
   await page.goto(`/shop/product/${ORDERABLE_PRODUCT_ID}`);
   await page.getByTestId('add-to-cart').click();

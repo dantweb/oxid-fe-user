@@ -10,7 +10,8 @@ browser ──► nginx (prod) / vite dev server
 oxid-fe-user (host app)
   src/            bootstrap, core wiring, router+guards, i18n, layout, login
   plugins/<name>/ IPlugin: routes, nav, i18n, config, setup()   ← shop today;
-  plugins.json    which plugins load + config overrides           payments in sprint 04
+  oxid-config.yaml  the INSTANCE: shop name, languages, which plugins load + their config
+                    (+ public/ overlay, plugins/ folder) — see instance-configuration.md
 
 oxid-fe-core (library @dantweb/oxid-fe-core)
   GraphqlClient · GraphqlError(errorCode)      transport + stable error codes

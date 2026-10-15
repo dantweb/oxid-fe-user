@@ -2,12 +2,20 @@ server {
     listen 80;
     server_name _;
 
-    root /usr/share/nginx/html;
-    index index.html;
+    # The instance (mounted at ${INSTANCE_DIR}): oxid-config.yaml, public/ overlay, plugins/
+    # See docs/instance-configuration.md
 
-    # SPA history fallback
-    location / {
-        try_files $uri $uri/ /index.html;
+    # instance configuration — never cached, so a redeployed config applies on the next load
+    location = /oxid-config.yaml {
+        alias ${INSTANCE_DIR}/oxid-config.yaml;
+        default_type application/yaml;
+        add_header Cache-Control "no-store";
+    }
+
+    # external plugins of this instance (ES modules)
+    location /plugins/ {
+        alias ${INSTANCE_DIR}/plugins/;
+        add_header Cache-Control "no-cache";
     }
 
     # Same-origin GraphQL: the app never does CORS
@@ -23,5 +31,17 @@ server {
     location /out/pictures/ {
         proxy_pass ${API_UPSTREAM}/out/pictures/;
         proxy_set_header Host $host;
+    }
+
+    # The instance's public/ overlay wins over the compiled app (robots.txt, favicon, images…)
+    location / {
+        root ${INSTANCE_DIR}/public;
+        try_files $uri @app;
+    }
+
+    # The compiled app, SPA history fallback
+    location @app {
+        root /usr/share/nginx/html;
+        try_files $uri $uri/ /index.html;
     }
 }

@@ -1,0 +1,45 @@
+# oxid-config.yaml — per-INSTANCE configuration of one oxid-fe-user deployment.
+#
+# Copy to `oxid-config.yaml` (gitignored in dev) or mount the instance's own file at
+# /etc/oxid-fe-instance/oxid-config.yaml in the container. One compiled bundle serves any
+# number of instances (shop1.oxid.dev, shop2.oxid.dev, ...): only this file and the instance's
+# optional `public/` and `plugins/` folders differ. Full reference: docs/instance-configuration.md
+#
+# !! The browser downloads this file (/oxid-config.yaml). Never put secrets in it. !!
+
+# Identity — shown as the shop name in header, footer, page titles
+instance:
+  id: default
+  name: OXID Storefront
+
+# The shop's GraphQL endpoint as the BROWSER reaches it. Keep it same-origin (the container's
+# nginx proxies /graphql/ to API_UPSTREAM) — a cross-origin URL needs CORS on the shop.
+shop:
+  graphql_url: /graphql/
+
+# Languages of this instance. Bundled catalogs: en, de.
+i18n:
+  default_locale: en
+  fallback_locale: en
+  locales: [en, de] # more than one -> a language switcher appears in the header
+
+# Plugins of this instance. Key = plugin name.
+#   enabled: false            -> not loaded (no routes, no nav entry)
+#   source: bundled (default) -> compiled into the app bundle
+#   source: external          -> ES module loaded at runtime from <instance>/plugins/<name>/index.js
+#   config: {...}             -> merged over the plugin's defaultConfig
+plugins:
+  shop:
+    enabled: true
+    config:
+      products_per_page: 12
+  checkout:
+    enabled: true
+  payment-paypal:
+    enabled: true
+  payment-stripe:
+    enabled: true
+  payment-mollie:
+    enabled: true
+  dashboard:
+    enabled: true

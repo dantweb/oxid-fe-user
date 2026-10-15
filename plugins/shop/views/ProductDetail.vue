@@ -18,7 +18,7 @@ const failed = ref(false);
 const added = ref(false);
 
 useHead({
-  title: () => (product.value ? `${product.value.title} · OXID Storefront` : 'OXID Storefront'),
+  title: () => (product.value ? `${product.value.title} · ${t('app.title')}` : t('app.title')),
   meta: [
     { name: 'description', content: () => product.value?.shortDescription ?? '' },
     { property: 'og:title', content: () => product.value?.title ?? '' },

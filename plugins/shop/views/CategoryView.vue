@@ -26,7 +26,7 @@ const failed = ref(false);
 const hasNext = computed(() => products.value.length === pageSize);
 
 useHead({
-  title: () => (category.value ? `${category.value.title} · OXID Storefront` : 'OXID Storefront'),
+  title: () => (category.value ? `${category.value.title} · ${t('app.title')}` : t('app.title')),
 });
 
 async function load(): Promise<void> {

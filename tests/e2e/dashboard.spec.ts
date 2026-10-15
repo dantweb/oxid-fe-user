@@ -1,48 +1,28 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { fillLogin, registerCustomer, signIn, type Credentials } from './helpers/session';
 
 test.describe.configure({ mode: 'serial' });
 
-const SHOP_GRAPHQL = `${process.env.E2E_BASE_URL ?? 'http://localhost:5173'}/graphql/`;
-
-const email = `fe-dash-${Date.now()}@oxid-test.local`;
-const password = 'fe-dash-Pass1!';
+let user: Credentials;
 const newPassword = 'fe-dash-Pass2!';
 
 test.beforeAll(async ({ request }) => {
-  const response = await request.post(SHOP_GRAPHQL, {
-    data: {
-      query: `mutation { customerRegister(customer: { email: "${email}", password: "${password}" }) { id } }`,
-    },
-    headers: { 'User-Agent': 'Mozilla/5.0 (playwright)' },
-  });
-  expect((await response.json()).data.customerRegister.id).toBeTruthy();
+  user = await registerCustomer(request, 'fe-dash');
 });
-
-async function fillLogin(page: Page, pass: string): Promise<void> {
-  await page.locator('input[name=email]').fill(email);
-  await page.locator('input[name=password]').fill(pass);
-  await page.getByTestId('login-form').locator('button[type=submit]').click();
-  await expect(page.getByTestId('nav-logout')).toBeVisible({ timeout: 20_000 });
-}
-
-async function signIn(page: Page, pass: string): Promise<void> {
-  await page.goto('/login');
-  await fillLogin(page, pass);
-}
 
 test('guests are redirected to login; the account area is noindex', async ({ page }) => {
   await page.goto('/dashboard');
   await expect(page).toHaveURL(/\/login\?redirect=/, { timeout: 20_000 });
 
   // sign in on the redirected page itself, so redirect-back is exercised
-  await fillLogin(page, password);
+  await fillLogin(page, user);
   await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 }); // redirect-back after login
-  await expect(page.getByTestId('account-email')).toHaveText(email);
+  await expect(page.getByTestId('account-email')).toHaveText(user.email);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
 });
 
 test('orders, addresses and newsletter work end to end', async ({ page }) => {
-  await signIn(page, password);
+  await signIn(page, user);
   await page.goto('/dashboard');
 
   await page.getByTestId('tile-orders').click();
@@ -77,15 +57,15 @@ test('orders, addresses and newsletter work end to end', async ({ page }) => {
 });
 
 test('password change takes effect for the next sign-in', async ({ page }) => {
-  await signIn(page, password);
+  await signIn(page, user);
   await page.goto('/dashboard/profile');
-  await page.locator('input[name=oldPassword]').fill(password);
+  await page.locator('input[name=oldPassword]').fill(user.password);
   await page.locator('input[name=newPassword]').fill(newPassword);
   await page.getByTestId('change-password').click();
   await expect(page.getByTestId('password-changed')).toBeVisible({ timeout: 20_000 });
 
   await page.getByTestId('nav-logout').click();
-  await signIn(page, newPassword);
+  await signIn(page, { ...user, password: newPassword });
   await page.goto('/dashboard');
-  await expect(page.getByTestId('account-email')).toHaveText(email);
+  await expect(page.getByTestId('account-email')).toHaveText(user.email);
 });

@@ -10,14 +10,19 @@ GraphQL API (`graphql-base` + `graphql-storefront`). Modelled on
 ```
 src/            host: bootstrap, core wiring, router, i18n, layout, login
 plugins/shop/   first-party shop plugin: catalog, product detail, guest cart
-plugins.json    which plugins load, with per-plugin config overrides
-docs/           architecture, sprints, dev_log (incl. the binding engineering requirements)
-e2e/            Playwright smoke flows (run against the SDK shop)
+oxid-config.yaml.dist   template of the per-instance configuration (docs/instance-configuration.md)
+instances/      example instance folders (oxid-config.yaml + public/ + plugins/)
+docs/           architecture, instance configuration, sprints, dev_log
+tests/e2e/      Playwright flows (run against the SDK shop or a deployed instance)
 ```
 
 A plugin exports an `IPlugin` (routes, nav items, i18n messages, config, `setup()`); the host
-registers enabled plugins from `plugins.json` at boot. Payment providers arrive as plugins in
-sprint 04.
+registers the plugins the instance's `oxid-config.yaml` enables at boot (bundled, or external from
+the instance's `plugins/` folder). Payment providers are plugins too.
+
+One compiled bundle serves many instances (`shop1.oxid.dev`, `shop2.oxid.dev`, …): each differs
+only by its mounted instance folder — config, languages, plugin set, `public/` overlay. See
+[`docs/instance-configuration.md`](docs/instance-configuration.md).
 
 ## Development
 

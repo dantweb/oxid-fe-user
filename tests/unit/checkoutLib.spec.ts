@@ -19,6 +19,23 @@ describe('mapPayments', () => {
     expect(mapped[1].plugin).toBeNull();
     expect(mapped.map((entry) => entry.payment.title)).toEqual(['PayPal', 'Invoice']);
   });
+
+  it('hides a contract-first payment this instance has no plugin for', () => {
+    const payments = [
+      { id: 'oe_payments_paypal', title: 'PayPal' },
+      { id: 'oe_payments_mollie', title: 'Mollie' },
+      { id: 'oxidcashondel', title: 'Cash on delivery' },
+    ];
+
+    const mapped = mapPayments(payments, (id) =>
+      id === 'oe_payments_paypal' ? paypalPlugin : null,
+    );
+
+    expect(mapped.map((entry) => entry.payment.id)).toEqual([
+      'oe_payments_paypal',
+      'oxidcashondel',
+    ]);
+  });
 });
 
 describe('checkoutUrls', () => {
