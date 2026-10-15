@@ -7,7 +7,7 @@ test-card fixtures and `.env` credentials.
 
 ## Ask
 
-Playwright must *prove* three storefront capabilities end to end against the real shop:
+Playwright must _prove_ three storefront capabilities end to end against the real shop:
 
 1. **Catalog page** — products render with title/price/image; pagination pages through.
 2. **Product category page** — does not exist yet (deferred in sprint 02): implement
@@ -21,14 +21,14 @@ Playwright must *prove* three storefront capabilities end to end against the rea
 
 ## Stories
 
-| # | Story |
-|---|---|
-| S1 | Category page: `CATEGORY_QUERY` + category-filtered products; `CategoryView`; category links on the catalog; shared `ProductGrid` component (DRY with the catalog) |
-| S2 | e2e env: copy credentials from the Stripe module's `.env` → `tests/e2e/.env` (gitignored) + committed `.env.dist`; dotenv loading in `playwright.config.ts`; fixtures (test user, Stripe test cards) env-overridable like the Stripe module's fixture file |
-| S3 | `catalog.spec.ts` — cards content + pagination |
-| S4 | `category.spec.ts` — catalog → category → products of that category → product detail |
-| S5 | `checkout-stripe-complete.spec.ts` — full payment with a success test card, committed order, paid in dashboard |
-| S6 | Redeploy the public instance (prod image rebuild) and run the suite against `https://daniil.oxiddev.de:8443` too |
+| #   | Story                                                                                                                                                                                                                                                      |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S1  | Category page: `CATEGORY_QUERY` + category-filtered products; `CategoryView`; category links on the catalog; shared `ProductGrid` component (DRY with the catalog)                                                                                         |
+| S2  | e2e env: copy credentials from the Stripe module's `.env` → `tests/e2e/.env` (gitignored) + committed `.env.dist`; dotenv loading in `playwright.config.ts`; fixtures (test user, Stripe test cards) env-overridable like the Stripe module's fixture file |
+| S3  | `catalog.spec.ts` — cards content + pagination                                                                                                                                                                                                             |
+| S4  | `category.spec.ts` — catalog → category → products of that category → product detail                                                                                                                                                                       |
+| S5  | `checkout-stripe-complete.spec.ts` — full payment with a success test card, committed order, paid in dashboard                                                                                                                                             |
+| S6  | Redeploy the public instance (prod image rebuild) and run the suite against `https://daniil.oxiddev.de:8443` too                                                                                                                                           |
 
 ## Acceptance
 

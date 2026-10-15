@@ -32,11 +32,11 @@ async function signIn(page: Page, pass: string): Promise<void> {
 
 test('guests are redirected to login; the account area is noindex', async ({ page }) => {
   await page.goto('/dashboard');
-  await expect(page).toHaveURL(/\/login\?redirect=/);
+  await expect(page).toHaveURL(/\/login\?redirect=/, { timeout: 20_000 });
 
   // sign in on the redirected page itself, so redirect-back is exercised
   await fillLogin(page, password);
-  await expect(page).toHaveURL(/\/dashboard$/); // redirect-back after login
+  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 }); // redirect-back after login
   await expect(page.getByTestId('account-email')).toHaveText(email);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
 });

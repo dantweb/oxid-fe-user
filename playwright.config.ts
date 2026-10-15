@@ -1,4 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import { config as loadEnv } from 'dotenv';
+
+loadEnv({ path: 'tests/e2e/.env', quiet: true });
 
 /** Point the suite at a deployed storefront (e.g. https://daniil.oxiddev.de:8443). */
 const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:5173';

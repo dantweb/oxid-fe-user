@@ -27,8 +27,8 @@ const plugin: PaymentPlugin = {
     api = createProviderCheckoutApi(ctx.client, 'mollie');
   },
   start: (basketId, options) => checkoutApi().start(basketId, options),
-  checkoutReturn: (contractId, contractToken) =>
-    checkoutApi().checkoutReturn(contractId, contractToken),
+  checkoutReturn: (contractId, contractToken, returnParams) =>
+    checkoutApi().checkoutReturn(contractId, contractToken, returnParams),
   cancel: (contractId, contractToken) => checkoutApi().cancel(contractId, contractToken),
 };
 

@@ -24,11 +24,13 @@ const plugin: PaymentPlugin = {
   version: '0.1.0',
   paymentId: 'oe_payments_stripe_wallet',
   setup(ctx: PluginContext) {
-    api = createProviderCheckoutApi(ctx.client, 'stripe');
+    api = createProviderCheckoutApi(ctx.client, 'stripe', {
+      returnArguments: { session_id: 'checkoutSessionId' },
+    });
   },
   start: (basketId, options) => checkoutApi().start(basketId, options),
-  checkoutReturn: (contractId, contractToken) =>
-    checkoutApi().checkoutReturn(contractId, contractToken),
+  checkoutReturn: (contractId, contractToken, returnParams) =>
+    checkoutApi().checkoutReturn(contractId, contractToken, returnParams),
   cancel: (contractId, contractToken) => checkoutApi().cancel(contractId, contractToken),
 };
 

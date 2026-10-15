@@ -28,3 +28,16 @@ describe.each(cases)('$plugin.name', ({ plugin, paymentId, startField }) => {
     expect(execute.mock.calls[0][0]).toContain(`${startField}(`);
   });
 });
+
+describe('stripe return', () => {
+  it('forwards session_id from the return URL as checkoutSessionId', async () => {
+    const execute = vi.fn().mockResolvedValue({ stripeCheckoutReturn: { status: 'committed' } });
+    stripe.setup?.({ client: { execute } as unknown as GraphqlClient } as PluginContext);
+
+    await stripe.checkoutReturn('c1', 't1', { session_id: 'cs_test_1' });
+
+    const [document, variables] = execute.mock.calls[0];
+    expect(document).toContain('checkoutSessionId: $checkoutSessionId');
+    expect(variables).toMatchObject({ checkoutSessionId: 'cs_test_1' });
+  });
+});

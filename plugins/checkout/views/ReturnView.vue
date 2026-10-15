@@ -3,6 +3,7 @@ import { isPaymentPlugin, type CheckoutReturnResult } from '@dantweb/oxid-fe-cor
 import { onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { useCartStore } from '../../shop/stores/cart';
 import { useCheckoutContext } from '../index';
 import { useCheckoutStore } from '../stores/checkout';
@@ -12,6 +13,7 @@ const props = defineProps<{ provider: string }>();
 const { t } = useI18n();
 useHead({ meta: [{ name: 'robots', content: 'noindex,nofollow' }] });
 
+const route = useRoute();
 const checkout = useCheckoutStore();
 const cart = useCartStore();
 const { registry } = useCheckoutContext();
@@ -21,6 +23,15 @@ const orderNumber = ref<string | null>(null);
 
 const POLLS = 5;
 const POLL_DELAY_MS = 2000;
+
+/** The PSP's return-URL query parameters (Stripe: session_id) — a provider maps the ones it needs. */
+function returnParams(): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(route.query).filter(
+      (entry): entry is [string, string] => typeof entry[1] === 'string',
+    ),
+  );
+}
 
 onMounted(async () => {
   const attempt = checkout.attempt;
@@ -34,7 +45,11 @@ onMounted(async () => {
   for (let i = 0; i < POLLS; i++) {
     let result: CheckoutReturnResult;
     try {
-      result = await plugin.checkoutReturn(attempt.contractId, attempt.contractToken);
+      result = await plugin.checkoutReturn(
+        attempt.contractId,
+        attempt.contractToken,
+        returnParams(),
+      );
     } catch {
       state.value = 'failed';
       return;

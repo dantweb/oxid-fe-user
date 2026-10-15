@@ -90,7 +90,7 @@ export const CATEGORY_QUERY = /* GraphQL */ `
 `;
 
 export const CATEGORY_PRODUCTS_QUERY = /* GraphQL */ `
-  query categoryProducts($categoryId: String!, $offset: Int!, $limit: Int!) {
+  query categoryProducts($categoryId: ID!, $offset: Int!, $limit: Int!) {
     products(
       filter: { category: { equals: $categoryId } }
       pagination: { offset: $offset, limit: $limit }
