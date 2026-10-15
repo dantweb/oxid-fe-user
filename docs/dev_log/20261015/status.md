@@ -16,3 +16,4 @@
 **Violations ledger:** 0 suppressions/any-casts in both codebases (`npm run evaluate`).
 **Known debt:** fe-user line coverage 18.5% (views proven by e2e, not unit-mounted); codegen
 types, CLI plugin manager, refresh tokens deferred (named in the done-reports).
+| 06 e2e catalog/category/checkout | ✅ done | 17/17 incl. completed Stripe payment, local + public ([report](done/sprint-06-e2e-catalog-category-checkout.md)) |
