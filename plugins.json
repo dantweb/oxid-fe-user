@@ -18,5 +18,9 @@
   "payment-mollie": {
     "enabled": true,
     "config": {}
+  },
+  "dashboard": {
+    "enabled": true,
+    "config": {}
   }
 }

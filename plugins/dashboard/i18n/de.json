@@ -1,0 +1,51 @@
+{
+  "nav": "Mein Konto",
+  "home": {
+    "headline": "Mein Konto",
+    "orders": "Bestellungen",
+    "addresses": "Adressen",
+    "profile": "Profil",
+    "newsletter": "Newsletter",
+    "subscribed": "abonniert",
+    "unsubscribed": "nicht abonniert",
+    "subscribe": "Abonnieren",
+    "unsubscribe": "Abbestellen",
+    "pending": "Bestätigung ausstehend"
+  },
+  "orders": {
+    "headline": "Ihre Bestellungen",
+    "empty": "Noch keine Bestellungen.",
+    "number": "Bestellung",
+    "date": "Datum",
+    "total": "Summe",
+    "status": "Status",
+    "paid": "bezahlt",
+    "open": "offen",
+    "cancelled": "storniert"
+  },
+  "order": {
+    "headline": "Bestellung {number}",
+    "back": "Alle Bestellungen",
+    "item": "Artikel",
+    "amount": "Menge",
+    "notFound": "Bestellung nicht gefunden."
+  },
+  "addresses": {
+    "headline": "Adressen",
+    "invoice": "Rechnungsadresse",
+    "delivery": "Lieferadressen",
+    "add": "Lieferadresse hinzufügen",
+    "delete": "Löschen",
+    "empty": "Keine Lieferadressen.",
+    "saved": "Gespeichert"
+  },
+  "profile": {
+    "headline": "Profil",
+    "password": "Passwort ändern",
+    "oldPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "change": "Passwort ändern",
+    "changed": "Passwort geändert.",
+    "failed": "Passwortänderung fehlgeschlagen"
+  }
+}

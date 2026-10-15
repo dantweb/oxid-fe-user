@@ -1,0 +1,51 @@
+{
+  "nav": "My account",
+  "home": {
+    "headline": "My account",
+    "orders": "Orders",
+    "addresses": "Addresses",
+    "profile": "Profile",
+    "newsletter": "Newsletter",
+    "subscribed": "subscribed",
+    "unsubscribed": "not subscribed",
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe",
+    "pending": "confirmation pending"
+  },
+  "orders": {
+    "headline": "Your orders",
+    "empty": "No orders yet.",
+    "number": "Order",
+    "date": "Date",
+    "total": "Total",
+    "status": "Status",
+    "paid": "paid",
+    "open": "open",
+    "cancelled": "cancelled"
+  },
+  "order": {
+    "headline": "Order {number}",
+    "back": "All orders",
+    "item": "Item",
+    "amount": "Amount",
+    "notFound": "Order not found."
+  },
+  "addresses": {
+    "headline": "Addresses",
+    "invoice": "Invoice address",
+    "delivery": "Delivery addresses",
+    "add": "Add delivery address",
+    "delete": "Delete",
+    "empty": "No delivery addresses.",
+    "saved": "Saved"
+  },
+  "profile": {
+    "headline": "Profile",
+    "password": "Change password",
+    "oldPassword": "Current password",
+    "newPassword": "New password",
+    "change": "Change password",
+    "changed": "Password changed.",
+    "failed": "Password change failed"
+  }
+}

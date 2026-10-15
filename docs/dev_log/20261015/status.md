@@ -11,7 +11,7 @@
 | 02 oxid-fe-user             | ✅ done         | 7/7 unit, **Playwright 2/2 against the live shop**, gate green ([report](done/sprint-02-oxid-fe-user-host-app.md))                                             |
 | 03 SEO                      | ✅ done         | prerender+JSON-LD verified crawler-side ([report](done/sprint-03-seo-spa.md))                                                                                  |
 | 04 checkout/payment plugins | ✅ done         | e2e to sandbox.paypal.com + checkout.stripe.com ([report](done/sprint-04-checkout-payment-plugins.md)) — [plan](sprints/sprint-04-checkout-payment-plugins.md) |
-| 05 /dashboard               | ⬜ next         | [plan](sprints/sprint-05-user-dashboard.md)                                                                                                                    |
+| 05 /dashboard               | ✅ done         | e2e 3/3: guard+redirect-back, orders, addresses, password change ([report](done/sprint-05-user-dashboard.md)) — [plan](sprints/sprint-05-user-dashboard.md)    |
 
 **Violations ledger:** 0 suppressions/any-casts in both codebases (`npm run evaluate`).
 **Known debt:** fe-user line coverage 18.5% (views proven by e2e, not unit-mounted); codegen

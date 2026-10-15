@@ -15,6 +15,7 @@ const availablePlugins: Record<string, () => Promise<{ default: IPlugin }>> = {
   'payment-paypal': () => import('../plugins/payment-paypal'),
   'payment-stripe': () => import('../plugins/payment-stripe'),
   'payment-mollie': () => import('../plugins/payment-mollie'),
+  dashboard: () => import('../plugins/dashboard'),
 };
 
 interface PluginState {
