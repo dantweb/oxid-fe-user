@@ -1,0 +1,29 @@
+{
+  "app": {
+    "title": "OXID Storefront"
+  },
+  "nav": {
+    "home": "Home",
+    "login": "Sign in",
+    "logout": "Sign out"
+  },
+  "home": {
+    "headline": "Welcome to the OXID storefront",
+    "intro": "A standalone Vue 3 frontend over the OXID GraphQL Storefront.",
+    "toCatalog": "Browse the catalog"
+  },
+  "login": {
+    "headline": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "failed": "Sign-in failed"
+  },
+  "session": {
+    "expired": "Your session has expired. Please sign in again.",
+    "dismiss": "Dismiss"
+  },
+  "notFound": {
+    "headline": "Page not found"
+  }
+}
