@@ -11,6 +11,8 @@ export function createAppRouter(registry: PluginRegistry, auth: AuthService): Ro
         component: registry.overrideFor('home') ?? (() => import('./views/HomeView.vue')),
       },
       { path: '/login', component: () => import('./views/LoginView.vue') },
+      { path: '/forgot-password', component: () => import('./views/ForgotPasswordView.vue') },
+      { path: '/reset-password', component: () => import('./views/ResetPasswordView.vue') },
       ...registry.routes,
       { path: '/:pathMatch(.*)*', component: () => import('./views/NotFoundView.vue') },
     ],

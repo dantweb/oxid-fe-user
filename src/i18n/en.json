@@ -17,7 +17,8 @@
     "email": "Email",
     "password": "Password",
     "submit": "Sign in",
-    "failed": "Sign-in failed"
+    "failed": "Sign-in failed",
+    "forgot": "Forgot your password?"
   },
   "session": {
     "expired": "Your session has expired. Please sign in again.",
@@ -25,5 +26,22 @@
   },
   "notFound": {
     "headline": "Page not found"
+  },
+  "forgot": {
+    "headline": "Forgot your password?",
+    "intro": "Enter your e-mail address and we send you a link to choose a new password.",
+    "submit": "Send link",
+    "sent": "If this address belongs to an account, an e-mail with a link is on its way.",
+    "back": "Back to sign in"
+  },
+  "reset": {
+    "headline": "Choose a new password",
+    "password": "New password",
+    "repeat": "Repeat new password",
+    "submit": "Save password",
+    "mismatch": "The passwords do not match.",
+    "failed": "The password could not be changed — the link may have expired.",
+    "done": "Your password has been changed.",
+    "noKey": "This link is incomplete. Request a new one."
   }
 }

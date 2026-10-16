@@ -15,7 +15,13 @@
     "addToCart": "Add to cart",
     "added": "Added to cart",
     "back": "Back to catalog",
-    "loadFailed": "The product could not be loaded."
+    "loadFailed": "The product could not be loaded.",
+    "addToWishlist": "Add to wish list",
+    "addToGiftRegistry": "Add to gift registry",
+    "loginToSave": "Sign in to save for later",
+    "savedToWishlist": "Added to your wish list",
+    "savedToGiftRegistry": "Added to your gift registry",
+    "saveFailed": "The product could not be saved."
   },
   "cart": {
     "headline": "Your cart",

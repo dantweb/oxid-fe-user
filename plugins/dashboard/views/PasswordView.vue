@@ -1,25 +1,28 @@
 <script setup lang="ts">
 import { GraphqlError } from '@dantweb/oxid-fe-core';
 import { ref } from 'vue';
-import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
 import { PASSWORD_CHANGE } from '../api/queries';
+import AccountLayout from '../components/AccountLayout.vue';
 import { useDashboardContext } from '../index';
 
 const { t } = useI18n();
-useHead({ meta: [{ name: 'robots', content: 'noindex,nofollow' }] });
-
 const { client, auth } = useDashboardContext();
 const oldPassword = ref('');
 const newPassword = ref('');
+const repeatPassword = ref('');
 const changed = ref(false);
 const error = ref<string | null>(null);
 const busy = ref(false);
 
 async function changePassword(): Promise<void> {
-  busy.value = true;
   changed.value = false;
   error.value = null;
+  if (newPassword.value !== repeatPassword.value) {
+    error.value = t('dashboard.password.mismatch');
+    return;
+  }
+  busy.value = true;
   try {
     const data = await client.execute<{ customerPasswordChange: { accessToken: string } }>(
       PASSWORD_CHANGE,
@@ -30,8 +33,9 @@ async function changePassword(): Promise<void> {
     changed.value = true;
     oldPassword.value = '';
     newPassword.value = '';
+    repeatPassword.value = '';
   } catch (cause) {
-    error.value = cause instanceof GraphqlError ? cause.message : t('dashboard.profile.failed');
+    error.value = cause instanceof GraphqlError ? cause.message : t('dashboard.password.failed');
   } finally {
     busy.value = false;
   }
@@ -39,14 +43,14 @@ async function changePassword(): Promise<void> {
 </script>
 
 <template>
-  <section>
-    <h1>{{ t('dashboard.profile.headline') }}</h1>
-    <h2>{{ t('dashboard.profile.password') }}</h2>
-    <form class="password" data-testid="password-form" @submit.prevent="changePassword">
+  <AccountLayout active="password">
+    <h2>{{ t('dashboard.menu.password') }}</h2>
+    <form class="stack" data-testid="password-form" @submit.prevent="changePassword">
       <label>
-        {{ t('dashboard.profile.oldPassword') }}
+        {{ t('dashboard.password.old') }}
         <input
           v-model="oldPassword"
+          class="form-control"
           type="password"
           name="oldPassword"
           required
@@ -54,39 +58,50 @@ async function changePassword(): Promise<void> {
         />
       </label>
       <label>
-        {{ t('dashboard.profile.newPassword') }}
+        {{ t('dashboard.password.new') }}
         <input
           v-model="newPassword"
+          class="form-control"
           type="password"
           name="newPassword"
           required
           autocomplete="new-password"
         />
       </label>
-      <p v-if="error" role="alert" data-testid="password-error">{{ error }}</p>
-      <p v-if="changed" data-testid="password-changed">{{ t('dashboard.profile.changed') }}</p>
-      <button type="submit" :disabled="busy" data-testid="change-password">
-        {{ t('dashboard.profile.change') }}
+      <label>
+        {{ t('dashboard.password.repeat') }}
+        <input
+          v-model="repeatPassword"
+          class="form-control"
+          type="password"
+          name="repeatPassword"
+          required
+          autocomplete="new-password"
+        />
+      </label>
+      <p v-if="error" class="alert alert-danger" role="alert" data-testid="password-error">
+        {{ error }}
+      </p>
+      <p v-if="changed" class="alert alert-success" data-testid="password-changed">
+        {{ t('dashboard.password.changed') }}
+      </p>
+      <button type="submit" class="btn btn-primary" :disabled="busy" data-testid="change-password">
+        {{ t('dashboard.password.change') }}
       </button>
     </form>
-  </section>
+  </AccountLayout>
 </template>
 
 <style scoped>
-.password {
+.stack {
   display: flex;
+  max-width: 24rem;
   flex-direction: column;
-  gap: 12px;
-  max-width: 360px;
+  gap: 0.75rem;
 }
 label {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-input {
-  padding: 8px;
-  border: 1px solid var(--oxfe-color-input-border, #ccc);
-  border-radius: var(--oxfe-radius-sm, 4px);
+  gap: 0.25rem;
 }
 </style>

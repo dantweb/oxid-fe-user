@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
 import { ORDERS_QUERY, type CustomerOrder } from '../api/queries';
+import AccountLayout from '../components/AccountLayout.vue';
 import { useDashboardContext } from '../index';
 
 const { t } = useI18n();
@@ -28,8 +29,8 @@ function statusOf(order: CustomerOrder): string {
 </script>
 
 <template>
-  <section>
-    <h1>{{ t('dashboard.orders.headline') }}</h1>
+  <AccountLayout active="orders">
+    <h2>{{ t('dashboard.orders.headline') }}</h2>
     <p v-if="loaded && orders.length === 0" data-testid="orders-empty">
       {{ t('dashboard.orders.empty') }}
     </p>
@@ -55,7 +56,7 @@ function statusOf(order: CustomerOrder): string {
         </tr>
       </tbody>
     </table>
-  </section>
+  </AccountLayout>
 </template>
 
 <style scoped>

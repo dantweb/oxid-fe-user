@@ -39,3 +39,10 @@ One source of truth for local work and CI — the same commands, byte-identical
   PayPal needs `PAYPAL_BUYER_EMAIL` / `PAYPAL_BUYER_PASSWORD` in the gitignored `tests/e2e/.env`
   (see `.env.dist`). `payments-evidence.spec.ts` regenerates the screenshots in
   `docs/dev_log/20261016/reports/payments/`.
+- The account proof (`tests/e2e/account.spec.ts`, 11 tests) and the button proof
+  (`account-buttons.spec.ts`, 7 tests — computed styles against Apex's values, default and `apex`
+  theme) run on the dev server and every public port; use fresh customers, so they leave the shared
+  test user alone. Reviews and account deletion are shop settings: the default run proves the shop's
+  refusal is shown; `E2E_SHOP_ALLOWS_ACCOUNT_MANAGEMENT=1` (with `blAllowUsersToManageTheirReviews` and
+  `blAllowUsersToDeleteTheirAccount` switched on in the shop) proves the real deletion.
+  `account-evidence.spec.ts` regenerates `docs/dev_log/20261016/reports/account/`.

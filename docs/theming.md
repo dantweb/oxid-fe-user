@@ -27,7 +27,7 @@ resources/themes/<theme_id>/
 └── images/                    *.jpg, *.png, *.gif … copied as-is
 ```
 
-The repo ships `default` (the reference look), `dark` (a child theme of `default`) and `peroxid`
+The repo ships `default` (the reference look), `dark` and `apex` (child themes of `default`; `apex` is OXID's Apex look: black primary, Bootstrap-5 button geometry) and `peroxid`
 (ivory, obsidian and brass with serif display type — the `defaultTheme` of the peroxid layout
 plugin, see `layout-plugins.md`).
 

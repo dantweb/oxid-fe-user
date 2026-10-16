@@ -15,7 +15,13 @@
     "addToCart": "In den Warenkorb",
     "added": "Zum Warenkorb hinzugefügt",
     "back": "Zurück zum Katalog",
-    "loadFailed": "Das Produkt konnte nicht geladen werden."
+    "loadFailed": "Das Produkt konnte nicht geladen werden.",
+    "addToWishlist": "Auf den Merkzettel",
+    "addToGiftRegistry": "Auf den Wunschzettel",
+    "loginToSave": "Anmelden, um zu merken",
+    "savedToWishlist": "Zum Merkzettel hinzugefügt",
+    "savedToGiftRegistry": "Zum Wunschzettel hinzugefügt",
+    "saveFailed": "Der Artikel konnte nicht gemerkt werden."
   },
   "cart": {
     "headline": "Ihr Warenkorb",

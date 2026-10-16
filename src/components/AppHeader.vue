@@ -45,7 +45,13 @@ function logout(): void {
       <router-link v-if="!authStore.authenticated" to="/login" data-testid="nav-login">
         {{ t('nav.login') }}
       </router-link>
-      <button v-else type="button" data-testid="nav-logout" @click="logout">
+      <button
+        v-else
+        class="btn btn-outline-primary btn-sm"
+        type="button"
+        data-testid="nav-logout"
+        @click="logout"
+      >
         {{ t('nav.logout') }}
       </button>
     </nav>

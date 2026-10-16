@@ -1,101 +1,164 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
-import { ACCOUNT_QUERY, NEWSLETTER_SUBSCRIBE, NEWSLETTER_UNSUBSCRIBE } from '../api/queries';
-import { useDashboardContext } from '../index';
+import AccountLayout from '../components/AccountLayout.vue';
+import { summary } from '../state';
 
 const { t } = useI18n();
-useHead({ meta: [{ name: 'robots', content: 'noindex,nofollow' }] });
 
-const { client } = useDashboardContext();
-const email = ref('');
-const newsletterStatus = ref('UNSUBSCRIBED');
-const busy = ref(false);
-
-onMounted(load);
-
-async function load(): Promise<void> {
-  const data = await client.execute<{
-    customer: { email: string; newsletterStatus: { status: string } | null };
-  }>(ACCOUNT_QUERY);
-  email.value = data.customer.email;
-  newsletterStatus.value = data.customer.newsletterStatus?.status ?? 'UNSUBSCRIBED';
-}
-
-async function toggleNewsletter(): Promise<void> {
-  busy.value = true;
-  try {
-    if (subscribed()) {
-      await client.execute(NEWSLETTER_UNSUBSCRIBE, { email: email.value });
-    } else {
-      await client.execute(NEWSLETTER_SUBSCRIBE, { email: email.value });
-    }
-    await load();
-  } finally {
-    busy.value = false;
-  }
-}
-
-/** Subscribing yields MISSING_DOUBLE_OPTIN until the shopper confirms by email. */
-function subscribed(): boolean {
-  return newsletterStatus.value === 'SUBSCRIBED' || pending();
-}
-
-function pending(): boolean {
-  return newsletterStatus.value === 'MISSING_DOUBLE_OPTIN';
+/** A card is a heading, an optional line of text and a "More" button that links the whole card. */
+function newsletterLabel(status: string): string {
+  if (status === 'SUBSCRIBED') return t('dashboard.newsletter.subscribed');
+  if (status === 'MISSING_DOUBLE_OPTIN') return t('dashboard.newsletter.pending');
+  return t('dashboard.newsletter.unsubscribed');
 }
 </script>
 
 <template>
-  <section>
-    <h1>{{ t('dashboard.home.headline') }}</h1>
-    <p data-testid="account-email">{{ email }}</p>
-    <nav class="tiles">
-      <router-link to="/dashboard/orders" data-testid="tile-orders">{{
-        t('dashboard.home.orders')
-      }}</router-link>
-      <router-link to="/dashboard/addresses" data-testid="tile-addresses">{{
-        t('dashboard.home.addresses')
-      }}</router-link>
-      <router-link to="/dashboard/profile" data-testid="tile-profile">{{
-        t('dashboard.home.profile')
-      }}</router-link>
-    </nav>
-    <p>
-      {{ t('dashboard.home.newsletter') }}:
-      <span data-testid="newsletter-status">{{
-        pending()
-          ? t('dashboard.home.pending')
-          : subscribed()
-            ? t('dashboard.home.subscribed')
-            : t('dashboard.home.unsubscribed')
-      }}</span>
-      <button
-        type="button"
-        :disabled="busy"
-        data-testid="newsletter-toggle"
-        @click="toggleNewsletter"
-      >
-        {{ subscribed() ? t('dashboard.home.unsubscribe') : t('dashboard.home.subscribe') }}
-      </button>
-    </p>
-  </section>
+  <AccountLayout active="dashboard">
+    <p v-if="summary" class="account-email" data-testid="account-email">{{ summary.email }}</p>
+    <div v-if="summary" class="cards" data-testid="account-cards">
+      <div class="card card-lg" data-testid="card-orders">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.orders') }}</h2>
+        <div class="card-body">
+          <p class="card-text" data-testid="card-orders-count">
+            {{ t('dashboard.cards.orders') }} {{ summary.counts.orders }}
+          </p>
+          <router-link
+            to="/dashboard/orders"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-orders-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div class="card card-lg" data-testid="card-password">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.password') }}</h2>
+        <div class="card-body">
+          <router-link
+            to="/dashboard/password"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-password-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div class="card card-lg" data-testid="card-newsletter">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.newsletter') }}</h2>
+        <div class="card-body">
+          <p class="card-text" data-testid="newsletter-status">
+            {{ newsletterLabel(summary.newsletterStatus) }}
+          </p>
+          <router-link
+            to="/dashboard/newsletter"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-newsletter-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div class="card card-lg" data-testid="card-addresses">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.addresses') }}</h2>
+        <div class="card-body">
+          <router-link
+            to="/dashboard/addresses"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-addresses-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div v-if="summary.counts.downloads > 0" class="card card-lg" data-testid="card-downloads">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.downloads') }}</h2>
+        <div class="card-body">
+          <p class="card-text">{{ t('dashboard.cards.downloadsText') }}</p>
+          <router-link
+            to="/dashboard/downloads"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-downloads-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div class="card card-lg" data-testid="card-wishlist">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.wishlist') }}</h2>
+        <div class="card-body">
+          <p class="card-text" data-testid="card-wishlist-count">
+            {{ t('dashboard.cards.products') }} {{ summary.counts.wishlist }}
+          </p>
+          <router-link
+            to="/dashboard/wishlist"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-wishlist-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div class="card card-lg" data-testid="card-giftRegistry">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.giftRegistry') }}</h2>
+        <div class="card-body">
+          <p class="card-text" data-testid="card-giftRegistry-count">
+            {{ t('dashboard.cards.products') }} {{ summary.counts.giftRegistry }}
+          </p>
+          <router-link
+            to="/dashboard/gift-registry"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-giftRegistry-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div v-if="summary.counts.reviews > 0" class="card card-lg" data-testid="card-reviews">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.menu.reviews') }}</h2>
+        <div class="card-body">
+          <p class="card-text" data-testid="card-reviews-count">
+            {{ t('dashboard.menu.reviews') }} {{ summary.counts.reviews }}
+          </p>
+          <router-link
+            to="/dashboard/reviews"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-reviews-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+
+      <div class="card card-lg" data-testid="card-delete">
+        <h2 class="h4 card-header card-title">{{ t('dashboard.delete.headline') }}</h2>
+        <div class="card-body">
+          <p class="card-text">{{ t('dashboard.delete.cardText') }}</p>
+          <router-link
+            to="/dashboard/delete"
+            class="btn btn-outline-primary stretched-link"
+            data-testid="card-delete-more"
+            >{{ t('dashboard.cards.more') }}</router-link
+          >
+        </div>
+      </div>
+    </div>
+  </AccountLayout>
 </template>
 
 <style scoped>
-.tiles {
-  display: flex;
-  gap: 16px;
-  margin: 16px 0;
+.account-email {
+  margin: 0 0 1rem;
+  color: var(--oxfe-color-text-muted, #555);
 }
-.tiles a {
-  border: 1px solid var(--oxfe-color-border, #e2e2e2);
-  border-radius: var(--oxfe-radius-lg, 8px);
-  padding: 16px 24px;
-  text-decoration: none;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 1rem;
 }
-button {
-  margin-left: 12px;
+.card-text {
+  margin: 0 0 1rem;
+}
+.h4 {
+  font-size: 1.25rem;
 }
 </style>

@@ -1,6 +1,7 @@
-import type { IPlugin, PluginContext } from '@dantweb/oxid-fe-core';
+import { CoreEvents, type IPlugin, type PluginContext } from '@dantweb/oxid-fe-core';
 import de from './i18n/de.json';
 import en from './i18n/en.json';
+import { clearSummary } from './state';
 
 let context: PluginContext | null = null;
 
@@ -17,7 +18,7 @@ export function useDashboardContext(): PluginContext {
  */
 const plugin: IPlugin = {
   name: 'dashboard',
-  version: '0.1.0',
+  version: '0.2.0',
   routes: [
     {
       path: '/dashboard',
@@ -41,8 +42,40 @@ const plugin: IPlugin = {
       meta: { requiresAuth: true },
     },
     {
-      path: '/dashboard/profile',
-      component: () => import('./views/ProfileView.vue'),
+      path: '/dashboard/password',
+      component: () => import('./views/PasswordView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/dashboard/newsletter',
+      component: () => import('./views/NewsletterView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/dashboard/wishlist',
+      component: () => import('./views/SavedListView.vue'),
+      props: { kind: 'noticelist' },
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/dashboard/gift-registry',
+      component: () => import('./views/SavedListView.vue'),
+      props: { kind: 'wishlist' },
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/dashboard/reviews',
+      component: () => import('./views/ReviewsView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/dashboard/downloads',
+      component: () => import('./views/DownloadsView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/dashboard/delete',
+      component: () => import('./views/DeleteAccountView.vue'),
       meta: { requiresAuth: true },
     },
   ],
@@ -50,6 +83,9 @@ const plugin: IPlugin = {
   messages: { en, de },
   setup(ctx) {
     context = ctx;
+    // one customer's numbers must never show for the next one
+    ctx.events.on(CoreEvents.AuthLogin, clearSummary);
+    ctx.events.on(CoreEvents.AuthLogout, clearSummary);
   },
 };
 

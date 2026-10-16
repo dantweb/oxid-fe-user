@@ -379,7 +379,7 @@ function messageOf(cause: unknown): string {
         /></label>
         <label>{{ t('checkout.address.city') }}<input v-model="address.city" name="city" /></label>
         <p v-if="addressError" role="alert" data-testid="address-error">{{ addressError }}</p>
-        <button type="submit" :disabled="busy" data-testid="save-address">
+        <button class="btn btn-primary" type="submit" :disabled="busy" data-testid="save-address">
           {{ t('checkout.address.save') }}
         </button>
       </form>
@@ -420,7 +420,13 @@ function messageOf(cause: unknown): string {
           {{ t('checkout.payment.terms') }}
         </label>
         <p v-if="error" role="alert" data-testid="checkout-error">{{ error }}</p>
-        <button v-if="blocked" type="button" data-testid="retry-payment" @click="retryPayment">
+        <button
+          v-if="blocked"
+          class="btn btn-primary"
+          type="button"
+          data-testid="retry-payment"
+          @click="retryPayment"
+        >
           {{ t('checkout.payment.retry') }}
         </button>
         <p v-if="redirecting" data-testid="redirecting">{{ t('checkout.payment.redirecting') }}</p>
@@ -441,7 +447,14 @@ function messageOf(cause: unknown): string {
             {{ t('checkout.payment.confirmTermsFirst') }}
           </p>
         </div>
-        <button v-else type="button" :disabled="!readyToPay" data-testid="pay-now" @click="pay">
+        <button
+          v-else
+          class="btn btn-primary"
+          type="button"
+          :disabled="!readyToPay"
+          data-testid="pay-now"
+          @click="pay"
+        >
           {{ t('checkout.payment.pay') }}
         </button>
       </template>
@@ -482,14 +495,6 @@ input[type='text'],
   border-radius: var(--oxfe-radius-sm, 4px);
 }
 button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--oxfe-radius-md, 6px);
-  background: var(--oxfe-color-primary, #0a5d9c);
-  color: var(--oxfe-color-primary-contrast, #fff);
   margin-top: 12px;
-}
-button:disabled {
-  background: var(--oxfe-color-primary-disabled, #9bb8cc);
 }
 </style>

@@ -71,11 +71,21 @@ onMounted(() => {
     <p v-else-if="!loading && products.length === 0">{{ t('shop.catalog.empty') }}</p>
     <ProductGrid v-else :products="products" />
     <nav class="catalog__pager">
-      <button type="button" :disabled="page === 0 || loading" @click="goTo(page - 1)">
+      <button
+        class="btn btn-outline-primary btn-sm"
+        type="button"
+        :disabled="page === 0 || loading"
+        @click="goTo(page - 1)"
+      >
         {{ t('shop.catalog.prev') }}
       </button>
       <span>{{ page + 1 }}</span>
-      <button type="button" :disabled="!hasNext || loading" @click="goTo(page + 1)">
+      <button
+        class="btn btn-outline-primary btn-sm"
+        type="button"
+        :disabled="!hasNext || loading"
+        @click="goTo(page + 1)"
+      >
         {{ t('shop.catalog.next') }}
       </button>
     </nav>

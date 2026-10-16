@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
       </p>
       <button
         type="button"
-        class="mollie-inline__pay"
+        class="btn btn-primary mollie-inline__pay"
         :disabled="busy"
         data-testid="mollie-pay"
         @click="submit"
@@ -249,6 +249,9 @@ onBeforeUnmount(() => {
   margin-bottom: 0.25rem;
   font-size: 0.875rem;
 }
+.mollie-inline__pay {
+  margin-top: 0.5rem;
+}
 .mollie-inline__input {
   min-height: 2.5rem;
   padding: 0.5rem;
@@ -258,18 +261,5 @@ onBeforeUnmount(() => {
 }
 .mollie-inline__error {
   color: var(--oxfe-color-danger, #b00020);
-}
-.mollie-inline__pay {
-  margin-top: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  border: 0;
-  border-radius: var(--oxfe-radius, 4px);
-  background: var(--oxfe-color-primary, #1a73e8);
-  color: var(--oxfe-color-on-primary, #fff);
-  cursor: pointer;
-}
-.mollie-inline__pay:disabled {
-  opacity: 0.6;
-  cursor: progress;
 }
 </style>

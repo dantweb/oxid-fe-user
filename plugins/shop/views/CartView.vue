@@ -32,17 +32,29 @@ const currencyName = computed(() => cart.items[0]?.currencyName ?? 'EUR');
               <router-link :to="`/shop/product/${item.productId}`">{{ item.title }}</router-link>
             </td>
             <td>
-              <button type="button" @click="cart.updateAmount(item.productId, item.amount - 1)">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                type="button"
+                @click="cart.updateAmount(item.productId, item.amount - 1)"
+              >
                 −
               </button>
               <span class="cart__amount" data-testid="cart-amount">{{ item.amount }}</span>
-              <button type="button" @click="cart.updateAmount(item.productId, item.amount + 1)">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                type="button"
+                @click="cart.updateAmount(item.productId, item.amount + 1)"
+              >
                 +
               </button>
             </td>
             <td>{{ formatPrice(item.amount * item.price, item.currencyName) }}</td>
             <td>
-              <button type="button" @click="cart.removeItem(item.productId)">
+              <button
+                class="btn btn-link btn-sm"
+                type="button"
+                @click="cart.removeItem(item.productId)"
+              >
                 {{ t('shop.cart.remove') }}
               </button>
             </td>

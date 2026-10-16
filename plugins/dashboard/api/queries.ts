@@ -26,17 +26,6 @@ export interface DeliveryAddress {
   city: string;
 }
 
-export const ACCOUNT_QUERY = /* GraphQL */ `
-  query account {
-    customer {
-      email
-      newsletterStatus {
-        status
-      }
-    }
-  }
-`;
-
 export const ORDERS_QUERY = /* GraphQL */ `
   query accountOrders {
     customer {
@@ -109,5 +98,74 @@ export const NEWSLETTER_SUBSCRIBE = /* GraphQL */ `
 export const NEWSLETTER_UNSUBSCRIBE = /* GraphQL */ `
   mutation accountNewsletterUnsubscribe($email: String!) {
     newsletterUnsubscribe(newsletterStatus: { email: $email })
+  }
+`;
+
+export const EMAIL_UPDATE = /* GraphQL */ `
+  mutation accountEmailUpdate($email: String!) {
+    customerEmailUpdate(email: $email) {
+      email
+    }
+  }
+`;
+
+export interface CustomerReview {
+  id: string;
+  text: string | null;
+  rating: number | null;
+  createAt: string | null;
+  product: { id: string; title: string } | null;
+}
+
+export const REVIEWS_QUERY = /* GraphQL */ `
+  query accountReviews {
+    customer {
+      reviews {
+        id
+        text
+        rating
+        createAt
+        product {
+          id
+          title
+        }
+      }
+    }
+  }
+`;
+
+export const REVIEW_DELETE = /* GraphQL */ `
+  mutation accountReviewDelete($id: ID!) {
+    reviewDelete(reviewId: $id)
+  }
+`;
+
+export interface CustomerFile {
+  id: string;
+  filename: string;
+  downloadCount: number;
+  maxDownloadCount: number;
+  validUntil: string | null;
+  valid: boolean;
+}
+
+export const FILES_QUERY = /* GraphQL */ `
+  query accountFiles {
+    customer {
+      files {
+        id
+        filename
+        downloadCount
+        maxDownloadCount
+        validUntil
+        valid
+      }
+    }
+  }
+`;
+
+export const CUSTOMER_DELETE = /* GraphQL */ `
+  mutation accountCustomerDelete {
+    customerDelete
   }
 `;

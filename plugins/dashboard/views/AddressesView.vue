@@ -14,6 +14,8 @@ import {
   DELIVERY_ADDRESS_DELETE,
   type DeliveryAddress,
 } from '../api/queries';
+import AccountLayout from '../components/AccountLayout.vue';
+import EmailForm from '../components/EmailForm.vue';
 import { useDashboardContext } from '../index';
 
 const { t } = useI18n();
@@ -115,31 +117,43 @@ async function removeDelivery(id: string): Promise<void> {
 </script>
 
 <template>
-  <section>
-    <h1>{{ t('dashboard.addresses.headline') }}</h1>
+  <AccountLayout active="addresses">
+    <h2>{{ t('dashboard.menu.addresses') }}</h2>
+    <EmailForm />
 
     <h2>{{ t('dashboard.addresses.invoice') }}</h2>
     <form class="address" data-testid="invoice-form" @submit.prevent="saveInvoice">
       <label
-        >{{ t('checkout.address.firstName') }}<input v-model="invoice.firstName" name="firstName"
+        >{{ t('checkout.address.firstName')
+        }}<input v-model="invoice.firstName" class="form-control" name="firstName"
       /></label>
       <label
-        >{{ t('checkout.address.lastName') }}<input v-model="invoice.lastName" name="lastName"
+        >{{ t('checkout.address.lastName')
+        }}<input v-model="invoice.lastName" class="form-control" name="lastName"
       /></label>
       <label
-        >{{ t('checkout.address.street') }}<input v-model="invoice.street" name="street"
+        >{{ t('checkout.address.street')
+        }}<input v-model="invoice.street" class="form-control" name="street"
       /></label>
       <label
         >{{ t('checkout.address.streetNumber')
-        }}<input v-model="invoice.streetNumber" name="streetNumber"
+        }}<input v-model="invoice.streetNumber" class="form-control" name="streetNumber"
       /></label>
       <label
-        >{{ t('checkout.address.zipCode') }}<input v-model="invoice.zipCode" name="zipCode"
+        >{{ t('checkout.address.zipCode')
+        }}<input v-model="invoice.zipCode" class="form-control" name="zipCode"
       /></label>
-      <label>{{ t('checkout.address.city') }}<input v-model="invoice.city" name="city" /></label>
-      <p v-if="invoiceError" role="alert">{{ invoiceError }}</p>
-      <p v-if="invoiceSaved" data-testid="invoice-saved">{{ t('dashboard.addresses.saved') }}</p>
-      <button type="submit" data-testid="save-invoice">{{ t('checkout.address.save') }}</button>
+      <label
+        >{{ t('checkout.address.city')
+        }}<input v-model="invoice.city" class="form-control" name="city"
+      /></label>
+      <p v-if="invoiceError" class="alert alert-danger" role="alert">{{ invoiceError }}</p>
+      <p v-if="invoiceSaved" class="alert alert-success" data-testid="invoice-saved">
+        {{ t('dashboard.addresses.saved') }}
+      </p>
+      <button type="submit" class="btn btn-primary" data-testid="save-invoice">
+        {{ t('checkout.address.save') }}
+      </button>
     </form>
 
     <h2>{{ t('dashboard.addresses.delivery') }}</h2>
@@ -150,35 +164,54 @@ async function removeDelivery(id: string): Promise<void> {
       <li v-for="entry in deliveryAddresses" :key="entry.id" data-testid="delivery-row">
         {{ entry.firstName }} {{ entry.lastName }}, {{ entry.street }} {{ entry.streetNumber }},
         {{ entry.zipCode }} {{ entry.city }}
-        <button type="button" @click="removeDelivery(entry.id)">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          @click="removeDelivery(entry.id)"
+        >
           {{ t('dashboard.addresses.delete') }}
         </button>
       </li>
     </ul>
-    <button v-if="!adding" type="button" data-testid="add-delivery" @click="adding = true">
+    <button
+      v-if="!adding"
+      type="button"
+      class="btn btn-outline-primary"
+      data-testid="add-delivery"
+      @click="adding = true"
+    >
       {{ t('dashboard.addresses.add') }}
     </button>
     <form v-else class="address" data-testid="delivery-form" @submit.prevent="addDelivery">
       <label
-        >{{ t('checkout.address.firstName') }}<input v-model="draft.firstName" name="dFirstName"
+        >{{ t('checkout.address.firstName')
+        }}<input v-model="draft.firstName" class="form-control" name="dFirstName"
       /></label>
       <label
-        >{{ t('checkout.address.lastName') }}<input v-model="draft.lastName" name="dLastName"
+        >{{ t('checkout.address.lastName')
+        }}<input v-model="draft.lastName" class="form-control" name="dLastName"
       /></label>
       <label
-        >{{ t('checkout.address.street') }}<input v-model="draft.street" name="dStreet"
+        >{{ t('checkout.address.street')
+        }}<input v-model="draft.street" class="form-control" name="dStreet"
       /></label>
       <label
         >{{ t('checkout.address.streetNumber')
-        }}<input v-model="draft.streetNumber" name="dStreetNumber"
+        }}<input v-model="draft.streetNumber" class="form-control" name="dStreetNumber"
       /></label>
       <label
-        >{{ t('checkout.address.zipCode') }}<input v-model="draft.zipCode" name="dZipCode"
+        >{{ t('checkout.address.zipCode')
+        }}<input v-model="draft.zipCode" class="form-control" name="dZipCode"
       /></label>
-      <label>{{ t('checkout.address.city') }}<input v-model="draft.city" name="dCity" /></label>
-      <button type="submit" data-testid="save-delivery">{{ t('dashboard.addresses.add') }}</button>
+      <label
+        >{{ t('checkout.address.city')
+        }}<input v-model="draft.city" class="form-control" name="dCity"
+      /></label>
+      <button type="submit" class="btn btn-primary" data-testid="save-delivery">
+        {{ t('dashboard.addresses.add') }}
+      </button>
     </form>
-  </section>
+  </AccountLayout>
 </template>
 
 <style scoped>
@@ -192,11 +225,6 @@ async function removeDelivery(id: string): Promise<void> {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-.address input {
-  padding: 8px;
-  border: 1px solid var(--oxfe-color-input-border, #ccc);
-  border-radius: var(--oxfe-radius-sm, 4px);
 }
 li {
   margin: 6px 0;

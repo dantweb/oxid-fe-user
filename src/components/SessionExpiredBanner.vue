@@ -21,7 +21,9 @@ onBeforeUnmount(unsubscribe);
   <div v-if="visible" class="banner" role="alert" data-testid="session-expired">
     <span>{{ t('session.expired') }}</span>
     <router-link to="/login" @click="visible = false">{{ t('nav.login') }}</router-link>
-    <button type="button" @click="visible = false">{{ t('session.dismiss') }}</button>
+    <button class="btn btn-secondary btn-sm" type="button" @click="visible = false">
+      {{ t('session.dismiss') }}
+    </button>
   </div>
 </template>
 

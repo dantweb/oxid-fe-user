@@ -1,0 +1,23 @@
+{
+  "id": "apex",
+  "name": "Apex",
+  "description": "The look of OXID's Apex theme: black primary, white surfaces, Bootstrap-5 button geometry",
+  "version": "1.0.0",
+  "parent": "default",
+  "tokens": {
+    "--oxfe-color-primary": "#000000",
+    "--oxfe-color-primary-contrast": "#ffffff",
+    "--oxfe-color-primary-disabled": "#6c757d",
+    "--oxfe-color-text": "#000000",
+    "--oxfe-color-text-muted": "#6c757d",
+    "--oxfe-color-border": "#dee2e6",
+    "--oxfe-color-input-border": "#ced4da",
+    "--oxfe-color-background": "#ffffff",
+    "--oxfe-color-surface": "#f5f5f5",
+    "--oxfe-color-link": "#000000",
+    "--oxfe-color-accent": "#000000"
+  },
+  "images": {
+    "logo": "logo.png"
+  }
+}

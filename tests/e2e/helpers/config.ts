@@ -30,3 +30,19 @@ export async function storefront<T>(
   });
   return (await response.json()).data as T;
 }
+
+/** Every payment plugin on its hosted (redirect) page — for specs that prove the redirect flow. */
+export const HOSTED_PAYMENTS_CONFIG = `plugins:
+  shop: {}
+  checkout: {}
+  dashboard: {}
+  payment-paypal:
+    config:
+      mode: redirect
+  payment-stripe:
+    config:
+      mode: redirect
+  payment-mollie:
+    config:
+      mode: redirect
+`;

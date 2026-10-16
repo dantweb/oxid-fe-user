@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatPrice } from '@dantweb/oxid-fe-core';
+import { createSavedListsApi, formatPrice, type SavedListKind } from '@dantweb/oxid-fe-core';
 import { useHead } from '@unhead/vue';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -10,12 +10,16 @@ import { useCartStore } from '../stores/cart';
 const props = defineProps<{ id: string }>();
 
 const { t } = useI18n();
-const { client } = useShopContext();
+const { client, auth } = useShopContext();
+const lists = createSavedListsApi(client);
 const cart = useCartStore();
 
 const product = ref<ProductDetail | null>(null);
 const failed = ref(false);
 const added = ref(false);
+/** the saved list the product was just put on (wish list / gift registry), for the confirmation */
+const saved = ref<SavedListKind | null>(null);
+const saveFailed = ref(false);
 
 useHead({
   title: () => (product.value ? `${product.value.title} · ${t('app.title')}` : t('app.title')),
@@ -69,6 +73,20 @@ function addToCart(): void {
   });
   added.value = true;
 }
+
+async function saveTo(kind: SavedListKind): Promise<void> {
+  if (!product.value) {
+    return;
+  }
+  saved.value = null;
+  saveFailed.value = false;
+  try {
+    await lists.add(kind, product.value.id);
+    saved.value = kind;
+  } catch {
+    saveFailed.value = true;
+  }
+}
 </script>
 
 <template>
@@ -84,10 +102,52 @@ function addToCart(): void {
           {{ formatPrice(product.price.price, product.price.currency.name) }}
         </strong>
         <p class="product__long">{{ product.longDescription }}</p>
-        <button type="button" data-testid="add-to-cart" @click="addToCart">
-          {{ t('shop.product.addToCart') }}
-        </button>
-        <span v-if="added" data-testid="added-note">{{ t('shop.product.added') }}</span>
+        <div class="product__actions">
+          <button
+            class="btn btn-primary"
+            type="button"
+            data-testid="add-to-cart"
+            @click="addToCart"
+          >
+            {{ t('shop.product.addToCart') }}
+          </button>
+          <template v-if="auth.isAuthenticated()">
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              data-testid="add-to-wishlist"
+              @click="saveTo('noticelist')"
+            >
+              {{ t('shop.product.addToWishlist') }}
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              data-testid="add-to-gift-registry"
+              @click="saveTo('wishlist')"
+            >
+              {{ t('shop.product.addToGiftRegistry') }}
+            </button>
+          </template>
+          <router-link
+            v-else
+            :to="{ path: '/login', query: { redirect: `/shop/product/${product.id}` } }"
+            class="btn btn-link"
+            data-testid="login-to-save"
+            >{{ t('shop.product.loginToSave') }}</router-link
+          >
+        </div>
+        <p v-if="added" data-testid="added-note">{{ t('shop.product.added') }}</p>
+        <p v-if="saved" data-testid="saved-note">
+          {{
+            saved === 'noticelist'
+              ? t('shop.product.savedToWishlist')
+              : t('shop.product.savedToGiftRegistry')
+          }}
+        </p>
+        <p v-if="saveFailed" role="alert" data-testid="save-failed">
+          {{ t('shop.product.saveFailed') }}
+        </p>
       </div>
     </article>
   </section>
@@ -108,13 +168,12 @@ function addToCart(): void {
   white-space: pre-line;
   color: var(--oxfe-color-text-muted, #555);
 }
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--oxfe-radius-md, 6px);
-  background: var(--oxfe-color-primary, #0a5d9c);
-  color: var(--oxfe-color-primary-contrast, #fff);
-  margin-right: 12px;
+.product__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 @media (max-width: 700px) {
   .product {

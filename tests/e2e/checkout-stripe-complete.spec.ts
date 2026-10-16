@@ -5,6 +5,7 @@ import {
   STRIPE_TEST_CARDS,
   TEST_USER,
 } from './fixtures/test-data';
+import { HOSTED_PAYMENTS_CONFIG, withInstanceConfig } from './helpers/config';
 import { signIn } from './helpers/session';
 
 /**
@@ -57,6 +58,7 @@ async function payOnStripeHostedPage(page: Page, cardNumber: string): Promise<vo
 test('pays with a Stripe test card, the order is committed and live in the dashboard', async ({
   page,
 }) => {
+  await withInstanceConfig(page, HOSTED_PAYMENTS_CONFIG); // this spec proves the hosted flow
   await signIn(page, { email: TEST_USER.email, password: TEST_USER.password });
 
   await page.goto(`/shop/product/${ORDERABLE_PRODUCT_ID}`);
@@ -91,6 +93,7 @@ test('pays with a Stripe test card, the order is committed and live in the dashb
 });
 
 test('a declined card keeps the shopper on Stripe with the decline message', async ({ page }) => {
+  await withInstanceConfig(page, HOSTED_PAYMENTS_CONFIG); // this spec proves the hosted flow
   await signIn(page, { email: TEST_USER.email, password: TEST_USER.password });
 
   await page.goto(`/shop/product/${ORDERABLE_PRODUCT_ID}`);

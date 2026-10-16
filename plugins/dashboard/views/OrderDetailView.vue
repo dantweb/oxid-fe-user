@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
 import { ORDERS_QUERY, type CustomerOrder } from '../api/queries';
+import AccountLayout from '../components/AccountLayout.vue';
 import { useDashboardContext } from '../index';
 
 const props = defineProps<{ id: string }>();
@@ -25,13 +26,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section>
+  <AccountLayout active="orders">
     <router-link to="/dashboard/orders">← {{ t('dashboard.order.back') }}</router-link>
     <p v-if="loaded && !order" role="alert">{{ t('dashboard.order.notFound') }}</p>
     <template v-else-if="order">
-      <h1 data-testid="order-headline">
+      <h2 data-testid="order-headline">
         {{ t('dashboard.order.headline', { number: order.orderNumber }) }}
-      </h1>
+      </h2>
       <table class="items">
         <thead>
           <tr>
@@ -50,7 +51,7 @@ onMounted(async () => {
         <strong>{{ formatPrice(order.cost.total, order.cost.currency.name) }}</strong>
       </p>
     </template>
-  </section>
+  </AccountLayout>
 </template>
 
 <style scoped>

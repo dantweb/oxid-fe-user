@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { HOSTED_PAYMENTS_CONFIG, withInstanceConfig } from './helpers/config';
 import { registerCustomer, signIn, type Credentials } from './helpers/session';
 
 /**
@@ -21,6 +22,7 @@ test.beforeAll(async ({ request }) => {
 });
 
 async function signInAndFillCart(page: Page): Promise<void> {
+  await withInstanceConfig(page, HOSTED_PAYMENTS_CONFIG); // this spec proves the hosted flow
   await signIn(page, user);
 
   await page.goto(`/shop/product/${ORDERABLE_PRODUCT}`);

@@ -1,17 +1,5 @@
 {
   "nav": "My account",
-  "home": {
-    "headline": "My account",
-    "orders": "Orders",
-    "addresses": "Addresses",
-    "profile": "Profile",
-    "newsletter": "Newsletter",
-    "subscribed": "subscribed",
-    "unsubscribed": "not subscribed",
-    "subscribe": "Subscribe",
-    "unsubscribe": "Unsubscribe",
-    "pending": "confirmation pending"
-  },
   "orders": {
     "headline": "Your orders",
     "empty": "No orders yet.",
@@ -39,13 +27,78 @@
     "empty": "No delivery addresses.",
     "saved": "Saved"
   },
-  "profile": {
-    "headline": "Profile",
+  "hello": "Hello",
+  "remove": "Remove",
+  "menu": {
+    "whereTo": "Where do you want to go?",
+    "dashboard": "Summary",
     "password": "Change password",
-    "oldPassword": "Current password",
-    "newPassword": "New password",
+    "newsletter": "Newsletter settings",
+    "addresses": "Billing and shipping settings",
+    "orders": "Order history",
+    "wishlist": "My wish list",
+    "giftRegistry": "My gift registry",
+    "reviews": "My reviews",
+    "downloads": "My downloads"
+  },
+  "cards": {
+    "more": "More",
+    "orders": "Orders:",
+    "products": "Products:",
+    "downloadsText": "Your downloadable files from paid orders."
+  },
+  "password": {
+    "old": "Current password",
+    "new": "New password",
+    "repeat": "Repeat new password",
     "change": "Change password",
     "changed": "Password changed.",
+    "mismatch": "The new passwords do not match.",
     "failed": "Password change failed"
-  }
+  },
+  "newsletter": {
+    "status": "Status",
+    "subscribed": "subscribed",
+    "unsubscribed": "not subscribed",
+    "pending": "confirmation pending",
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe",
+    "failed": "Newsletter change failed"
+  },
+  "email": {
+    "label": "E-mail address",
+    "save": "Save e-mail",
+    "saved": "E-mail address saved.",
+    "failed": "The e-mail address could not be changed"
+  },
+  "wishlist": {
+    "empty": "Your wish list is empty."
+  },
+  "giftRegistry": {
+    "empty": "Your gift registry is empty.",
+    "visibility": "Visibility",
+    "public": "public",
+    "private": "private",
+    "makePublic": "Make public",
+    "makePrivate": "Make private"
+  },
+  "reviews": {
+    "empty": "You have not written any reviews.",
+    "failed": "The review could not be deleted"
+  },
+  "downloads": {
+    "empty": "No downloads yet.",
+    "failed": "Your downloads could not be loaded.",
+    "count": "{used} of {max} downloads used",
+    "expired": "expired"
+  },
+  "delete": {
+    "headline": "Delete my account",
+    "cardText": "Remove your account and personal data.",
+    "warning": "This permanently deletes your account. This cannot be undone.",
+    "confirm": "Yes, delete my account",
+    "cancel": "Cancel",
+    "failed": "The account could not be deleted"
+  },
+  "loadFailed": "Your account data could not be loaded."
 }

@@ -1,17 +1,5 @@
 {
   "nav": "Mein Konto",
-  "home": {
-    "headline": "Mein Konto",
-    "orders": "Bestellungen",
-    "addresses": "Adressen",
-    "profile": "Profil",
-    "newsletter": "Newsletter",
-    "subscribed": "abonniert",
-    "unsubscribed": "nicht abonniert",
-    "subscribe": "Abonnieren",
-    "unsubscribe": "Abbestellen",
-    "pending": "Bestätigung ausstehend"
-  },
   "orders": {
     "headline": "Ihre Bestellungen",
     "empty": "Noch keine Bestellungen.",
@@ -39,13 +27,78 @@
     "empty": "Keine Lieferadressen.",
     "saved": "Gespeichert"
   },
-  "profile": {
-    "headline": "Profil",
+  "hello": "Hallo",
+  "remove": "Entfernen",
+  "menu": {
+    "whereTo": "Wohin möchten Sie?",
+    "dashboard": "Übersicht",
     "password": "Passwort ändern",
-    "oldPassword": "Aktuelles Passwort",
-    "newPassword": "Neues Passwort",
+    "newsletter": "Newsletter-Einstellungen",
+    "addresses": "Rechnungs- und Versandeinstellungen",
+    "orders": "Bestellhistorie",
+    "wishlist": "Mein Merkzettel",
+    "giftRegistry": "Mein Wunschzettel",
+    "reviews": "Meine Bewertungen",
+    "downloads": "Meine Downloads"
+  },
+  "cards": {
+    "more": "Mehr",
+    "orders": "Bestellungen:",
+    "products": "Artikel:",
+    "downloadsText": "Ihre herunterladbaren Dateien aus bezahlten Bestellungen."
+  },
+  "password": {
+    "old": "Aktuelles Passwort",
+    "new": "Neues Passwort",
+    "repeat": "Neues Passwort wiederholen",
     "change": "Passwort ändern",
     "changed": "Passwort geändert.",
+    "mismatch": "Die neuen Passwörter stimmen nicht überein.",
     "failed": "Passwortänderung fehlgeschlagen"
-  }
+  },
+  "newsletter": {
+    "status": "Status",
+    "subscribed": "angemeldet",
+    "unsubscribed": "nicht angemeldet",
+    "pending": "Bestätigung ausstehend",
+    "subscribe": "Anmelden",
+    "unsubscribe": "Abmelden",
+    "failed": "Newsletter-Änderung fehlgeschlagen"
+  },
+  "email": {
+    "label": "E-Mail-Adresse",
+    "save": "E-Mail speichern",
+    "saved": "E-Mail-Adresse gespeichert.",
+    "failed": "Die E-Mail-Adresse konnte nicht geändert werden"
+  },
+  "wishlist": {
+    "empty": "Ihr Merkzettel ist leer."
+  },
+  "giftRegistry": {
+    "empty": "Ihr Wunschzettel ist leer.",
+    "visibility": "Sichtbarkeit",
+    "public": "öffentlich",
+    "private": "privat",
+    "makePublic": "Öffentlich machen",
+    "makePrivate": "Privat machen"
+  },
+  "reviews": {
+    "empty": "Sie haben noch keine Bewertungen geschrieben.",
+    "failed": "Die Bewertung konnte nicht gelöscht werden"
+  },
+  "downloads": {
+    "empty": "Noch keine Downloads.",
+    "failed": "Ihre Downloads konnten nicht geladen werden.",
+    "count": "{used} von {max} Downloads genutzt",
+    "expired": "abgelaufen"
+  },
+  "delete": {
+    "headline": "Mein Konto löschen",
+    "cardText": "Konto und persönliche Daten entfernen.",
+    "warning": "Ihr Konto wird dauerhaft gelöscht. Das kann nicht rückgängig gemacht werden.",
+    "confirm": "Ja, mein Konto löschen",
+    "cancel": "Abbrechen",
+    "failed": "Das Konto konnte nicht gelöscht werden"
+  },
+  "loadFailed": "Ihre Kontodaten konnten nicht geladen werden."
 }

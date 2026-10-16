@@ -45,12 +45,20 @@ async function submit(): Promise<void> {
     <form data-testid="login-form" @submit.prevent="submit">
       <label>
         {{ t('login.email') }}
-        <input v-model="email" type="email" name="email" required autocomplete="username" />
+        <input
+          v-model="email"
+          class="form-control"
+          type="email"
+          name="email"
+          required
+          autocomplete="username"
+        />
       </label>
       <label>
         {{ t('login.password') }}
         <input
           v-model="password"
+          class="form-control"
           type="password"
           name="password"
           required
@@ -58,7 +66,12 @@ async function submit(): Promise<void> {
         />
       </label>
       <p v-if="error" class="login__error" role="alert" data-testid="login-error">{{ error }}</p>
-      <button type="submit" :disabled="busy">{{ t('login.submit') }}</button>
+      <button class="btn btn-primary" type="submit" :disabled="busy">
+        {{ t('login.submit') }}
+      </button>
+      <router-link to="/forgot-password" class="btn btn-link" data-testid="forgot-link">{{
+        t('login.forgot')
+      }}</router-link>
     </form>
   </section>
 </template>
@@ -76,11 +89,6 @@ label {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-input {
-  padding: 8px;
-  border: 1px solid var(--oxfe-color-input-border, #ccc);
-  border-radius: var(--oxfe-radius-sm, 4px);
 }
 .login__error {
   color: var(--oxfe-color-danger, #b00020);
