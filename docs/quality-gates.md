@@ -14,8 +14,9 @@ One source of truth for local work and CI — the same commands, byte-identical
 | Violations report     | `npm run evaluate`                        | ✓               | ✓                        |
 
 - CI (`.github/workflows/ci.yml` in each repo) runs the full set on every push to `main` and
-  every PR. oxid-fe-user CI checks out `dantweb/oxid-fe-core` as a sibling and needs the
-  `REPO_READ_TOKEN` secret (fine-grained PAT, read-only on oxid-fe-core).
+  every PR. oxid-fe-user CI checks out `dantweb/oxid-fe-core` as a sibling over SSH with the
+  `CORE_DEPLOY_KEY` secret — the private half of a **read-only deploy key** registered on
+  oxid-fe-core (it can read that one repository and nothing else; no personal token in CI).
 - `npm run evaluate` prints suppressions/any-casts in source, coverage, and outdated
   dependencies. Reviewed at every sprint close; the count only goes down or is justified in the
   day's dev_log (see the engineering requirements).

@@ -13,11 +13,12 @@ jobs:
         with:
           path: oxid-fe-user
       # file:../oxid-fe-core — sibling checkout, same layout as the SDK root.
-      # Needs the REPO_READ_TOKEN secret (fine-grained PAT, read access to dantweb/oxid-fe-core).
+      # CORE_DEPLOY_KEY: a READ-ONLY deploy key of dantweb/oxid-fe-core (least privilege:
+      # it can read that one repo and nothing else).
       - uses: actions/checkout@v4
         with:
           repository: dantweb/oxid-fe-core
-          token: ${{ secrets.REPO_READ_TOKEN || github.token }}
+          ssh-key: ${{ secrets.CORE_DEPLOY_KEY }}
           path: oxid-fe-core
       - uses: actions/setup-node@v4
         with:
