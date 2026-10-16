@@ -13,7 +13,9 @@ export type PaymentKey = keyof typeof PAYMENT_IDS;
 /** Fills the invoice address when the account has none yet (the saved one is reused otherwise). */
 export async function ensureAddress(page: Page): Promise<void> {
   const form = page.getByTestId('address-form');
-  if (await form.isVisible({ timeout: 5_000 }).catch(() => false)) {
+  // wait for the page to know which it is: the form (no address yet) or the saved address
+  await form.or(page.getByTestId('address-saved')).first().waitFor({ timeout: 30_000 });
+  if (await form.isVisible()) {
     await page.locator('input[name=firstName]').fill('Marc');
     await page.locator('input[name=lastName]').fill('Muster');
     await page.locator('input[name=street]').fill('Bertoldstr');

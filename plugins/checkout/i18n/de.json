@@ -14,7 +14,9 @@
   },
   "delivery": {
     "headline": "2 · Versand",
-    "loading": "Versandarten werden geladen…"
+    "loading": "Versandarten werden geladen…",
+    "none": "Für die Artikel in Ihrem Warenkorb ist keine Versandart verfügbar.",
+    "backToCart": "Zurück zum Warenkorb"
   },
   "payment": {
     "headline": "3 · Zahlung",

@@ -14,7 +14,9 @@
   },
   "delivery": {
     "headline": "2 · Delivery",
-    "loading": "Loading delivery options…"
+    "loading": "Loading delivery options…",
+    "none": "No delivery method is available for the items in your cart.",
+    "backToCart": "Back to the cart"
   },
   "payment": {
     "headline": "3 · Payment",

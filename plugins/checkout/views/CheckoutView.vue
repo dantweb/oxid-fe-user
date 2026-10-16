@@ -60,6 +60,8 @@ const addressError = ref<string | null>(null);
 
 const basketId = ref<string | null>(null);
 const deliveryMethods = ref<DeliveryMethod[]>([]);
+/** The shop answered, and offers this cart no delivery method (its shipping rules). */
+const noDelivery = ref(false);
 const deliveryMethodId = ref<string | null>(null);
 const payments = ref<PaymentChoice[]>([]);
 const selectedPaymentId = ref<string | null>(null);
@@ -266,6 +268,7 @@ async function prepareBasket(): Promise<void> {
       { basketId: basketId.value },
     );
     deliveryMethods.value = methods.basketDeliveryMethods;
+    noDelivery.value = methods.basketDeliveryMethods.length === 0;
     if (methods.basketDeliveryMethods.length === 1) {
       await selectDelivery(methods.basketDeliveryMethods[0].id);
     }
@@ -391,6 +394,23 @@ function messageOf(cause: unknown): string {
       <template v-if="addressSaved">
         <h2>{{ t('checkout.delivery.headline') }}</h2>
         <p v-if="busy && !deliveryMethods.length">{{ t('checkout.delivery.loading') }}</p>
+        <div v-if="noDelivery" class="alert alert-danger" role="alert" data-testid="no-delivery">
+          {{ t('checkout.delivery.none') }}
+          <router-link to="/shop/cart" data-testid="no-delivery-cart">{{
+            t('checkout.delivery.backToCart')
+          }}</router-link>
+        </div>
+        <p
+          v-if="error && !deliveryMethodId"
+          class="alert alert-danger"
+          role="alert"
+          data-testid="checkout-error"
+        >
+          {{ error }}
+          <router-link to="/shop/cart" data-testid="checkout-error-cart">{{
+            t('checkout.delivery.backToCart')
+          }}</router-link>
+        </p>
         <label v-for="method in deliveryMethods" :key="method.id" class="choice">
           <input
             type="radio"
