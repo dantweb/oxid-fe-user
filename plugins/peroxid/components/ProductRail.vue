@@ -106,7 +106,7 @@ function scroll(direction: 1 | -1): void {
 }
 h2 {
   margin: 0;
-  font-family: var(--oxfe-font-heading, Georgia, serif);
+  font-family: var(--oxfe-font-heading, sans-serif);
   font-size: clamp(1.4rem, 4vw, 2rem);
   font-weight: 500;
 }

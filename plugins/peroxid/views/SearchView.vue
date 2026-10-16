@@ -93,7 +93,7 @@ watch(
 
 <style scoped>
 h1 {
-  font-family: var(--oxfe-font-heading, Georgia, serif);
+  font-family: var(--oxfe-font-heading, sans-serif);
   font-size: clamp(1.5rem, 5vw, 2.25rem);
   font-weight: 500;
   overflow-wrap: anywhere;

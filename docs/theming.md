@@ -28,7 +28,7 @@ resources/themes/<theme_id>/
 ```
 
 The repo ships `default` (the reference look), `dark` and `apex` (child themes of `default`; `apex` is OXID's Apex look: black primary, Bootstrap-5 button geometry) and `peroxid`
-(ivory, obsidian and brass with serif display type — the `defaultTheme` of the peroxid layout
+(ivory, obsidian and brass with Roboto sans-serif type — the `defaultTheme` of the peroxid layout
 plugin, see `layout-plugins.md`).
 
 ## `config.json`

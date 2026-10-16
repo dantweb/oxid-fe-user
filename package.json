@@ -1,7 +1,7 @@
 {
   "name": "@dantweb/oxid-fe-user",
   "version": "0.1.0",
-  "description": "Standalone Vue 3 storefront for headless OXID eShop \u2014 plugin-host app on @dantweb/oxid-fe-core.",
+  "description": "Standalone Vue 3 storefront for headless OXID eShop — plugin-host app on @dantweb/oxid-fe-core.",
   "license": "BUSL-1.1",
   "private": true,
   "type": "module",
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@dantweb/oxid-fe-core": "file:../oxid-fe-core",
+    "@fontsource/roboto": "^5.3.0",
     "@unhead/vue": "^1.11.18",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",

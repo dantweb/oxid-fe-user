@@ -35,7 +35,7 @@ const year = new Date().getFullYear();
   padding: 32px 0;
 }
 .pxd-footer__brand {
-  font-family: var(--oxfe-font-heading, Georgia, serif);
+  font-family: var(--oxfe-font-heading, sans-serif);
   letter-spacing: 0.3em;
   text-transform: uppercase;
 }

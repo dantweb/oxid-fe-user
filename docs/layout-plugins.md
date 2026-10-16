@@ -54,7 +54,7 @@ polished — on any other theme.
 ## `peroxid` — the first layout plugin (its `defaultTheme` is the `peroxid` theme)
 
 A modern, premium ("high-end boutique") storefront layout: ivory and obsidian, brass accent,
-serif display type.
+Roboto sans-serif type.
 
 **Header** — fixed content width **1200 px**, fluid below that (`width: min(1200px, 100% − gutters)`),
 sticky:

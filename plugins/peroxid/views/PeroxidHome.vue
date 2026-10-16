@@ -71,7 +71,7 @@ useHead({
 }
 .pxd-hero__title {
   margin: 0 0 16px;
-  font-family: var(--oxfe-font-heading, Georgia, serif);
+  font-family: var(--oxfe-font-heading, sans-serif);
   font-size: clamp(2.1rem, 7vw, 3.75rem);
   font-weight: 500;
   line-height: 1.08;

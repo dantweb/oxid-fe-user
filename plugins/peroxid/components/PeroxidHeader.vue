@@ -194,7 +194,7 @@ function logout(): void {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--oxfe-color-text, #15130f);
-  font-family: var(--oxfe-font-heading, Georgia, serif);
+  font-family: var(--oxfe-font-heading, sans-serif);
   font-size: 1.15rem;
   font-weight: 500;
   letter-spacing: 0.32em;
