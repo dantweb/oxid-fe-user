@@ -1,13 +1,13 @@
 {
   "name": "@dantweb/oxid-fe-user",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Standalone Vue 3 storefront for headless OXID eShop — plugin-host app on @dantweb/oxid-fe-core.",
   "license": "BUSL-1.1",
   "private": true,
   "exports": {
     "./bootstrap": "./src/bootstrap.ts",
     "./plugins/*": "./plugins/*/index.ts",
-    "./plugins/*/components/*": "./plugins/*/components/*",
+    "./plugin-components/*": "./plugins/*",
     "./theme-tools": "./scripts/theme-build.mjs",
     "./public-config": "./scripts/public-config.mjs",
     "./package.json": "./package.json"
