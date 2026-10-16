@@ -41,8 +41,7 @@ export const instanceConfigSchema = z
         default: z.string().min(1).default('default'),
         active: z.string().min(1).optional(),
       })
-      .default({})
-      .transform((theme) => ({ default: theme.default, active: theme.active ?? theme.default })),
+      .default({}),
     plugins: z.record(pluginEntrySchema).default(defaultPlugins),
   })
   .superRefine((config, ctx) => {

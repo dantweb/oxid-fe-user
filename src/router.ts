@@ -5,7 +5,11 @@ export function createAppRouter(registry: PluginRegistry, auth: AuthService): Ro
   const router = createRouter({
     history: createWebHistory(),
     routes: [
-      { path: '/', component: () => import('./views/HomeView.vue') },
+      {
+        path: '/',
+        // a layout plugin (e.g. peroxid) may take over the front page
+        component: registry.overrideFor('home') ?? (() => import('./views/HomeView.vue')),
+      },
       { path: '/login', component: () => import('./views/LoginView.vue') },
       ...registry.routes,
       { path: '/:pathMatch(.*)*', component: () => import('./views/NotFoundView.vue') },

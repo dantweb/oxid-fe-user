@@ -1,17 +1,28 @@
 <script setup lang="ts">
+import { inject } from 'vue';
 import AppFooter from './components/AppFooter.vue';
 import AppHeader from './components/AppHeader.vue';
 import SessionExpiredBanner from './components/SessionExpiredBanner.vue';
+import { coreKey } from './core';
+import { resolveLayoutView } from './layout';
+
+const core = inject(coreKey);
+if (!core) {
+  throw new Error('App needs the app core');
+}
+// a layout plugin (e.g. peroxid) may take over the header and footer
+const Header = resolveLayoutView(core.registry, 'header', AppHeader);
+const Footer = resolveLayoutView(core.registry, 'footer', AppFooter);
 </script>
 
 <template>
   <div class="app">
     <SessionExpiredBanner />
-    <AppHeader />
+    <component :is="Header" />
     <main class="app__main">
       <router-view />
     </main>
-    <AppFooter />
+    <component :is="Footer" />
   </div>
 </template>
 

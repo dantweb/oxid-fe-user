@@ -6,6 +6,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { loadInstanceConfig } from './config/load';
 import { loadConfiguredPlugins } from './config/plugins';
+import { resolveActiveTheme } from './config/theme';
 import { coreKey, createCore, themeKey } from './core';
 import { createAppI18n } from './i18n';
 import { createAppRouter } from './router';
@@ -24,20 +25,28 @@ async function bootstrap(): Promise<void> {
   const config = await loadInstanceConfig();
   const core = createCore(config.shop.graphql_url);
 
-  // the theme (config + parent chain + stylesheet) loads while the plugins resolve
-  const [theme, plugins] = await Promise.all([
-    loadTheme({ active: config.theme.active, fallback: config.theme.default }),
-    loadConfiguredPlugins(config, bundledPlugins, (path) => import(/* @vite-ignore */ path)),
-  ]);
+  const plugins = await loadConfiguredPlugins(
+    config,
+    bundledPlugins,
+    (path) => import(/* @vite-ignore */ path),
+  );
   for (const { plugin, config: pluginConfig } of plugins) {
     core.registry.register(plugin, pluginConfig);
   }
-  await core.registry.setupAll({
-    client: core.client,
-    auth: core.auth,
-    events: core.events,
-    registry: core.registry,
-  });
+
+  // explicit theme.active > a plugin's defaultTheme > theme.default; the theme loads while the plugins set up
+  const [theme] = await Promise.all([
+    loadTheme({
+      active: resolveActiveTheme(config.theme, core.registry.defaultTheme()),
+      fallback: config.theme.default,
+    }),
+    core.registry.setupAll({
+      client: core.client,
+      auth: core.auth,
+      events: core.events,
+      registry: core.registry,
+    }),
+  ]);
 
   const app = createApp(App);
   app.use(createPinia());
