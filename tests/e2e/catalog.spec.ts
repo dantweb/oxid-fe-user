@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { productsPerPage } from './helpers/instance-config';
 
 test.describe('catalog page', () => {
   test('renders product cards with title, price and image', async ({ page }) => {
@@ -6,7 +7,7 @@ test.describe('catalog page', () => {
 
     const cards = page.getByTestId('product-card');
     await expect(cards.first()).toBeVisible({ timeout: 20_000 });
-    await expect(cards).toHaveCount(12);
+    await expect(cards).toHaveCount(productsPerPage()); // from oxid-config.yaml
 
     await expect(page.getByTestId('product-card-title').first()).not.toBeEmpty();
     await expect(page.getByTestId('product-card-price').first()).toContainText('€');

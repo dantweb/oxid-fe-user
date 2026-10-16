@@ -1,9 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 import { CAPS_CATEGORY_ID, ORDERABLE_PRODUCT_ID } from './fixtures/test-data';
+import { deployedConfig, productsPerPage, shopName } from './helpers/instance-config';
 import { registerCustomer, signIn } from './helpers/session';
 
 /**
- * One compiled image, two instance folders (instances/example-a, instances/example-b):
+ * One compiled image, two instance folders (the deployed oxid-config.yaml, instances/example-b):
  * the two deployments must be visibly different shops. Run with both containers up:
  *   E2E_INSTANCE_A_URL=http://localhost:8090 E2E_INSTANCE_B_URL=http://localhost:8091 npx playwright test instances
  */
@@ -34,17 +35,24 @@ async function openCheckoutPayments(
   });
 }
 
-test.describe('instance A — the defaults', () => {
+test.describe('instance A — the deployed oxid-config.yaml', () => {
   test.use({ baseURL: A });
 
-  test('shop name, two languages, 12 products per page, indexable', async ({ page, request }) => {
+  test('shop name, languages and page size from its config, indexable', async ({
+    page,
+    request,
+  }) => {
     await page.goto('/');
-    await expect(page.locator('.header__brand')).toHaveText('OXID Storefront');
+    await expect(page.locator('.header__brand')).toHaveText(shopName());
     await expect(page.getByTestId('locale-switcher')).toBeVisible();
-    await expect(page.getByTestId('locale-switcher').locator('option')).toHaveCount(2);
+    await expect(page.getByTestId('locale-switcher').locator('option')).toHaveCount(
+      deployedConfig().i18n.locales.length,
+    );
 
     await page.goto('/shop');
-    await expect(page.getByTestId('product-card')).toHaveCount(12, { timeout: 20_000 });
+    await expect(page.getByTestId('product-card')).toHaveCount(productsPerPage(), {
+      timeout: 20_000,
+    });
     await expect(page.getByRole('link', { name: /Mützen-Angebote|Cap deals/ })).toHaveCount(0);
 
     const robots = await (await request.get('/robots.txt')).text();

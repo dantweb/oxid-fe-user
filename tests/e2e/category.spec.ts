@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { CAPS_CATEGORY_ID } from './fixtures/test-data';
+import { escapeRegExp, productsPerPage, shopName } from './helpers/instance-config';
 
 test.describe('product category page', () => {
   test('catalog → category link → that category’s products → product detail', async ({ page }) => {
@@ -10,7 +11,7 @@ test.describe('product category page', () => {
 
     await expect(page).toHaveURL(new RegExp(`/shop/category/${CAPS_CATEGORY_ID}$`));
     await expect(page.getByTestId('category-title')).toHaveText('Caps');
-    await expect(page).toHaveTitle(/Caps · OXID Storefront/);
+    await expect(page).toHaveTitle(new RegExp(`Caps · ${escapeRegExp(shopName())}`));
 
     const cards = page.getByTestId('product-card');
     await expect(cards.first()).toBeVisible({ timeout: 20_000 });
@@ -26,7 +27,7 @@ test.describe('product category page', () => {
     await page.goto(`/shop/category/${CAPS_CATEGORY_ID}`);
     await expect(page.getByTestId('product-card').first()).toBeVisible({ timeout: 20_000 });
     // Caps is a small category: strictly fewer than a full 12-item catalog page
-    expect(await page.getByTestId('product-card').count()).toBeLessThan(12);
+    expect(await page.getByTestId('product-card').count()).toBeLessThan(productsPerPage());
   });
 
   test('category page head is indexable-friendly', async ({ page }) => {

@@ -8,6 +8,7 @@ import {
   type ResolvedTheme,
 } from '@dantweb/oxid-fe-core';
 import type { InjectionKey } from 'vue';
+import type { InstanceConfig } from './config/schema';
 
 interface AppCore {
   client: GraphqlClient;
@@ -18,6 +19,9 @@ interface AppCore {
 }
 
 export const coreKey: InjectionKey<AppCore> = Symbol('oxfe-core');
+
+/** The validated oxid-config.yaml of this instance. */
+export const instanceKey: InjectionKey<InstanceConfig> = Symbol('oxfe-instance');
 
 /** The instance's loaded theme (null: running on the component fallbacks). */
 export const themeKey: InjectionKey<ResolvedTheme | null> = Symbol('oxfe-theme');

@@ -34,6 +34,7 @@ Sibling layout with the core is required (`file:../oxid-fe-core`):
 cd ../oxid-fe-core && npm ci && npm run build
 cd ../oxid-fe-user && npm ci
 cp .env.example .env            # VITE_SHOP_URL → your shop
+cp oxid-config.yaml.dist oxid-config.yaml   # this deployment's instance configuration
 npm run dev                      # http://localhost:5173, /graphql proxied to the shop
 ```
 

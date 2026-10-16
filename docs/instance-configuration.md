@@ -73,9 +73,31 @@ docker run -d -p 8082:80 -e API_UPSTREAM=https://shop2.example.com \
 deployment wiring, not frontend config. The image ships a default instance (the `.dist`) so it
 also runs with no mount.
 
+## Your deployment's file
+
+The deployment's own configuration is created from the template and is **not** committed
+(instance-specific, like `.env`):
+
+```bash
+cp oxid-config.yaml.dist oxid-config.yaml      # then edit: instance.id, instance.name, …
+```
+
+The SDK's `oxid-fe-user-prod` service mounts exactly this one file over the image's default
+instance file (`./oxid-fe-user/oxid-config.yaml:/etc/oxid-fe-instance/oxid-config.yaml`). Edit it
+**in place** and reload the page: the change is live, no rebuild, no restart. (Editors that save
+by replacing the file swap its inode and leave the single-file mount stale — then
+`docker compose restart oxid-fe-user-prod`.) `make run` uses it too; `make run INSTANCE=<dir>`
+mounts a whole instance folder instead.
+
+`tests/e2e/deployed-config.spec.ts` proves a deployment uses it: the server serves this exact
+file, and `/shop` shows its shop name, page size and languages — values deliberately different
+from the built-in defaults. Unit tests (`tests/unit/instanceFiles.spec.ts`) check that every
+config in the repo is _usable_: valid, only bundled plugins that exist, only themes that exist,
+only languages that have a catalog, every external plugin shipped.
+
 ## Local development
 
-`npm run dev` serves `oxid-config.yaml` from the project root at `/oxid-config.yaml` (falling
+`npm run dev` serves the same `oxid-config.yaml` from the project root at `/oxid-config.yaml` (falling
 back to `oxid-config.yaml.dist`). `oxid-config.yaml` is gitignored; copy the `.dist` and edit.
 
 ## Known limits

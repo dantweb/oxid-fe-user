@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
+import { escapeRegExp, shopName } from './helpers/instance-config';
 
 test('product page carries title, description, OG and JSON-LD Product', async ({ page }) => {
   await page.goto('/shop');
   await page.getByTestId('product-card').first().click();
   await expect(page.getByTestId('product-price')).toBeVisible({ timeout: 20_000 });
 
-  await expect(page).toHaveTitle(/ · OXID Storefront$/);
+  await expect(page).toHaveTitle(new RegExp(` · ${escapeRegExp(shopName())}$`));
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.+/);
   await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'product');
 

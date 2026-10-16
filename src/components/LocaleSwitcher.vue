@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { instanceKey } from '../core';
 import { LOCALE_STORAGE_KEY } from '../i18n';
 
 const { locale, availableLocales } = useI18n();
+// the instance's order (oxid-config.yaml `i18n.locales`), not vue-i18n's alphabetical one
+const locales = inject(instanceKey)?.i18n.locales ?? availableLocales;
 
 function change(event: Event): void {
   const next = (event.target as HTMLSelectElement).value;
@@ -17,13 +21,13 @@ function change(event: Event): void {
 
 <template>
   <select
-    v-if="availableLocales.length > 1"
+    v-if="locales.length > 1"
     :value="locale"
     aria-label="Language"
     data-testid="locale-switcher"
     @change="change"
   >
-    <option v-for="entry in availableLocales" :key="entry" :value="entry">
+    <option v-for="entry in locales" :key="entry" :value="entry">
       {{ entry.toUpperCase() }}
     </option>
   </select>

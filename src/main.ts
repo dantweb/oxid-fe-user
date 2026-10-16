@@ -7,7 +7,7 @@ import App from './App.vue';
 import { loadInstanceConfig } from './config/load';
 import { loadConfiguredPlugins } from './config/plugins';
 import { resolveActiveTheme } from './config/theme';
-import { coreKey, createCore, themeKey } from './core';
+import { coreKey, createCore, instanceKey, themeKey } from './core';
 import { createAppI18n } from './i18n';
 import { createAppRouter } from './router';
 
@@ -53,6 +53,7 @@ async function bootstrap(): Promise<void> {
   app.use(createHead());
   app.provide(coreKey, core);
   app.provide(themeKey, theme);
+  app.provide(instanceKey, config);
   app.use(createAppI18n(core.registry, config));
   app.use(createAppRouter(core.registry, core.auth));
   app.mount('#app');

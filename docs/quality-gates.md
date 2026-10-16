@@ -25,3 +25,5 @@ One source of truth for local work and CI — the same commands, byte-identical
 - The two-instance proof (`tests/e2e/instances.spec.ts`) skips unless both containers run:
   `E2E_BASE_URL=http://localhost:8090 E2E_INSTANCE_A_URL=http://localhost:8090 E2E_INSTANCE_B_URL=http://localhost:8091 npx playwright test instances`
   (SDK services `oxid-fe-user-prod` / `oxid-fe-user-prod-b`, built from one image).
+- `tests/e2e/deployed-config.spec.ts` proves a deployment really runs this repo's `oxid-config.yaml`:
+  `E2E_BASE_URL=https://daniil.oxiddev.de:8443 npx playwright test deployed-config`.

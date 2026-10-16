@@ -4,7 +4,7 @@
 SHELL        := /bin/bash
 SDK_ROOT     := $(abspath ..)
 IMAGE        ?= oxid-fe-user:local
-INSTANCE     ?= instances/example-a
+INSTANCE     ?=
 PORT         ?= 8090
 API_UPSTREAM ?= http://host.docker.internal
 CONTAINER    ?= oxid-fe-user-$(PORT)
@@ -35,12 +35,13 @@ compile: ## Recompile the app: themes + type-check + production bundle in dist/
 build: ## Build the Docker image from the SDK root (the core is compiled inside the image)
 	cd $(SDK_ROOT) && docker build -f oxid-fe-user/Dockerfile -t $(IMAGE) .
 
-run: build ## Build, then run the image with INSTANCE mounted: http://localhost:PORT
+run: build ## Build, then run the image: http://localhost:PORT — with oxid-config.yaml, or INSTANCE=<dir> (config + public/ + plugins/)
 	-@docker rm -f $(CONTAINER) >/dev/null 2>&1
+	@$(if $(INSTANCE),true,test -f oxid-config.yaml || cp oxid-config.yaml.dist oxid-config.yaml)
 	docker run -d --name $(CONTAINER) -p $(PORT):80 \
 		--add-host host.docker.internal:host-gateway -e API_UPSTREAM=$(API_UPSTREAM) \
-		-v $(abspath $(INSTANCE)):/etc/oxid-fe-instance:ro $(IMAGE)
-	@echo "oxid-fe-user [$(INSTANCE)] on http://localhost:$(PORT)"
+		-v $(if $(INSTANCE),$(abspath $(INSTANCE)):/etc/oxid-fe-instance:ro,$(abspath oxid-config.yaml):/etc/oxid-fe-instance/oxid-config.yaml:ro) $(IMAGE)
+	@echo "oxid-fe-user [$(if $(INSTANCE),$(INSTANCE),oxid-config.yaml)] on http://localhost:$(PORT)"
 
 stop: ## Stop and remove the container started by `make run`
 	-docker rm -f $(CONTAINER)
