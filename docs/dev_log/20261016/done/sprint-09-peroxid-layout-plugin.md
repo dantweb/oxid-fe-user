@@ -58,3 +58,32 @@
 - Browser language wins over `i18n.default_locale` when the instance offers it (documented
   behavior); the German-streams test therefore uses a German-only instance.
 - Not included: a shopper-facing theme/layout switcher; peroxid checkout styling beyond tokens.
+
+## Final numbers
+
+- Gate: lint, vue-tsc, knip, build green; **unit 84/84**; core v0.4.0 CI green, app CI green (`0fd0eaf`).
+- **Dev server, all projects** (desktop + 4 device profiles): 64 passed (12 skipped by design: the
+  instance specs without containers, and the phone-menu test on the Fold's wide screen).
+- **Public `https://daniil.oxiddev.de:8443`, all projects:** 64 passed, 0 failed in two full runs.
+  One earlier full run had a single failure — iPhone-WebKit menu drawer, 2.8 s in — that did not
+  reproduce in 7+ later runs (diagnostics now print project, element, display and viewport if it
+  does). Recorded as an unexplained intermittent, not as fixed.
+- **Three instances** (A deployed file, B example-b, C peroxid): 11/11 on localhost _and_ 11/11
+  over the public URLs below.
+
+## Public access to the three instances
+
+Cloudflare's proxy only forwards a fixed set of ports (HTTPS: 443, 2053, 2083, 2087, 2096, 8443),
+so `daniil.oxiddev.de:8090/8091/8092` cannot be reached through the tunnel — verified: no
+connection at all on those ports, http or https. The edge router (`cf-tunnel-template`) therefore
+maps the instances onto supported ports:
+
+| URL                              | Instance                            | Host port |
+| -------------------------------- | ----------------------------------- | --------- |
+| `https://daniil.oxiddev.de:8443` | A — the deployed `oxid-config.yaml` | 8090      |
+| `https://daniil.oxiddev.de:2053` | B — `example-b`                     | 8091      |
+| `https://daniil.oxiddev.de:2083` | C — `example-peroxid`               | 8092      |
+
+The two new origins are also in the shop's `sPaymentBaseHeadlessReturnOrigins` (checkout returns).
+Exactly 8090–8092 would need a DNS-only (grey-cloud) record with a port-forward — no tunnel, no
+Cloudflare TLS — or Cloudflare Spectrum; the router would then need those Host values added.

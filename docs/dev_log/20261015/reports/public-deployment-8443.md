@@ -49,3 +49,9 @@ app's vite config.
 ```bash
 E2E_BASE_URL=https://daniil.oxiddev.de:8443 npx playwright test   # 9/9
 ```
+
+## Update 2026-10-16 — instances B and C
+
+`:2053` → instance B and `:2083` → instance C (host ports 8091 / 8092) were added to the edge
+router; `:8090–8092` themselves cannot pass Cloudflare's proxy — see
+`dev_log/20261016/done/sprint-09-peroxid-layout-plugin.md`.
