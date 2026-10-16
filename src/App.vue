@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject } from 'vue';
+import { defineAsyncComponent, inject } from 'vue';
 import AppFooter from './components/AppFooter.vue';
 import AppHeader from './components/AppHeader.vue';
 import SessionExpiredBanner from './components/SessionExpiredBanner.vue';
@@ -13,6 +13,8 @@ if (!core) {
 // a layout plugin (e.g. peroxid) may take over the header and footer
 const Header = resolveLayoutView(core.registry, 'header', AppHeader);
 const Footer = resolveLayoutView(core.registry, 'footer', AppFooter);
+// global components plugins contribute (cookie consent, banners …)
+const overlays = core.registry.overlays().map((loader) => defineAsyncComponent(loader));
 </script>
 
 <template>
@@ -23,6 +25,7 @@ const Footer = resolveLayoutView(core.registry, 'footer', AppFooter);
       <router-view />
     </main>
     <component :is="Footer" />
+    <component :is="overlay" v-for="(overlay, index) in overlays" :key="index" />
   </div>
 </template>
 

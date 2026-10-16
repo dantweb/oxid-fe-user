@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 // @ts-expect-error untyped build script modules (plain .mjs by design)
-import { buildThemes } from '../../scripts/theme-build.mjs';
+import { buildThemes, stageThemeSources } from '../../scripts/theme-build.mjs';
 // @ts-expect-error untyped build script modules (plain .mjs by design)
 import { validateParentChains, validateThemeConfig } from '../../scripts/theme-lib.mjs';
 
@@ -115,6 +115,41 @@ describe('buildThemes', () => {
     const css = readFileSync(join(outDir(), 'dark/styles/styles.css'), 'utf-8');
     expect(css).toContain('background: #000000');
     expect(css).toContain('url("../../default/images/hero.jpg")');
+  });
+
+  it('copies a theme’s fonts/ next to its styles, so url("../fonts/…") resolves', async () => {
+    theme('default', { id: 'default', name: 'D' }, '@font-face { src: url("../fonts/a.woff2"); }');
+    mkdirSync(join(srcDir(), 'default', 'fonts'));
+    writeFileSync(join(srcDir(), 'default', 'fonts', 'a.woff2'), 'font');
+
+    await buildThemes({ srcDir: srcDir(), outDir: outDir() });
+
+    expect(existsSync(join(outDir(), 'default/fonts/a.woff2'))).toBe(true);
+    expect(readFileSync(join(outDir(), 'default/styles/styles.css'), 'utf-8')).toContain(
+      'url("../fonts/a.woff2")',
+    );
+  });
+
+  it('stageThemeSources merges base and project themes; a project theme can import its base parent', async () => {
+    theme('default', { id: 'default', name: 'D' }, '@bg: #fff; body { background: @bg; }');
+    const project = join(root, 'project');
+    mkdirSync(join(project, 'brand', 'styles'), { recursive: true });
+    writeFileSync(
+      join(project, 'brand', 'config.json'),
+      JSON.stringify({ id: 'brand', name: 'B', parent: 'default' }),
+    );
+    writeFileSync(
+      join(project, 'brand', 'styles', 'styles.less'),
+      '@import "../../default/styles/styles.less"; @bg: #123456;',
+    );
+
+    const staged = stageThemeSources([srcDir(), project], join(root, 'staged'));
+    const { built } = await buildThemes({ srcDir: staged, outDir: outDir() });
+
+    expect(built).toEqual(['brand', 'default']);
+    expect(readFileSync(join(outDir(), 'brand/styles/styles.css'), 'utf-8')).toContain(
+      'background: #123456',
+    );
   });
 
   it('builds a single theme with `only`', async () => {

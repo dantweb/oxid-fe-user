@@ -3,6 +3,7 @@
  *   config.json            copied
  *   styles/styles.css      compiled from styles/styles.less (LESS)
  *   images/*               copied (jpg, png, gif, …)
+ *   fonts/*                copied (woff2, … — referenced from the LESS as url('../fonts/…'))
  * Layout is preserved, so relative url("../images/…") in the LESS works in the output too.
  */
 import {
@@ -23,6 +24,23 @@ function listThemeFolders(srcDir) {
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
+}
+
+/**
+ * Merges theme source directories into one staging directory (a later directory wins on a name
+ * clash), so a project's themes can name a theme of the base package as their `parent` and
+ * `@import` its LESS. Returns the staging directory.
+ */
+export function stageThemeSources(srcDirs, stagingDir) {
+  rmSync(stagingDir, { recursive: true, force: true });
+  mkdirSync(stagingDir, { recursive: true });
+  for (const dir of srcDirs) {
+    for (const folder of listThemeFolders(dir)) {
+      rmSync(join(stagingDir, folder), { recursive: true, force: true });
+      cpSync(join(dir, folder), join(stagingDir, folder), { recursive: true });
+    }
+  }
+  return stagingDir;
 }
 
 /** Returns { built: string[] }; throws one Error listing every problem found. */
@@ -64,8 +82,10 @@ export async function buildThemes({ srcDir, outDir, only = null }) {
     mkdirSync(join(target, 'styles'), { recursive: true });
 
     cpSync(join(srcDir, folder, 'config.json'), join(target, 'config.json'));
-    if (existsSync(join(srcDir, folder, 'images'))) {
-      cpSync(join(srcDir, folder, 'images'), join(target, 'images'), { recursive: true });
+    for (const assets of ['images', 'fonts']) {
+      if (existsSync(join(srcDir, folder, assets))) {
+        cpSync(join(srcDir, folder, assets), join(target, assets), { recursive: true });
+      }
     }
 
     const lessFile = join(srcDir, folder, 'styles', 'styles.less');
