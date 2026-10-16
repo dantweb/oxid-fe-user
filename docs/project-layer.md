@@ -35,6 +35,7 @@ plugin is listed last so it wins its slots).
 
 ## Overriding a plugin
 
+0. **Extending a plugin:** the project's plugin spreads the original (`{ ...peroxid, overrides: { ...peroxid.overrides, footer } }`), keeps its `name` (so message namespaces such as `peroxid.*` keep working) and may be registered under a project-friendly loader key (`startStorefront({ plugins: { hydroxid: () => import(…) } })` → `hydroxid:` in `oxid-config.yaml`). Components of a plugin can be wrapped through `@dantweb/oxid-fe-user/plugins/<name>/components/<File>.vue`.
 1. **By name:** register a plugin under the bundled plugin's name; the project's replaces it. The
    usual shape is to _extend_ the original: `import base from '@dantweb/oxid-fe-user/plugins/dashboard'`
    and return `{ ...base, routes: [...], messages: { … } }`.
