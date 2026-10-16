@@ -10,6 +10,7 @@ import { registerCustomer, signIn } from './helpers/session';
  */
 const A = process.env.E2E_INSTANCE_A_URL;
 const B = process.env.E2E_INSTANCE_B_URL;
+const C = process.env.E2E_INSTANCE_C_URL;
 
 test.skip(!A || !B, 'set E2E_INSTANCE_A_URL and E2E_INSTANCE_B_URL to run the instance proof');
 
@@ -133,5 +134,38 @@ test.describe('instance B — same bundle, its own configuration', () => {
     const yaml = await (await request.get('/oxid-config.yaml')).text();
     expect(yaml).toContain('id: example-b');
     expect(yaml).toContain('name: Shop Zwei');
+  });
+});
+
+test.describe('instance C — the peroxid layout plugin from its own config', () => {
+  test.skip(!C, 'set E2E_INSTANCE_C_URL to run the peroxid instance proof');
+  test.use({ baseURL: C });
+
+  test('the layout plugin and its default theme apply with no explicit theme', async ({ page }) => {
+    await page.goto('/');
+
+    // layout: header, hero, three streams, footer from the plugin; the defaults are gone
+    await expect(page.getByTestId('pxd-header')).toBeVisible();
+    await expect(page.getByTestId('pxd-hero')).toBeVisible();
+    await expect(page.getByTestId('pxd-rail-title')).toHaveCount(3, { timeout: 20_000 });
+    await expect(page.getByTestId('pxd-footer')).toBeVisible();
+    await expect(page.locator('.header__brand')).toHaveCount(0);
+
+    // look: the instance names no theme, so the plugin's defaultTheme (peroxid) is what runs
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
+      'rgb(251, 249, 246)',
+    );
+    await expect(page.locator('#oxfe-theme-css')).toHaveAttribute('href', /\/themes\/peroxid\//);
+  });
+
+  test('the other two instances are untouched by the plugin', async ({ browser }) => {
+    for (const url of [A!, B!]) {
+      const context = await browser.newContext({ baseURL: url });
+      const page = await context.newPage();
+      await page.goto('/');
+      await expect(page.getByTestId('home-hero')).toBeVisible();
+      await expect(page.getByTestId('pxd-header')).toHaveCount(0);
+      await context.close();
+    }
   });
 });

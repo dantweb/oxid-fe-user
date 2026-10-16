@@ -1,0 +1,39 @@
+{
+  "menu": "Menü",
+  "account": "Konto",
+  "cart": "Warenkorb",
+  "cartCount": "Warenkorb, {count} Produkte",
+  "logout": "Abmelden",
+  "search": {
+    "placeholder": "Kollektion durchsuchen",
+    "label": "Suche",
+    "open": "Suche öffnen",
+    "close": "Suche schließen",
+    "submit": "Suchen",
+    "results": "Ergebnisse für „{query}“",
+    "none": "Nichts gefunden für „{query}“.",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "failed": "Die Suche konnte nicht abgeschlossen werden."
+  },
+  "hero": {
+    "eyebrow": "Die Peroxid-Auswahl",
+    "title": "Objekte, die bleiben",
+    "lead": "Eine sorgfältige Auswahl des Neuen, des Besonderen und des Wesentlichen — für alle, die auf Details achten.",
+    "cta": "Kollektion entdecken",
+    "secondary": "Angebote des Tages"
+  },
+  "streams": {
+    "new": "Neuheiten",
+    "sales": "Angebote des Tages",
+    "electronic": "Elektronik",
+    "viewAll": "Alle ansehen",
+    "prev": "Zurückblättern",
+    "next": "Weiterblättern"
+  },
+  "footer": {
+    "rights": "Alle Rechte vorbehalten.",
+    "shop": "Shop",
+    "search": "Suche"
+  }
+}

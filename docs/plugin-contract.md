@@ -32,7 +32,9 @@ export default plugin;
 3. **i18n keys** are namespaced by plugin name: `t('shop.cart.headline')`.
 4. **Stores** are ordinary Pinia stores inside the plugin (`useCartStore`); the host provides
    the Pinia instance.
-5. **Versioning**: a plugin names the core version range it needs in its repo/package; breaking
+5. **Layout plugins** may also `overrides` host views (header, footer, front page), declare
+   `requires` (plugins that must be enabled) and a `defaultTheme` — see `layout-plugins.md`.
+6. **Versioning**: a plugin names the core version range it needs in its repo/package; breaking
    changes to `IPlugin` bump core's major.
 
 ## Payment plugins (sprint 04 preview)

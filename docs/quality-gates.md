@@ -25,5 +25,10 @@ One source of truth for local work and CI — the same commands, byte-identical
 - The two-instance proof (`tests/e2e/instances.spec.ts`) skips unless both containers run:
   `E2E_BASE_URL=http://localhost:8090 E2E_INSTANCE_A_URL=http://localhost:8090 E2E_INSTANCE_B_URL=http://localhost:8091 npx playwright test instances`
   (SDK services `oxid-fe-user-prod` / `oxid-fe-user-prod-b`, built from one image).
+- The responsiveness proof (`tests/e2e/peroxid-responsive.spec.ts`) runs as four extra Playwright
+  **projects** — `iphone-17-pro` (WebKit: `npx playwright install webkit` once), `galaxy-s24`,
+  `galaxy-s25-ultra`, `galaxy-z-fold-7` (Chromium) — so a plain `npx playwright test` includes
+  them; `--project=chromium` runs the desktop suite only. Screenshots land in
+  `docs/dev_log/<day>/reports/peroxid-responsive/`.
 - `tests/e2e/deployed-config.spec.ts` proves a deployment really runs this repo's `oxid-config.yaml`:
   `E2E_BASE_URL=https://daniil.oxiddev.de:8443 npx playwright test deployed-config`.

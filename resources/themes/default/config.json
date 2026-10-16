@@ -20,7 +20,8 @@
     "--oxfe-color-warning-border": "#e0c668",
     "--oxfe-radius-sm": "4px",
     "--oxfe-radius-md": "6px",
-    "--oxfe-radius-lg": "8px"
+    "--oxfe-radius-lg": "8px",
+    "--oxfe-color-accent": "#0a5d9c"
   },
   "images": {
     "logo": "logo.png"

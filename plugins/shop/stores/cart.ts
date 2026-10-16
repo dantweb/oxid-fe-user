@@ -32,6 +32,8 @@ export const useCartStore = defineStore('shop-cart', {
   state: () => ({ items: loadItems() }),
   getters: {
     itemCount: (state): number => state.items.reduce((sum, item) => sum + item.amount, 0),
+    /** Distinct products (SKUs) in the cart — two units of one product count once. */
+    skuCount: (state): number => state.items.length,
     subtotal: (state): number =>
       state.items.reduce((sum, item) => sum + item.amount * item.price, 0),
     isEmpty(): boolean {

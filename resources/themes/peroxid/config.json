@@ -1,0 +1,32 @@
+{
+  "id": "peroxid",
+  "name": "Peroxid",
+  "description": "Ivory, obsidian and brass — the default theme of the peroxid layout plugin",
+  "version": "1.0.0",
+  "parent": "default",
+  "tokens": {
+    "--oxfe-color-primary": "#15130f",
+    "--oxfe-color-primary-contrast": "#fbf9f6",
+    "--oxfe-color-primary-disabled": "#8d877c",
+    "--oxfe-color-text": "#15130f",
+    "--oxfe-color-text-muted": "#6b655b",
+    "--oxfe-color-border": "#e4ded3",
+    "--oxfe-color-input-border": "#cfc8bb",
+    "--oxfe-color-background": "#fbf9f6",
+    "--oxfe-color-surface": "#f1ede6",
+    "--oxfe-color-link": "#15130f",
+    "--oxfe-color-accent": "#b08d57",
+    "--oxfe-color-danger": "#9b2c2c",
+    "--oxfe-color-warning-bg": "#f3ead6",
+    "--oxfe-color-warning-border": "#c9ab6b",
+    "--oxfe-radius-sm": "2px",
+    "--oxfe-radius-md": "4px",
+    "--oxfe-radius-lg": "6px",
+    "--oxfe-font-family": "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "--oxfe-font-heading": "'Cormorant Garamond', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
+    "--oxfe-container-max-width": "1200px"
+  },
+  "images": {
+    "logo": "logo.png"
+  }
+}

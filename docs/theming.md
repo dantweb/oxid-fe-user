@@ -27,7 +27,9 @@ resources/themes/<theme_id>/
 └── images/                    *.jpg, *.png, *.gif … copied as-is
 ```
 
-The repo ships `default` (the reference look) and `dark` (a child theme of `default`).
+The repo ships `default` (the reference look), `dark` (a child theme of `default`) and `peroxid`
+(ivory, obsidian and brass with serif display type — the `defaultTheme` of the peroxid layout
+plugin, see `layout-plugins.md`).
 
 ## `config.json`
 
@@ -54,8 +56,9 @@ The repo ships `default` (the reference look) and `dark` (a child theme of `defa
 ## The token contract (oxid-fe-core `styles/variables.css`)
 
 Colors `--oxfe-color-{primary, primary-contrast, primary-disabled, text, text-muted, border,
-input-border, background, surface, danger, warning-bg, warning-border, link}`; radii
-`--oxfe-radius-{sm, md, lg}`; `--oxfe-font-family`; `--oxfe-container-max-width`.
+input-border, background, surface, danger, warning-bg, warning-border, link, accent}`; radii
+`--oxfe-radius-{sm, md, lg}`; `--oxfe-font-family`, `--oxfe-font-heading`;
+`--oxfe-container-max-width`.
 Components always write `var(--oxfe-…, <fallback>)`.
 
 ## `styles/styles.less`
@@ -77,7 +80,10 @@ theme:
   active: dark # the theme this instance runs
 ```
 
-At boot the app loads `/themes/<active>/config.json`, merges the parent chain, applies the
+Which theme runs: an explicit `theme.active` wins; else the `defaultTheme` of an enabled
+(layout) plugin; else `theme.default`.
+
+At boot the app loads that theme's `/themes/<id>/config.json`, merges the parent chain, applies the
 tokens (`applyTheme`) and attaches the stylesheet. If `active` is unavailable it falls back to
 `default`; if that fails too the page runs on the component fallbacks (the default look).
 

@@ -50,3 +50,11 @@ plugins:
     enabled: true
   dashboard:
     enabled: true
+  # Layout plugins (docs/layout-plugins.md) override the header, footer and front page. Opt in:
+  # list it LAST so it wins its slots; it brings its own theme unless `theme.active` is set.
+  #peroxid:
+  #  config:
+  #    streams:
+  #      - { id: new, type: action, ref: oxnewest }
+  #      - { id: sales, type: action, ref: oxbargain }
+  #      - { id: electronic, type: category, ref: <category id> }

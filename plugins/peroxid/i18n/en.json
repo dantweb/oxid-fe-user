@@ -1,0 +1,39 @@
+{
+  "menu": "Menu",
+  "account": "Account",
+  "cart": "Cart",
+  "cartCount": "Cart, {count} products",
+  "logout": "Sign out",
+  "search": {
+    "placeholder": "Search the collection",
+    "label": "Search",
+    "open": "Open search",
+    "close": "Close search",
+    "submit": "Search",
+    "results": "Results for “{query}”",
+    "none": "Nothing found for “{query}”.",
+    "prev": "Previous",
+    "next": "Next",
+    "failed": "The search could not be completed."
+  },
+  "hero": {
+    "eyebrow": "The Peroxid edit",
+    "title": "Objects made to be kept",
+    "lead": "A considered selection of the new, the exceptional and the essential — chosen for those who notice the details.",
+    "cta": "Discover the collection",
+    "secondary": "Today’s offers"
+  },
+  "streams": {
+    "new": "New arrivals",
+    "sales": "Today’s offers",
+    "electronic": "Electronics",
+    "viewAll": "View all",
+    "prev": "Scroll back",
+    "next": "Scroll forward"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "shop": "Shop",
+    "search": "Search"
+  }
+}

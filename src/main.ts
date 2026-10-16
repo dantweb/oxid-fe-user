@@ -19,6 +19,7 @@ const bundledPlugins: Record<string, () => Promise<{ default: IPlugin }>> = {
   'payment-stripe': () => import('../plugins/payment-stripe'),
   'payment-mollie': () => import('../plugins/payment-mollie'),
   dashboard: () => import('../plugins/dashboard'),
+  peroxid: () => import('../plugins/peroxid'),
 };
 
 async function bootstrap(): Promise<void> {

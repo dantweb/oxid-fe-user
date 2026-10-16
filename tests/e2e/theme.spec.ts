@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { withInstanceConfig } from './helpers/config';
 
 /**
  * Theming: the instance's `theme:` config picks the look. The config is served per instance, so
@@ -7,9 +8,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 async function withTheme(page: Page, theme: { default: string; active?: string }): Promise<void> {
   const yaml = `theme:\n  default: ${theme.default}\n${theme.active ? `  active: ${theme.active}\n` : ''}`;
-  await page.route('**/oxid-config.yaml', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/yaml', body: yaml }),
-  );
+  await withInstanceConfig(page, yaml);
 }
 
 const bodyBackground = (page: Page): Promise<string> =>

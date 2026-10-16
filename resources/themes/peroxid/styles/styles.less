@@ -1,0 +1,82 @@
+// Peroxid theme — ivory, obsidian and brass. Child of default: re-declare the variables, add the look.
+@import '../../default/styles/styles.less';
+
+@color-primary: #15130f;
+@color-primary-contrast: #fbf9f6;
+@color-primary-disabled: #8d877c;
+@color-text: #15130f;
+@color-text-muted: #6b655b;
+@color-border: #e4ded3;
+@color-input-border: #cfc8bb;
+@color-background: #fbf9f6;
+@color-surface: #f1ede6;
+@color-link: #15130f;
+@color-accent: #b08d57;
+@color-danger: #9b2c2c;
+@color-warning-bg: #f3ead6;
+@color-warning-border: #c9ab6b;
+
+:root {
+  --oxfe-radius-sm: 2px;
+  --oxfe-radius-md: 4px;
+  --oxfe-radius-lg: 6px;
+  --oxfe-font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --oxfe-font-heading: 'Cormorant Garamond', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --oxfe-container-max-width: 1200px;
+}
+
+body {
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--oxfe-font-heading);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+a {
+  text-underline-offset: 0.22em;
+}
+
+::selection {
+  background: @color-accent;
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid @color-accent;
+  outline-offset: 2px;
+}
+
+// The peroxid layout plugin's hero: structure comes from the plugin, the photography from the theme.
+// `html .x.x` outranks the plugin's scoped styles whatever order the stylesheets load in.
+html .pxd-hero.pxd-hero {
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(10, 9, 8, 0.8) 0%,
+      rgba(10, 9, 8, 0.4) 55%,
+      rgba(10, 9, 8, 0.06) 100%
+    ),
+    url('../images/hero.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+@media (max-width: 600px) {
+  html .pxd-hero.pxd-hero {
+    background-image:
+      linear-gradient(
+        0deg,
+        rgba(10, 9, 8, 0.88) 0%,
+        rgba(10, 9, 8, 0.5) 60%,
+        rgba(10, 9, 8, 0.25) 100%
+      ),
+      url('../images/hero.jpg');
+    background-position: 70% center;
+  }
+}

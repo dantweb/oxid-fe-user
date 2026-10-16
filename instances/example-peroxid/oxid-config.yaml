@@ -1,0 +1,28 @@
+# Example instance C — the peroxid layout plugin.
+# No `theme.active`: the plugin's own `defaultTheme` (peroxid) applies. Set `theme.active` to
+# override it — an instance's explicit choice always wins (docs/layout-plugins.md).
+instance:
+  id: example-peroxid
+  name: Peroxid
+shop:
+  graphql_url: /graphql/
+i18n:
+  default_locale: en
+  fallback_locale: en
+  locales: [en, de]
+theme:
+  default: default
+plugins:
+  shop: {}
+  checkout: {}
+  payment-paypal: {}
+  payment-stripe: {}
+  payment-mollie: {}
+  dashboard: {}
+  # a layout plugin: listed last so it wins every slot it overrides
+  peroxid:
+    config:
+      streams:
+        - { id: new, type: action, ref: oxnewest }
+        - { id: sales, type: action, ref: oxbargain }
+        - { id: electronic, type: category, ref: 91c959d1be6af96041072032ead2daf0 }

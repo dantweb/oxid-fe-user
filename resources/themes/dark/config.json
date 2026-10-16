@@ -17,7 +17,8 @@
     "--oxfe-color-link": "#6db8ee",
     "--oxfe-color-danger": "#ff6b81",
     "--oxfe-color-warning-bg": "#3a3320",
-    "--oxfe-color-warning-border": "#6b5b1f"
+    "--oxfe-color-warning-border": "#6b5b1f",
+    "--oxfe-color-accent": "#4aa3e0"
   },
   "images": {
     "logo": "logo-dark.png"
