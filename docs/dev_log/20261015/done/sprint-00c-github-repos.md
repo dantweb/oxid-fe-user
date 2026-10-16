@@ -24,3 +24,12 @@
 2. Branch protection on `main` (PR + green CI) — enable once the secret is in and CI is green,
    otherwise sprint pushes would lock themselves out.
 3. First tagged release `v0.1.0` of core + GitHub Packages publish workflow (S4).
+
+## Update 2026-10-16 — open item 1 closed: oxid-fe-user CI is green
+
+The cross-repo checkout now uses a **read-only deploy key** on `dantweb/oxid-fe-core`
+(`CORE_DEPLOY_KEY` secret on oxid-fe-user) instead of a personal token: it can read that one
+repository and nothing else. A personal classic PAT was offered, but it carries admin/delete
+scopes (`admin:org`, `admin:enterprise`, `delete_repo`, `workflow`, …) — as a repo secret it
+would have given every workflow, including PR-triggered ones, full control of the account.
+First green run: 38877464289 (all quality-gate steps, 58 s).
