@@ -1,0 +1,22 @@
+{
+  "method": "Zahlungsart",
+  "card": "Kreditkarte",
+  "cardHolder": "Karteninhaber",
+  "cardNumber": "Kartennummer",
+  "expiryDate": "Ablaufdatum",
+  "verificationCode": "CVC",
+  "payWithCard": "Mit Karte bezahlen",
+  "payWith": "Mit {method} bezahlen",
+  "methods": {
+    "creditcard": "Kreditkarte",
+    "ideal": "iDEAL",
+    "bancontact": "Bancontact",
+    "paypal": "PayPal",
+    "banktransfer": "Überweisung",
+    "eps": "EPS",
+    "giropay": "giropay",
+    "sofort": "SOFORT"
+  },
+  "tokenFailed": "Die Kartendaten wurden nicht akzeptiert: {message}",
+  "redirecting": "Weiterleitung zu Mollie…"
+}

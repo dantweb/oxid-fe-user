@@ -18,7 +18,10 @@ plugins:
     config:
       products_per_page: 6
   checkout: {}
-  payment-stripe: {}
+  payment-stripe:
+    config:
+      mode: iframe
+      publishable_key: pk_test_51TuDSdDy2vmJsUOtehDDyjW7LVux6H4KhqkKHBKtscJ0pc8TtNlCSLMpgmcLU2dHeWzmBBIOM2YsUYnSD6eoV0UQ003raZjAtm
   dashboard: {}
   promo:
     source: external

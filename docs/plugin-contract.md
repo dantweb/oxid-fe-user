@@ -37,9 +37,16 @@ export default plugin;
 6. **Versioning**: a plugin names the core version range it needs in its repo/package; breaking
    changes to `IPlugin` bump core's major.
 
-## Payment plugins (sprint 04 preview)
+## Payment plugins
 
-Payment providers implement a `PaymentPlugin` extension of this contract (interface lands in
-core with sprint 04): `paymentId` (OXID id, e.g. `oe_payments_paypal`), `start()` mapping to the
-provider's `<provider>CheckoutStart` mutation, return/cancel route components, and an optional
-embedded-mode component (`clientSecret`).
+Payment providers implement `PaymentPlugin` (core): `paymentId` (OXID id, e.g.
+`oe_payments_paypal`), `start()` / `checkoutReturn()` / `cancel()` — one factory,
+`createProviderCheckoutApi(client, prefix, { returnArguments, startArguments })`, maps them to the
+provider's `<provider>CheckoutStart/Return/Cancel` mutations. `startArguments` forwards
+`PaymentStartOptions.providerOptions` to extra start arguments (Mollie: `method`, `cardToken`).
+
+**Inline (iframe) mode (core 0.5.0):** an optional `inlineComponent(): ViewLoader | null` returns
+the component that renders the provider's own UI inside the checkout page, or `null` for the
+hosted page (plugin `config.mode: redirect`, or the provider's public value is not configured).
+The component receives `InlinePaymentProps` and emits `attempt` / `settled` / `failed` /
+`cancelled`; see [payments.md](payments.md). Provider SDKs load through `loadScriptOnce`.

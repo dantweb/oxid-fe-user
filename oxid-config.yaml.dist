@@ -44,10 +44,24 @@ plugins:
     enabled: true
   payment-paypal:
     enabled: true
+    config:
+      mode: iframe # iframe (Smart Buttons, default) | redirect (PayPal's approval page)
+      client_id: REPLACE_ME # public by design; empty = hosted page. docs/payments.md
+      currency: EUR
+      intent: capture # shop capture mode automatic -> capture, manual -> authorize
   payment-stripe:
     enabled: true
+    config:
+      mode: iframe # iframe (inline, default) | redirect (Stripe's hosted page)
+      publishable_key: pk_test_REPLACE_ME # public by design; empty = hosted page. docs/payments.md
   payment-mollie:
     enabled: true
+    config:
+      mode: iframe
+      profile_id: pfl_REPLACE_ME # public by design; empty = hosted page. docs/payments.md
+      test_mode: true
+      locale: en_US
+      methods: [creditcard, ideal, bancontact]
   dashboard:
     enabled: true
   # Layout plugins (docs/layout-plugins.md) override the header, footer and front page. Opt in:

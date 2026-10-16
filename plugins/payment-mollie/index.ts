@@ -4,8 +4,11 @@ import {
   type PluginContext,
   type ProviderCheckoutApi,
 } from '@dantweb/oxid-fe-core';
+import de from './i18n/de.json';
+import en from './i18n/en.json';
 
 let api: ProviderCheckoutApi | null = null;
+let context: PluginContext | null = null;
 
 function checkoutApi(): ProviderCheckoutApi {
   if (!api) {
@@ -14,17 +17,51 @@ function checkoutApi(): ProviderCheckoutApi {
   return api;
 }
 
+export interface MollieInlineConfig {
+  profileId: string;
+  testMode: boolean;
+  locale: string;
+  /** Mollie methods offered inline; `creditcard` uses Mollie Components, the rest Mollie's page */
+  methods: string[];
+}
+
+/** What the inline component needs: the provider calls and the instance's public Mollie config. */
+export function useMollieInline(): { api: ProviderCheckoutApi; config: MollieInlineConfig } {
+  const config = context?.config ?? {};
+  return {
+    api: checkoutApi(),
+    config: {
+      profileId: String(config.profile_id ?? ''),
+      testMode: config.test_mode !== false,
+      locale: String(config.locale ?? 'en_US'),
+      methods: Array.isArray(config.methods) ? config.methods.map(String) : ['creditcard'],
+    },
+  };
+}
+
 /**
- * Mollie over payment-base's headless contract, hosted page. Mollie's
- * optional `method` pre-selection (ideal, creditcard, …) arrives with the
- * provider-options story.
+ * Mollie over payment-base's headless contract. Inline ("iframe mode"): Mollie Components render the
+ * card fields in Mollie's iframes; the single-use card token goes with `mollieCheckoutStart`. Other
+ * methods (iDEAL, Bancontact, …) pre-select the method and continue on Mollie's page. Without a
+ * `profile_id` (or with `mode: redirect`) Mollie's hosted method-selection page is used.
+ * Config: `mode`, `profile_id: pfl_…` (public), `test_mode`, `locale`, `methods`.
  */
 const plugin: PaymentPlugin = {
   name: 'payment-mollie',
-  version: '0.1.0',
+  version: '0.2.0',
   paymentId: 'oe_payments_mollie',
+  messages: { en, de },
   setup(ctx: PluginContext) {
-    api = createProviderCheckoutApi(ctx.client, 'mollie');
+    context = ctx;
+    api = createProviderCheckoutApi(ctx.client, 'mollie', {
+      startArguments: { method: 'method', cardToken: 'cardToken' },
+    });
+  },
+  inlineComponent() {
+    const config = context?.config ?? {};
+    return config.mode === 'redirect' || !config.profile_id
+      ? null
+      : () => import('./MollieInline.vue');
   },
   start: (basketId, options) => checkoutApi().start(basketId, options),
   checkoutReturn: (contractId, contractToken, returnParams) =>

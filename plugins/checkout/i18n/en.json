@@ -20,7 +20,10 @@
     "headline": "3 · Payment",
     "terms": "I confirm the terms and conditions",
     "pay": "Pay now",
-    "redirecting": "Taking you to the payment provider…"
+    "redirecting": "Taking you to the payment provider…",
+    "confirmTermsFirst": "Confirm the terms and conditions to continue with the payment.",
+    "loadingProvider": "Loading the secure payment form…",
+    "retry": "Try again"
   },
   "return": {
     "checking": "Checking your payment…",

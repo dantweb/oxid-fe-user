@@ -20,7 +20,10 @@
     "headline": "3 · Zahlung",
     "terms": "Ich bestätige die AGB",
     "pay": "Jetzt bezahlen",
-    "redirecting": "Weiterleitung zum Zahlungsanbieter…"
+    "redirecting": "Weiterleitung zum Zahlungsanbieter…",
+    "confirmTermsFirst": "Bestätigen Sie die AGB, um mit der Zahlung fortzufahren.",
+    "loadingProvider": "Das sichere Zahlungsformular wird geladen…",
+    "retry": "Erneut versuchen"
   },
   "return": {
     "checking": "Zahlung wird geprüft…",

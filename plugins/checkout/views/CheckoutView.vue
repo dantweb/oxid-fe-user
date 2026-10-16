@@ -1,8 +1,22 @@
 <script setup lang="ts">
-import { addressSchema, GraphqlError, type AddressInput } from '@dantweb/oxid-fe-core';
-import { computed, onMounted, reactive, ref } from 'vue';
+import {
+  addressSchema,
+  GraphqlError,
+  type AddressInput,
+  type InlinePaymentAttempt,
+} from '@dantweb/oxid-fe-core';
+import {
+  computed,
+  defineAsyncComponent,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+  type Component,
+} from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useCartStore } from '../../shop/stores/cart';
 import {
   BASKET_ADD_ITEM,
@@ -25,6 +39,7 @@ const { t } = useI18n();
 useHead({ meta: [{ name: 'robots', content: 'noindex,nofollow' }] });
 
 const { client, registry } = useCheckoutApi();
+const router = useRouter();
 const cart = useCartStore();
 const checkout = useCheckoutStore();
 
@@ -53,6 +68,120 @@ const busy = ref(false);
 const redirecting = ref(false);
 const error = ref<string | null>(null);
 const placedOrderNumber = ref<string | null>(null);
+
+// ---- inline (iframe-mode) payment: the provider's own UI inside this page -----------------------
+const selectedChoice = computed(() =>
+  payments.value.find((entry) => entry.payment.id === selectedPaymentId.value),
+);
+const inlineComponents = new Map<string, Component>();
+/** The selected plugin's inline component, or null (hosted page / classic payment). */
+const inlineComponent = computed<Component | null>(() => {
+  const plugin = selectedChoice.value?.plugin;
+  const loader = plugin?.inlineComponent?.() ?? null;
+  if (!plugin || !loader) {
+    return null;
+  }
+  const known = inlineComponents.get(plugin.name);
+  if (known) {
+    return known;
+  }
+  const created = defineAsyncComponent(loader);
+  inlineComponents.set(plugin.name, created);
+  return created;
+});
+const inlineUrls = computed(() =>
+  selectedChoice.value?.plugin
+    ? checkoutUrls(window.location.origin, selectedChoice.value.plugin.name)
+    : null,
+);
+/** True while the current basket has its delivery method — only then may a provider start on it. */
+const basketReady = ref(false);
+/** After a failed start the form is not remounted by itself (that would loop): the shopper retries. */
+const blocked = ref(false);
+let rebuilding = false;
+/** Mounted only once the shopper picked the method, confirmed the terms and the basket is ready. */
+const inlineReady = computed(
+  () =>
+    inlineComponent.value !== null &&
+    basketId.value !== null &&
+    basketReady.value &&
+    termsConfirmed.value &&
+    !blocked.value,
+);
+/** The open attempt of the mounted inline component — retired if the shopper changes their mind. */
+const inlineAttempt = ref<InlinePaymentAttempt | null>(null);
+
+function onAttempt(attempt: InlinePaymentAttempt): void {
+  const plugin = selectedChoice.value?.plugin;
+  if (!plugin) {
+    return;
+  }
+  inlineAttempt.value = attempt;
+  checkout.setAttempt({ provider: plugin.name, ...attempt });
+}
+
+function onSettled(): void {
+  const plugin = selectedChoice.value?.plugin;
+  inlineAttempt.value = null; // finished at the provider: nothing to retire
+  if (plugin) {
+    void router.push(`/checkout/return/${plugin.name}`);
+  }
+}
+
+/** A cancelled attempt blocks its basket: continue on a fresh one, keeping the shopper's choices. */
+async function rebuildBasket(): Promise<void> {
+  if (rebuilding) {
+    return;
+  }
+  rebuilding = true;
+  const delivery = deliveryMethodId.value;
+  const payment = selectedPaymentId.value;
+  try {
+    basketId.value = null;
+    basketReady.value = false;
+    checkout.clear();
+    await prepareBasket();
+    if (delivery && !basketReady.value) {
+      await selectDelivery(delivery);
+    }
+    selectedPaymentId.value = payment;
+  } finally {
+    rebuilding = false;
+  }
+}
+
+function retryPayment(): void {
+  error.value = null;
+  blocked.value = false;
+}
+
+async function onInlineFailed(message: string): Promise<void> {
+  inlineAttempt.value = null;
+  blocked.value = true;
+  error.value = t('checkout.errors.start', { message });
+  await rebuildBasket();
+}
+
+async function onInlineCancelled(): Promise<void> {
+  inlineAttempt.value = null;
+  error.value = null;
+  await rebuildBasket();
+}
+
+// leaving the inline state (other method, terms unticked) retires the open attempt
+watch(inlineReady, async (ready, wasReady) => {
+  const attempt = inlineAttempt.value;
+  const plugin = selectedChoice.value?.plugin;
+  if (wasReady && !ready && attempt) {
+    inlineAttempt.value = null;
+    try {
+      await plugin?.cancel(attempt.contractId, attempt.contractToken);
+    } catch {
+      /* already retired — retiring twice changes nothing */
+    }
+    await rebuildBasket();
+  }
+});
 
 const readyToPay = computed(
   () =>
@@ -116,6 +245,7 @@ async function saveAddress(): Promise<void> {
 
 /** Fresh server-side basket per attempt — a cancelled attempt blocks its old basket. */
 async function prepareBasket(): Promise<void> {
+  basketReady.value = false;
   error.value = null;
   busy.value = true;
   try {
@@ -164,6 +294,7 @@ async function selectDelivery(methodId: string): Promise<void> {
   if (payments.value.length === 1) {
     selectedPaymentId.value = payments.value[0].payment.id;
   }
+  basketReady.value = true;
 }
 
 async function pay(): Promise<void> {
@@ -265,6 +396,7 @@ function messageOf(cause: unknown): string {
             type="radio"
             name="delivery"
             :checked="deliveryMethodId === method.id"
+            :disabled="inlineAttempt !== null"
             @change="selectDelivery(method.id)"
           />
           {{ method.title }}
@@ -288,8 +420,28 @@ function messageOf(cause: unknown): string {
           {{ t('checkout.payment.terms') }}
         </label>
         <p v-if="error" role="alert" data-testid="checkout-error">{{ error }}</p>
+        <button v-if="blocked" type="button" data-testid="retry-payment" @click="retryPayment">
+          {{ t('checkout.payment.retry') }}
+        </button>
         <p v-if="redirecting" data-testid="redirecting">{{ t('checkout.payment.redirecting') }}</p>
-        <button type="button" :disabled="!readyToPay" data-testid="pay-now" @click="pay">
+
+        <div v-if="inlineComponent" class="inline-payment" data-testid="inline-payment">
+          <component
+            :is="inlineComponent"
+            v-if="inlineReady && inlineUrls"
+            :basket-id="basketId"
+            :return-url="inlineUrls.returnUrl"
+            :cancel-url="inlineUrls.cancelUrl"
+            @attempt="onAttempt"
+            @settled="onSettled"
+            @failed="onInlineFailed"
+            @cancelled="onInlineCancelled"
+          />
+          <p v-else class="inline-payment__hint" data-testid="inline-hint">
+            {{ t('checkout.payment.confirmTermsFirst') }}
+          </p>
+        </div>
+        <button v-else type="button" :disabled="!readyToPay" data-testid="pay-now" @click="pay">
           {{ t('checkout.payment.pay') }}
         </button>
       </template>
@@ -314,6 +466,14 @@ function messageOf(cause: unknown): string {
   align-items: center;
   gap: 8px;
   margin: 6px 0;
+}
+.inline-payment {
+  margin-top: 12px;
+  min-height: 56px;
+}
+.inline-payment__hint {
+  color: var(--oxfe-color-text-muted, #555);
+  font-style: italic;
 }
 input[type='text'],
 .address input {

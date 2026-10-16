@@ -32,3 +32,10 @@ One source of truth for local work and CI — the same commands, byte-identical
   `docs/dev_log/<day>/reports/peroxid-responsive/`.
 - `tests/e2e/deployed-config.spec.ts` proves a deployment really runs this repo's `oxid-config.yaml`:
   `E2E_BASE_URL=https://daniil.oxiddev.de:8443 npx playwright test deployed-config`.
+- The payment proof (`tests/e2e/payments-*.spec.ts`, 14 tests: Stripe, PayPal, Mollie) completes
+  real sandbox payments. Run it **serially** — all three specs use one shop customer, so parallel
+  workers can interfere: `E2E_BASE_URL=https://daniil.oxiddev.de:2083 npm run test:e2e:payments`
+  (`:8443` and `:2053` likewise; `:2053` enables only Stripe → `npx playwright test payments-stripe`).
+  PayPal needs `PAYPAL_BUYER_EMAIL` / `PAYPAL_BUYER_PASSWORD` in the gitignored `tests/e2e/.env`
+  (see `.env.dist`). `payments-evidence.spec.ts` regenerates the screenshots in
+  `docs/dev_log/20261016/reports/payments/`.

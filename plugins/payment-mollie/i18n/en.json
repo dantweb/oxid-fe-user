@@ -1,0 +1,22 @@
+{
+  "method": "Payment method",
+  "card": "Credit card",
+  "cardHolder": "Card holder",
+  "cardNumber": "Card number",
+  "expiryDate": "Expiry date",
+  "verificationCode": "CVC",
+  "payWithCard": "Pay by card",
+  "payWith": "Pay with {method}",
+  "methods": {
+    "creditcard": "Credit card",
+    "ideal": "iDEAL",
+    "bancontact": "Bancontact",
+    "paypal": "PayPal",
+    "banktransfer": "Bank transfer",
+    "eps": "EPS",
+    "giropay": "giropay",
+    "sofort": "SOFORT"
+  },
+  "tokenFailed": "The card details were not accepted: {message}",
+  "redirecting": "Taking you to Mollie…"
+}

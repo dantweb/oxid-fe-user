@@ -33,7 +33,8 @@ export async function fillLogin(page: Page, credentials: Credentials): Promise<v
   await page.locator('input[name=email]').fill(credentials.email);
   await page.locator('input[name=password]').fill(credentials.password);
   await page.getByTestId('login-form').locator('button[type=submit]').click();
-  await expect(page.getByTestId('nav-logout')).toBeVisible({ timeout: 20_000 });
+  // a successful login leaves /login (the layouts differ in where they show "sign out")
+  await expect(page).not.toHaveURL(/\/login/, { timeout: 20_000 });
 }
 
 export async function signIn(page: Page, credentials: Credentials): Promise<void> {
