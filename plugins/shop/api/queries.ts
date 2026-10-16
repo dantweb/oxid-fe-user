@@ -4,7 +4,7 @@
  * generated types (codegen) replace these hand-written shapes in a later core story.
  */
 
-export interface ProductPrice {
+interface ProductPrice {
   price: number;
   currency: { name: string; sign: string };
 }

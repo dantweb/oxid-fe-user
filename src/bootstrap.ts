@@ -1,7 +1,7 @@
 import '@dantweb/oxid-fe-core/styles/variables.css';
 import '@dantweb/oxid-fe-core/styles/components.css';
 import { loadTheme, type IPlugin } from '@dantweb/oxid-fe-core';
-import { createHead } from '@unhead/vue';
+import { createHead } from '@unhead/vue/client';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import App from './App.vue';

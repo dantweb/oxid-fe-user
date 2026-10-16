@@ -1,6 +1,6 @@
 /** GraphQL Storefront documents for the account area (verified against b-7.4.x). */
 
-export interface OrderItem {
+interface OrderItem {
   id: string;
   amount: number;
   title: string;
