@@ -56,7 +56,7 @@ that in its own `package.json`:
 
 ```json
 "dependencies": {
-  "@dantweb/oxid-fe-user": "github:dantweb/oxid-fe-user#v0.2.0",
+  "@dantweb/oxid-fe-user": "github:dantweb/oxid-fe-user#v0.3.1",
   "@dantweb/oxid-fe-core": "github:dantweb/oxid-fe-core#v0.8.0"
 },
 "overrides": { "@dantweb/oxid-fe-core": "github:dantweb/oxid-fe-core#v0.8.0" }
