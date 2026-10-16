@@ -1,7 +1,11 @@
-import { parse } from 'yaml';
 import { defaultInstanceConfig, instanceConfigSchema, type InstanceConfig } from './schema';
 
-const INSTANCE_CONFIG_URL = '/oxid-config.yaml';
+/**
+ * The browser's instance configuration: `oxid-config.json`, RENDERED on the server from the
+ * deployment's `oxid-config.yaml` (scripts/public-config.mjs: allow-list + secret guard). The YAML
+ * itself is never served.
+ */
+const INSTANCE_CONFIG_URL = '/oxid-config.json';
 
 export class InstanceConfigError extends Error {
   constructor(message: string) {
@@ -10,20 +14,17 @@ export class InstanceConfigError extends Error {
   }
 }
 
-/** Parses and validates the YAML text of an `oxid-config.yaml`. Throws InstanceConfigError. */
-export function parseInstanceConfig(yamlText: string): InstanceConfig {
-  let raw: unknown;
-  try {
-    raw = parse(yamlText) ?? {};
-  } catch (cause) {
-    throw new InstanceConfigError(`oxid-config.yaml is not valid YAML: ${String(cause)}`);
-  }
-  const result = instanceConfigSchema.safeParse(raw);
+/**
+ * Validates the parsed `oxid-config.json`. Throws InstanceConfigError.
+ * @public used by the test helpers (knip cannot see them as consumers)
+ */
+export function parseInstanceConfig(raw: unknown): InstanceConfig {
+  const result = instanceConfigSchema.safeParse(raw ?? {});
   if (!result.success) {
     const problems = result.error.issues
       .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
       .join('; ');
-    throw new InstanceConfigError(`oxid-config.yaml is invalid — ${problems}`);
+    throw new InstanceConfigError(`oxid-config.json is invalid — ${problems}`);
   }
   return result.data;
 }
@@ -46,5 +47,12 @@ export async function loadInstanceConfig(
   if (!response.ok || contentType.includes('text/html')) {
     return defaultInstanceConfig();
   }
-  return parseInstanceConfig(await response.text());
+  try {
+    return parseInstanceConfig(await response.json());
+  } catch (cause) {
+    if (cause instanceof InstanceConfigError) {
+      throw cause;
+    }
+    throw new InstanceConfigError(`oxid-config.json is not valid JSON: ${String(cause)}`);
+  }
 }

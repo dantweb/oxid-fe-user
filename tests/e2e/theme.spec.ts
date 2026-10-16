@@ -3,7 +3,7 @@ import { withInstanceConfig } from './helpers/config';
 
 /**
  * Theming: the instance's `theme:` config picks the look. The config is served per instance, so
- * every scenario is produced by answering /oxid-config.yaml — it works against any target.
+ * every scenario is produced by answering /oxid-config.json — it works against any target.
  */
 
 async function withTheme(page: Page, theme: { default: string; active?: string }): Promise<void> {

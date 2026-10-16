@@ -130,10 +130,11 @@ test.describe('instance B — same bundle, its own configuration', () => {
     );
   });
 
-  test('serves its own oxid-config.yaml', async ({ request }) => {
-    const yaml = await (await request.get('/oxid-config.yaml')).text();
-    expect(yaml).toContain('id: example-b');
-    expect(yaml).toContain('name: Shop Zwei');
+  test('serves its own public config (rendered) and never the YAML', async ({ request }) => {
+    const config = await (await request.get('/oxid-config.json')).json();
+    expect(config.instance).toMatchObject({ id: 'example-b', name: 'Shop Zwei' });
+    const yaml = await request.get('/oxid-config.yaml');
+    expect((await yaml.text()).includes('name: Shop Zwei')).toBe(false);
   });
 });
 

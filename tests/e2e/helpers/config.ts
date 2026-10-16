@@ -1,12 +1,15 @@
 import type { APIRequestContext, Page } from '@playwright/test';
+import { renderPublicConfig } from '../../../scripts/public-config.mjs';
 
 /**
- * Answers /oxid-config.yaml for one page with the given YAML — every instance scenario can then
- * be produced against any target (dev server, container, public URL) without redeploying.
+ * Answers /oxid-config.json for one page with the config rendered from the given YAML (the same
+ * allow-list + secret guard the server applies) — every instance scenario can then be produced
+ * against any target (dev server, container, public URL) without redeploying.
  */
 export async function withInstanceConfig(page: Page, yaml: string): Promise<void> {
-  await page.route('**/oxid-config.yaml', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/yaml', body: yaml }),
+  const body = renderPublicConfig(yaml);
+  await page.route('**/oxid-config.json', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body }),
   );
 }
 

@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
-import { parseInstanceConfig } from '../../src/config/load';
+import { parseInstanceConfig } from './helpers/yamlConfig';
 
 /**
  * Every oxid-config.yaml in the repo must be USABLE, not just parseable: it boots (valid schema),

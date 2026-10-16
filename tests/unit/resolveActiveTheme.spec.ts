@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseInstanceConfig } from '../../src/config/load';
+import { parseInstanceConfig } from './helpers/yamlConfig';
 import { resolveActiveTheme } from '../../src/config/theme';
 
 describe('resolveActiveTheme', () => {

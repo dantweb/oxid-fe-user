@@ -5,11 +5,18 @@ server {
     # The instance (mounted at ${INSTANCE_DIR}): oxid-config.yaml, public/ overlay, plugins/
     # See docs/instance-configuration.md
 
-    # instance configuration — never cached, so a redeployed config applies on the next load
-    location = /oxid-config.yaml {
-        alias ${INSTANCE_DIR}/oxid-config.yaml;
-        default_type application/yaml;
+    # The browser's instance configuration: oxid-config.json, RENDERED at container start from the
+    # instance's oxid-config.yaml (allow-list + secret guard, scripts/public-config.mjs). Never cached,
+    # so a redeployed config applies on the next load.
+    location = /oxid-config.json {
+        alias /var/lib/oxid-fe/oxid-config.json;
+        default_type application/json;
         add_header Cache-Control "no-store";
+    }
+
+    # The deployment YAML is NEVER served — not at its own path, not from the public/ overlay
+    location ~* \.ya?ml(\.dist)?$ {
+        return 404;
     }
 
     # external plugins of this instance (ES modules)

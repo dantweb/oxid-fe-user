@@ -3,7 +3,7 @@ import { defaultInstanceConfig } from '../../src/config/schema';
 import {
   deployedConfig,
   deployedConfigFile,
-  deployedConfigText,
+  expectedPublicConfig,
   escapeRegExp,
   productsPerPage,
   shopName,
@@ -24,13 +24,32 @@ test.describe('the deployment uses oxid-config.yaml', () => {
     expect(productsPerPage()).not.toBe(12);
   });
 
-  test('the server serves exactly this file at /oxid-config.yaml', async ({ request }) => {
-    const response = await request.get('/oxid-config.yaml');
+  test('the server serves the config RENDERED from this file at /oxid-config.json', async ({
+    request,
+  }) => {
+    const response = await request.get('/oxid-config.json');
 
     expect(response.status()).toBe(200);
-    expect(response.headers()['content-type']).toContain('yaml');
+    expect(response.headers()['content-type']).toContain('json');
     expect(response.headers()['cache-control']).toContain('no-store');
-    expect((await response.text()).trim()).toBe(deployedConfigText().trim());
+    expect(await response.json()).toEqual(expectedPublicConfig());
+  });
+
+  test('the deployment YAML itself is never served (404 at every path)', async ({ request }) => {
+    for (const path of [
+      '/oxid-config.yaml',
+      '/oxid-config.yaml.dist',
+      '/instances/example-b/oxid-config.yaml',
+    ]) {
+      const response = await request.get(path);
+      const body = await response.text();
+      expect(
+        response.status() === 404 || response.headers()['content-type']?.includes('html'),
+      ).toBe(true);
+      // not even the SPA fallback may carry config content
+      expect(body).not.toContain('products_per_page');
+      expect(body).not.toContain('graphql_url');
+    }
   });
 
   test('/shop shows the configured shop name, page size and languages', async ({ page }) => {

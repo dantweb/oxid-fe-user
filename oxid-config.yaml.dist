@@ -5,7 +5,9 @@
 # number of instances (shop1.oxid.dev, shop2.oxid.dev, ...): only this file and the instance's
 # optional `public/` and `plugins/` folders differ. Full reference: docs/instance-configuration.md
 #
-# !! The browser downloads this file (/oxid-config.yaml). Never put secrets in it. !!
+# !! This file is NEVER served. The browser gets /oxid-config.json, rendered from it (allow-list:
+# !! instance, shop.graphql_url, i18n, theme, plugins.*.enabled/source/config). Everything under
+# !! plugins.*.config is PUBLIC: no secrets there — the renderer refuses secret-looking keys/values. !!
 
 # Identity — shown as the shop name in header, footer, page titles
 instance:

@@ -2,22 +2,42 @@ import { existsSync, readFileSync } from 'node:fs';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, loadEnv, type Connect, type Plugin } from 'vite';
 import { configDefaults } from 'vitest/config';
+import { renderPublicConfig } from './scripts/public-config.mjs';
 
-/** Dev/preview twin of nginx's /oxid-config.yaml: the local file, else the committed .dist. */
+/**
+ * Dev/preview twin of nginx: serves the RENDERED public config (/oxid-config.json — allow-list and
+ * secret guard, see scripts/public-config.mjs) from the local oxid-config.yaml (else the committed
+ * .dist), and answers 404 for the YAML and the instance folders: the raw deployment config is
+ * never served, not even by the dev server (which would otherwise expose the project root).
+ */
 function serveInstanceConfig(): Plugin {
-  const middleware: Connect.NextHandleFunction = (_request, response) => {
+  const json: Connect.NextHandleFunction = (_request, response) => {
     const file = ['oxid-config.yaml', 'oxid-config.yaml.dist'].find((candidate) =>
       existsSync(candidate),
     );
-    response.setHeader('Content-Type', 'application/yaml');
+    response.setHeader('Content-Type', 'application/json');
     response.setHeader('Cache-Control', 'no-store');
-    response.end(file ? readFileSync(file) : '');
+    try {
+      response.end(file ? renderPublicConfig(readFileSync(file, 'utf-8')) : '{}');
+    } catch (error) {
+      response.statusCode = 500;
+      response.end(String(error instanceof Error ? error.message : error));
+    }
+  };
+  const hidden: Connect.NextHandleFunction = (_request, response) => {
+    response.statusCode = 404;
+    response.end('Not found');
+  };
+  const install = (use: Connect.Server['use']): void => {
+    use('/oxid-config.json', json);
+    for (const path of ['/oxid-config.yaml', '/oxid-config.yaml.dist', '/instances']) {
+      use(path, hidden);
+    }
   };
   return {
     name: 'oxid-instance-config',
-    configureServer: (server) => void server.middlewares.use('/oxid-config.yaml', middleware),
-    configurePreviewServer: (server) =>
-      void server.middlewares.use('/oxid-config.yaml', middleware),
+    configureServer: (server) => install(server.middlewares.use.bind(server.middlewares)),
+    configurePreviewServer: (server) => install(server.middlewares.use.bind(server.middlewares)),
   };
 }
 
@@ -36,6 +56,8 @@ export default defineConfig(({ mode }) => {
     server: {
       host: true,
       port: 5173,
+      // belt and braces: the dev server never reads deployment configs from disk for a browser
+      fs: { deny: ['.env', '.env.*', 'oxid-config.yaml*', 'instances/**', '**/*.pem', '**/*.key'] },
       // Same-origin in dev too: the app always talks to /graphql/ on its own origin.
       proxy: {
         '/graphql': { target: shopUrl, changeOrigin: true },

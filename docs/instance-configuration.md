@@ -16,16 +16,28 @@ their settings, extra files, extra plugins. The app bundle is identical for all 
 
 ## How it is loaded
 
-1. nginx serves the instance's file at `GET /oxid-config.yaml` (never cached).
-2. Before the app mounts, `src/config/` fetches and parses it, **validates it with a zod
-   schema** and fills defaults. A file that is present but invalid stops the app with a clear
-   error screen instead of half-starting; a file that is **absent** (plain `npm run dev` without
-   one) means "all defaults" — everything bundled, `en`+`de`.
-3. The validated config drives: the GraphQL URL, i18n locales, the shop name, and which plugins
+1. `oxid-config.yaml` is a **server-side deployment file. It is never served to a browser.** At
+   container start (`docker-entrypoint.d/30-render-public-config.sh`) `scripts/public-config.mjs`
+   renders the browser's **`/oxid-config.json`** from it: an **allow-list** — `instance`,
+   `shop.graphql_url`, `i18n`, `theme`, and per plugin only `enabled` / `source` / `config`.
+   Everything else in the YAML (other sections, other plugin fields) never leaves the server.
+2. **Secret guard:** the renderer refuses to render — and the container does not start, the dev
+   server answers 500 — when the allow-listed part contains a secret-looking key (`secret`,
+   `password`, `token`, `api_key`, `private`, `credential`, `authorization`, `bearer`) or value
+   (`sk_live_…`, `whsec_…`, `ghp_…`, `-----BEGIN …`, credentials in `graphql_url`). A mistake stops
+   the deployment instead of reaching a visitor.
+3. nginx serves only the rendered JSON (never cached) and answers **404 for any `*.yaml` / `*.yml` /
+   `*.yaml.dist`**, also from the instance's `public/` overlay. The dev server does the same.
+4. Before the app mounts, `src/config/` fetches the JSON, **validates it with a zod schema** and
+   fills defaults. A file that is present but invalid stops the app with a clear error screen; one
+   that is **absent** (plain `npm run dev` without a config) means "all defaults".
+5. The validated config drives: the GraphQL URL, i18n locales, the shop name, and which plugins
    load (bundled or external) with which config.
 
-> **The browser downloads this file.** It must contain no secrets (no API keys, no tokens).
-> Secrets belong to the shop (OXID module settings) and never to the frontend.
+> **What is in `plugins.<name>.config` is public**: it ships to every visitor in `/oxid-config.json`.
+> Only public values belong there (Stripe publishable key, PayPal client id, Mollie profile id, page
+> sizes, labels). Secrets belong to the shop (OXID module settings) and never to the frontend — and the
+> guard above enforces it.
 
 ## Reference
 
@@ -97,8 +109,8 @@ only languages that have a catalog, every external plugin shipped.
 
 ## Local development
 
-`npm run dev` serves the same `oxid-config.yaml` from the project root at `/oxid-config.yaml` (falling
-back to `oxid-config.yaml.dist`). `oxid-config.yaml` is gitignored; copy the `.dist` and edit.
+`npm run dev` renders `/oxid-config.json` from the `oxid-config.yaml` in the project root (falling
+back to `oxid-config.yaml.dist`) and answers 404 for the YAML itself. `oxid-config.yaml` is gitignored; copy the `.dist` and edit.
 
 ## Known limits
 

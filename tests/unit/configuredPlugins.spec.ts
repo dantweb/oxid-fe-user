@@ -1,7 +1,7 @@
 import type { IPlugin } from '@dantweb/oxid-fe-core';
 import { describe, expect, it, vi } from 'vitest';
 import { loadConfiguredPlugins } from '../../src/config/plugins';
-import { parseInstanceConfig } from '../../src/config/load';
+import { parseInstanceConfig } from './helpers/yamlConfig';
 
 const plugin = (name: string): IPlugin => ({ name, version: '1' });
 const bundled = {

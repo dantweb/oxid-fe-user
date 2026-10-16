@@ -8,9 +8,14 @@ WORKDIR /build
 COPY oxid-fe-core/ oxid-fe-core/
 RUN cd oxid-fe-core && npm ci && npm run build
 COPY oxid-fe-user/ oxid-fe-user/
-RUN cd oxid-fe-user && npm ci && npm run build
+RUN cd oxid-fe-user && npm ci && npm run build \
+ && npx esbuild scripts/public-config-cli.mjs --bundle --platform=node --format=cjs --outfile=public-config.cjs
 
 FROM nginx:1.27-alpine
+# node only runs the config renderer at container start (docker-entrypoint.d)
+RUN apk add --no-cache nodejs
+COPY --from=builder /build/oxid-fe-user/public-config.cjs /opt/oxid-fe/public-config.cjs
+COPY oxid-fe-user/nginx/30-render-public-config.sh /docker-entrypoint.d/30-render-public-config.sh
 COPY --from=builder /build/oxid-fe-user/dist /usr/share/nginx/html
 COPY oxid-fe-user/nginx/default.conf.template /etc/nginx/templates/default.conf.template
 

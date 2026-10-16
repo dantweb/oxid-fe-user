@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import {
-  InstanceConfigError,
-  loadInstanceConfig,
-  parseInstanceConfig,
-} from '../../src/config/load';
+import { InstanceConfigError, loadInstanceConfig } from '../../src/config/load';
+import { parseInstanceConfig } from './helpers/yamlConfig';
 import { defaultInstanceConfig } from '../../src/config/schema';
 
 describe('parseInstanceConfig', () => {
@@ -55,10 +52,6 @@ plugins:
     );
     expect(() => parseInstanceConfig('i18n: { locales: [] }')).toThrow(InstanceConfigError);
   });
-
-  it('rejects broken YAML', () => {
-    expect(() => parseInstanceConfig('instance: [unclosed')).toThrow(/not valid YAML/);
-  });
 });
 
 function answer(body: string, init: ResponseInit): typeof fetch {
@@ -66,10 +59,10 @@ function answer(body: string, init: ResponseInit): typeof fetch {
 }
 
 describe('loadInstanceConfig', () => {
-  it('parses a served yaml file', async () => {
+  it('parses the served oxid-config.json', async () => {
     const config = await loadInstanceConfig(
-      answer('instance: { name: "Shop Eins" }', {
-        headers: { 'content-type': 'application/yaml' },
+      answer('{ "instance": { "name": "Shop Eins" } }', {
+        headers: { 'content-type': 'application/json' },
       }),
     );
     expect(config.instance.name).toBe('Shop Eins');
@@ -91,8 +84,19 @@ describe('loadInstanceConfig', () => {
   it('fails loudly when a present file is invalid', async () => {
     await expect(
       loadInstanceConfig(
-        answer('i18n: { locales: [] }', { headers: { 'content-type': 'application/yaml' } }),
+        answer('{ "i18n": { "locales": [] } }', {
+          headers: { 'content-type': 'application/json' },
+        }),
       ),
     ).rejects.toBeInstanceOf(InstanceConfigError);
+    await expect(
+      loadInstanceConfig(answer('not json', { headers: { 'content-type': 'application/json' } })),
+    ).rejects.toThrow(/not valid JSON/);
+  });
+
+  it('never asks for the YAML', async () => {
+    const fetchFn = answer('{}', { headers: { 'content-type': 'application/json' } });
+    await loadInstanceConfig(fetchFn);
+    expect(vi.mocked(fetchFn).mock.calls[0][0]).toBe('/oxid-config.json');
   });
 });
