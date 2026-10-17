@@ -1,6 +1,6 @@
 import { isPaymentPlugin, type GraphqlClient, type PluginContext } from '@dantweb/oxid-fe-core';
 import { describe, expect, it, vi } from 'vitest';
-import mollie from '../../plugins/payment-mollie';
+import mollie, { mollieLocale } from '../../plugins/payment-mollie';
 import paypal from '../../plugins/payment-paypal';
 import stripe from '../../plugins/payment-stripe';
 
@@ -87,5 +87,17 @@ describe('mollie start options', () => {
       method: 'creditcard',
       cardToken: 'tkn_1',
     });
+  });
+});
+
+describe('mollieLocale', () => {
+  it('follows the active storefront language', () => {
+    expect(mollieLocale('de', null)).toBe('de_DE');
+    expect(mollieLocale('en', null)).toBe('en_US');
+  });
+
+  it('an instance’s explicit locale wins; an unknown language falls back to en_US', () => {
+    expect(mollieLocale('de', 'nl_NL')).toBe('nl_NL');
+    expect(mollieLocale('xx', null)).toBe('en_US');
   });
 });

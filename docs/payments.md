@@ -61,7 +61,7 @@ plugins:
       mode: iframe
       profile_id: pfl_… # Mollie profile id (sMollieProfileId)
       test_mode: true # mirrors sMollieMode
-      locale: en_US
+      # locale: en_US   # optional: derived from the active storefront language (de → de_DE)
       methods: [creditcard, ideal, bancontact] # offered inline; creditcard uses Components, the rest Mollie's page
 ```
 

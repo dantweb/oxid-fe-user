@@ -17,10 +17,25 @@ function checkoutApi(): ProviderCheckoutApi {
   return api;
 }
 
+const MOLLIE_LOCALES: Record<string, string> = {
+  de: 'de_DE',
+  en: 'en_US',
+  fr: 'fr_FR',
+  nl: 'nl_NL',
+  es: 'es_ES',
+  it: 'it_IT',
+};
+
+/** Mollie's locale: the instance's `locale` override, else derived from the active storefront language. */
+export function mollieLocale(active: string, override: string | null): string {
+  return override ?? MOLLIE_LOCALES[active] ?? 'en_US';
+}
+
 export interface MollieInlineConfig {
   profileId: string;
   testMode: boolean;
-  locale: string;
+  /** explicit Mollie locale (`de_DE`); null = derived from the active language (see mollieLocale) */
+  locale: string | null;
   /** Mollie methods offered inline; `creditcard` uses Mollie Components, the rest Mollie's page */
   methods: string[];
 }
@@ -33,7 +48,7 @@ export function useMollieInline(): { api: ProviderCheckoutApi; config: MollieInl
     config: {
       profileId: String(config.profile_id ?? ''),
       testMode: config.test_mode !== false,
-      locale: String(config.locale ?? 'en_US'),
+      locale: config.locale ? String(config.locale) : null,
       methods: Array.isArray(config.methods) ? config.methods.map(String) : ['creditcard'],
     },
   };

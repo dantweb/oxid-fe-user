@@ -2,7 +2,7 @@
 import { loadScriptOnce, type InlinePaymentAttempt } from '@dantweb/oxid-fe-core';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useMollieInline } from './index';
+import { mollieLocale, useMollieInline } from './index';
 
 const props = defineProps<{ basketId: string; returnUrl: string; cancelUrl: string }>();
 const emit = defineEmits<{
@@ -34,7 +34,7 @@ const FIELDS: { name: ComponentName; label: string }[] = [
   { name: 'verificationCode', label: 'verificationCode' },
 ];
 
-const { t, te } = useI18n();
+const { t, te, locale } = useI18n();
 const { api, config } = useMollieInline();
 const selected = ref(config.methods[0] ?? CARD);
 const loading = ref(true);
@@ -151,7 +151,10 @@ onMounted(async () => {
     if (!factory || disposed) {
       return;
     }
-    mollie = factory(config.profileId, { locale: config.locale, testmode: config.testMode });
+    mollie = factory(config.profileId, {
+      locale: mollieLocale(String(locale.value), config.locale),
+      testmode: config.testMode,
+    });
     loading.value = false;
     await nextTick();
     if (isCard.value) {

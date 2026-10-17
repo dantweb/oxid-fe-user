@@ -14,14 +14,14 @@ interface EmbeddedCheckout {
 interface StripeInstance {
   initEmbeddedCheckout(options: { clientSecret: string }): Promise<EmbeddedCheckout>;
 }
-type StripeFactory = (publishableKey: string) => StripeInstance;
+type StripeFactory = (publishableKey: string, options: { locale: string }) => StripeInstance;
 
 const STRIPE_JS = 'https://js.stripe.com/v3/';
 
 /** Stripe allows ONE Embedded Checkout object per document — every mount goes through this. */
 let active: EmbeddedCheckout | null = null;
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { api, publishableKey } = useStripeInline();
 const container = ref<HTMLElement | null>(null);
 const loading = ref(true);
@@ -50,7 +50,10 @@ onMounted(async () => {
       throw new Error('Stripe did not answer a client secret');
     }
 
-    const stripe = (window as unknown as { Stripe: StripeFactory }).Stripe(publishableKey);
+    const stripe = (window as unknown as { Stripe: StripeFactory }).Stripe(publishableKey, {
+      // Stripe's form speaks the storefront's language, not the browser's
+      locale: String(locale.value),
+    });
     await active?.destroy();
     active = null;
     const checkout = await stripe.initEmbeddedCheckout({ clientSecret: started.clientSecret });
