@@ -46,6 +46,42 @@ Inside the OXID Docker SDK the `oxid-fe-user` service (port 5173) has both repos
 
 `make help` lists them: `theme` (rebuild themes), `compile`, `build` / `run` / `stop` (Docker, per instance), `dev`, `debug`, `debug-e2e`, `logs`, `nginx-config`, `gate`.
 
+## Applying a changed `oxid-config.yaml` locally
+
+A configuration change needs a **re-render of the browser's `/oxid-config.json`** — not an image
+rebuild. `oxid-config.yaml` itself is never served (see
+[docs/instance-configuration.md](docs/instance-configuration.md)).
+
+**SDK instances** (`oxid-fe-user-prod` :8090, `-b` :8091, `-c` :8092): the JSON is rendered when the
+container starts, so restart the container.
+
+```bash
+cd ~/osc/strpwt7-nov26                                   # the SDK root
+docker compose restart oxid-fe-user-prod-b               # or -c: they mount their whole instances/<name> folder
+docker compose up -d --force-recreate oxid-fe-user-prod  # instance A mounts the single file oxid-config.yaml
+curl -s http://localhost:8090/oxid-config.json           # verify
+```
+
+- Instance A mounts one file. Editors that save by replacing the file leave the container with the
+  old copy, so use `--force-recreate` for A.
+- A secret-looking key or value stops the container right after start (the renderer refuses it):
+  `docker compose logs oxid-fe-user-prod-b` names the offending path.
+- `make dev` (hot reload on :5173) renders the YAML on every request: reload the browser tab.
+- Code or theme changes do need the image: `docker compose build oxid-fe-user-prod`, then recreate.
+
+**A project built on this package** (e.g. `hydroxid-project`, `localhost:8101`–`8103`): render the
+instances again and reload the tab; nginx reads them from a mounted folder and serves them `no-store`.
+
+```bash
+cd ~/osc/strpwt7-nov26/hydroxid-project
+npm run build:instances            # instances/<id>/oxid-config.yaml → build/instances/<id>/oxid-config.json
+npm run build:nginx && docker compose restart   # only after changing a port in deploy/instances.json
+make local                         # code or theme changes: rebuild everything
+```
+
+To get a configuration change onto a server, deploy: the build renders the JSON again from the YAML
+in the repository.
+
 ## Quality gate (same locally and in CI)
 
 ```bash
