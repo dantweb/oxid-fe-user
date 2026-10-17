@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { defineAsyncComponent, inject } from 'vue';
+import { defineAsyncComponent, inject, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AppFooter from './components/AppFooter.vue';
 import AppHeader from './components/AppHeader.vue';
 import SessionExpiredBanner from './components/SessionExpiredBanner.vue';
@@ -10,6 +11,15 @@ const core = inject(coreKey);
 if (!core) {
   throw new Error('App needs the app core');
 }
+// the document's language follows the active locale (screen readers, browser translation prompts)
+const { locale } = useI18n();
+watch(
+  locale,
+  (current) => {
+    document.documentElement.lang = String(current);
+  },
+  { immediate: true },
+);
 // a layout plugin (e.g. peroxid) may take over the header and footer
 const Header = resolveLayoutView(core.registry, 'header', AppHeader);
 const Footer = resolveLayoutView(core.registry, 'footer', AppFooter);

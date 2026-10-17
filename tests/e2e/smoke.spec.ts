@@ -32,3 +32,14 @@ test('login page renders and rejects wrong credentials', async ({ page }) => {
   await page.getByTestId('login-form').locator('button[type=submit]').click();
   await expect(page.getByTestId('login-error')).toBeVisible({ timeout: 20_000 });
 });
+
+test('the document language follows the active locale', async ({ page }) => {
+  await page.goto('/');
+  const switcher = page.getByTestId('locale-switcher');
+  await expect(page.locator('html')).toHaveAttribute('lang', /^(en|de)$/);
+  if (await switcher.isVisible().catch(() => false)) {
+    await switcher.selectOption({ index: 1 });
+    const chosen = await switcher.inputValue();
+    await expect(page.locator('html')).toHaveAttribute('lang', chosen);
+  }
+});
