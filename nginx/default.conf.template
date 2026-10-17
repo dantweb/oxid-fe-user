@@ -40,6 +40,21 @@ server {
         proxy_set_header Host $host;
     }
 
+    # Cache policy — a phone that loaded an earlier release must pick up the next one:
+    #  - content-hashed bundles change their name per build, so they can be cached forever
+    #  - theme files keep their URL across releases: revalidate on every load (ETag → 304)
+    #  - index.html / SPA routes (below) and the config JSON (above) are never served stale
+    location /assets/ {
+        root /usr/share/nginx/html;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    location /themes/ {
+        root /usr/share/nginx/html;
+        add_header Cache-Control "no-cache";
+        try_files $uri =404;
+    }
+
     # The instance's public/ overlay wins over the compiled app (robots.txt, favicon, images…)
     location / {
         root ${INSTANCE_DIR}/public;
@@ -49,6 +64,7 @@ server {
     # The compiled app, SPA history fallback
     location @app {
         root /usr/share/nginx/html;
+        add_header Cache-Control "no-cache";
         try_files $uri $uri/ /index.html;
     }
 }
