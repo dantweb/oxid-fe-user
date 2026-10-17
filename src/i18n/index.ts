@@ -1,4 +1,5 @@
 import type { PluginRegistry } from '@dantweb/oxid-fe-core';
+import { unref } from 'vue';
 import { createI18n, type I18n, type LocaleMessageDictionary, type VueMessageType } from 'vue-i18n';
 import type { InstanceConfig } from '../config/schema';
 import de from './de.json';
@@ -37,6 +38,15 @@ function savedLocale(): string | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * The active locale as the shop's language code. Sent with every GraphQL call (`Accept-Language`):
+ * OXID answers products, categories and messages in that language — so a German instance shows
+ * German shop content whatever the visitor's browser is set to.
+ */
+export function activeLocale(i18n: I18n): string {
+  return String(unref(i18n.global.locale));
 }
 
 export function createAppI18n(registry: PluginRegistry, config: InstanceConfig): I18n {

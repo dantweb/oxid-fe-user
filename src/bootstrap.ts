@@ -9,7 +9,7 @@ import { loadInstanceConfig } from './config/load';
 import { loadConfiguredPlugins } from './config/plugins';
 import { resolveActiveTheme } from './config/theme';
 import { coreKey, createCore, instanceKey, themeKey } from './core';
-import { createAppI18n } from './i18n';
+import { activeLocale, createAppI18n } from './i18n';
 import { createAppRouter } from './router';
 
 /** Plugins compiled into this app; the instance's oxid-config.yaml decides which ones load. */
@@ -64,7 +64,10 @@ async function bootstrap(options: StartStorefrontOptions): Promise<void> {
   app.provide(coreKey, core);
   app.provide(themeKey, theme);
   app.provide(instanceKey, config);
-  app.use(createAppI18n(core.registry, config));
+  const i18n = createAppI18n(core.registry, config);
+  // the shop answers in the storefront's language (follows a language switch), not the browser's
+  core.client.setLanguageProvider(() => activeLocale(i18n));
+  app.use(i18n);
   app.use(createAppRouter(core.registry, core.auth));
   app.mount('#app');
 
