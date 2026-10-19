@@ -121,3 +121,23 @@ Per-merchant key rotation UI, hardware-bound keys, replacing the providers' SDKs
   backend modules first, then core, user, hydroxid.
 - Existing deployments break when the YAML keys are rejected; the loader error names the field and
   points to the docs.
+
+## Outcome (as built, 2026-10-19)
+
+**Done and verified**
+
+- **S1:** `docs/payments-keys.md` + ADR-004; the decision "the browser can always read what it decrypts; hosted redirect is the fallback" was taken as written. Shared test vector `oxid-fe-core/tests/fixtures/sealed-config-vector.json`.
+- **S2:** `renderPublicConfig` refuses key fields (`publishable_key`, `client_id`, `profile_id`, anything with `key`/`secret`) in `payment-*` plugin config, naming the path and pointing to the docs. Red first on the shipped YAMLs.
+- **S3 (core):** `fetchSealedConfig` (WebCrypto ECDH P-256 + HKDF-SHA256 + AES-256-GCM), `createSealedKeys`/`sealedKeysForPlugin`. 140 core tests, 98% lines. The vector made by Node crypto is opened by the browser code; tamper, wrong provider, wrong session and replay-window cases fail as required.
+- **S4 (backend, local commits only, not pushed):** payment-base `0a11f50` (query `paymentClientConfig`, sealer, guard, registry; the PHP sealer reproduces the shared vector byte for byte; 47 new tests, phpcs/phpstan max/phpmd green) and one provider per module: stripe `a84373a`, paypal `2cbcaff`, mollie `95223f2`. Each lives in `<module>/.claude/worktrees/sealed-client-config` on branch `feature/sealed-client-config`.
+- **S5:** the three plugins fetch their key when the inline component mounts, before anything is started at the shop; any failure flips a reactive flag and the checkout uses the hosted page — never a built-in key.
+- **S6:** keys removed from `oxid-config.yaml.dist`, the example instances and the HydroXid instances; `test_mode` too (the shop decides). A test greps all tracked files and `dist/` for key-shaped values.
+- Gates green in core, user and hydroxid-project; user e2e (all but `payments-*`/evidence): 71 passed.
+
+**Not done / not verified — read before relying on it**
+
+- **S7 not run:** no sandbox payment with a sealed key and no HAR assertion. It needs the new `payment-base` and the three module providers installed and activated in a running shop; the shop in this session still runs the old module code. Until then the real flow end to end is unproven.
+- **Backend runtime unverified:** nothing ran against the real graphql-base/GraphQLite schema. In particular a guest token calling `paymentClientConfig` (access by `#[Right]` only, no `#[Logged]`) and the type's `v` / `issuedAt` fields must be checked once with a real token after activating the modules. The DI wiring was only compiled in a throwaway container.
+- **Order/constraints:** stripe and mollie `composer.json` still say `payment-base >=1.3`/`>=1.2`; they need `>=1.4` once payment-base ships the interface. The paypal worktree is based on the local `origin/main` ref (a fetch failed, so it may be stale). The mollie worktree is based on `origin/main`, which has no `CHANGELOG.md`; its entry text is in the agent report, to add when the file exists.
+- **Until the backend ships, existing deployments fall back to the hosted pages** (Stripe Checkout, PayPal approval page, Mollie page): payments still work, but not inline.
+- **S8 (rotation) not done:** it is a manual step at Stripe, PayPal and Mollie. The old publishable key, client id and profile id were committed and served publicly and remain in git history; public ids are not secret in the providers' model, but rotate them if you want them gone.
