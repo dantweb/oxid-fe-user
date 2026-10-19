@@ -117,4 +117,4 @@ All stories done except the HydroXid pin bump, which waits for the release (see 
 ### Still open (needs a decision or an action outside this repo)
 
 1. **Scale limit:** with `contains` and no index, every search query scans the product table. The storefront limits the number and size of requests but cannot make a query cheaper. If it is too slow at your catalogue size, the options that leave the core alone are a search engine in front of the shop or an index shipped by a separate module.
-2. **Release order** (tags are outward-facing, so not done): tag `oxid-fe-core` v0.10.0, then `oxid-fe-user` v0.5.0, then bump the two pins in `hydroxid-project/package.json`. Until then HydroXid's new test "has no search of its own" fails against the pinned v0.4.1.
+2. **Release order** (tags are outward-facing, so not done): tag `oxid-fe-core` v0.9.1, then `oxid-fe-user` v0.5.0, then bump the two pins in `hydroxid-project/package.json`. Until then HydroXid's new test "has no search of its own" fails against the pinned v0.4.1.

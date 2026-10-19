@@ -75,7 +75,7 @@ cache, cache-size metrics. Each needs a real second use first.
 
 All stories done except the release step (see below).
 
-- **core 0.10.0** (not yet tagged): `ResponseCache` (`remember`, `clear`, TTL, max entries, in-flight sharing, generation guard so a load that started before `clear()` is not stored), `stableStringify`, `GraphqlClient` option `cache` and `execute(q, vars, { cacheTtlMs })`. 92 unit tests, all green.
+- **core 0.9.1** (not yet tagged): `ResponseCache` (`remember`, `clear`, TTL, max entries, in-flight sharing, generation guard so a load that started before `clear()` is not stored), `stableStringify`, `GraphqlClient` option `cache` and `execute(q, vars, { cacheTtlMs })`. 92 unit tests, all green.
 - **user 0.5.0** (not yet tagged): `plugins/shop/api/cachePolicy.ts` (`CATALOG_READ` 60 s, `SUGGESTION_READ` 30 s), applied to catalog, category, product and front-page stream reads; `createCore` injects one cache. `tests/unit/cachePolicy.spec.ts` fails if basket, account, checkout or payment code opts in.
 - **Deviation from the plan:** the e2e proves the category read-back case (`tests/e2e/request-cache.spec.ts`, red without the cache, green with it). "Basket is fresh after adding" and "language switch" are proven by the core unit tests, not by a browser test.
 - **Finding:** the guest token arrives right after the first page load and is part of the cache key, so the very first read may be asked again once per session. Documented in `docs/architecture.md`.
