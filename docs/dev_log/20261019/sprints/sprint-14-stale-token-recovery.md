@@ -90,3 +90,10 @@ Refresh-token flow, background token validation, per-tab token sync, cookie-base
   code check and the messages can be removed.
 - Retrying a query after dropping the token can show guest data for a moment. Accepted: the
   session-expired event tells the UI to ask for login.
+
+## Outcome (as built, 2026-10-19)
+
+- **core:** `isRejectedToken` (code `invalid_token` or the two known messages), `execute(…, { omitToken })`, `setTokenRejectedHandler`; `AuthService` installs the handler (drops the token, `SessionExpired` for a customer only), sends the token calls with `omitToken`, drops a non-JWT stored value on read. 114 unit tests, 98% lines; red first (15 failing) then green.
+- **user:** `tests/e2e/stale-token.spec.ts`. Run against core `main` it fails (storefront and login are blocked by a forged token — the reported bug); with the fix all 3 pass.
+- **Deviation:** S6 ran against the local dev server and the SDK shop, not the public ports `:2053/:2083/:8443` (those need a deployed build). Re-run there after release: `E2E_BASE_URL=… npx playwright test stale-token`.
+- **Backend ask (open):** graphql-base should answer with `extensions.errorCode: invalid_token`; then the message matching in `rejectedToken.ts` can go.

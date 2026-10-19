@@ -75,3 +75,12 @@ a `contains` match (the shop core, and so its indexes, stay untouched), `%` stri
 minimum, debounce, 5 suggestions, pages of 12 asked as 13 (so "next page exists" needs no
 `COUNT`), a depth cap of 20 pages followed by a "refine your search" hint, and the request cache
 above. Limits are named constants in `search/searchApi.ts`.
+
+## A stale access token heals itself
+
+The shop checks the `Authorization` header before it reads the query, so a token it no longer
+trusts (signing key changed, another environment on the same origin, reset database) used to block
+everything, including the login. Core now treats the shop's refusal as the truth: the token is
+dropped (`SessionExpired` if it was a customer's), a **query** is retried once without it, a
+mutation is not replayed, and the `token` calls (login, guest token) never carry a token. A stored
+value that is not a JWT is dropped on read. `tests/e2e/stale-token.spec.ts` seeds a forged token.
