@@ -1,8 +1,13 @@
 import { isPaymentPlugin, type GraphqlClient, type PluginContext } from '@dantweb/oxid-fe-core';
 import { describe, expect, it, vi } from 'vitest';
-import mollie, { mollieLocale } from '../../plugins/payment-mollie';
-import paypal from '../../plugins/payment-paypal';
-import stripe from '../../plugins/payment-stripe';
+import { SealedConfigError } from '@dantweb/oxid-fe-core';
+import mollie, {
+  mollieLocale,
+  parseMollieKeys,
+  useMollieInline,
+} from '../../plugins/payment-mollie';
+import paypal, { parsePayPalKeys, usePayPalInline } from '../../plugins/payment-paypal';
+import stripe, { parseStripeKeys, useStripeInline } from '../../plugins/payment-stripe';
 
 const cases = [
   { plugin: paypal, paymentId: 'oe_payments_paypal', startField: 'paypalCheckoutStart' },
@@ -42,27 +47,67 @@ describe('stripe return', () => {
   });
 });
 
-describe.each([
-  { plugin: stripe, key: 'publishable_key', value: 'pk_test_1' },
-  { plugin: paypal, key: 'client_id', value: 'client-1' },
-  { plugin: mollie, key: 'profile_id', value: 'pfl_1' },
-])('$plugin.name inline (iframe) mode', ({ plugin, key, value }) => {
-  const setupWith = (config: Record<string, unknown>) =>
-    plugin.setup?.({ client: {} as GraphqlClient, config } as PluginContext);
+/** The shop never answers: the sealed exchange fails. */
+const failingContext = (config: Record<string, unknown> = {}): PluginContext =>
+  ({
+    client: { execute: vi.fn().mockRejectedValue(new Error('down')) } as unknown as GraphqlClient,
+    auth: { payload: () => null },
+    config,
+  }) as unknown as PluginContext;
 
-  it('offers the inline component once the provider’s public value is configured', () => {
-    setupWith({ [key]: value });
+describe.each([
+  { plugin: stripe, load: () => useStripeInline().loadKeys() },
+  { plugin: paypal, load: () => usePayPalInline().loadKeys() },
+  { plugin: mollie, load: () => useMollieInline().loadKeys() },
+])('$plugin.name inline (iframe) mode', ({ plugin, load }) => {
+  it('offers the inline component without any key in the configuration', () => {
+    plugin.setup?.(failingContext());
     expect(plugin.inlineComponent?.()).toBeTypeOf('function');
   });
 
-  it('falls back to the hosted page without the public value', () => {
-    setupWith({});
+  it('falls back to the hosted page with mode: redirect', () => {
+    plugin.setup?.(failingContext({ mode: 'redirect' }));
     expect(plugin.inlineComponent?.()).toBeNull();
   });
 
-  it('falls back to the hosted page with mode: redirect', () => {
-    setupWith({ [key]: value, mode: 'redirect' });
+  it('falls back to the hosted page when the sealed exchange fails — never to a built-in key', async () => {
+    plugin.setup?.(failingContext());
+
+    await expect(load()).rejects.toBeInstanceOf(SealedConfigError);
+
     expect(plugin.inlineComponent?.()).toBeNull();
+  });
+
+  it('a fresh setup (new page) offers inline again', async () => {
+    plugin.setup?.(failingContext());
+    await load().catch(() => undefined);
+
+    plugin.setup?.(failingContext());
+
+    expect(plugin.inlineComponent?.()).toBeTypeOf('function');
+  });
+});
+
+describe('what the shop may hand over (allow-listed values only)', () => {
+  it('stripe: the publishable key', () => {
+    expect(parseStripeKeys({ publishableKey: 'pk-x' })).toEqual({ publishableKey: 'pk-x' });
+    expect(() => parseStripeKeys({})).toThrow(SealedConfigError);
+    expect(() => parseStripeKeys({ publishableKey: '' })).toThrow(SealedConfigError);
+    expect(() => parseStripeKeys({ publishableKey: true })).toThrow(SealedConfigError);
+  });
+
+  it('paypal: the client id', () => {
+    expect(parsePayPalKeys({ clientId: 'id-1' })).toEqual({ clientId: 'id-1' });
+    expect(() => parsePayPalKeys({ clientId: '' })).toThrow(SealedConfigError);
+  });
+
+  it('mollie: the profile id and the test mode (the shop decides, default test)', () => {
+    expect(parseMollieKeys({ profileId: 'pfl_1', testMode: false })).toEqual({
+      profileId: 'pfl_1',
+      testMode: false,
+    });
+    expect(parseMollieKeys({ profileId: 'pfl_1' })).toEqual({ profileId: 'pfl_1', testMode: true });
+    expect(() => parseMollieKeys({ testMode: true })).toThrow(SealedConfigError);
   });
 });
 

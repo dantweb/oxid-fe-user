@@ -2,7 +2,7 @@
 import { loadScriptOnce, type InlinePaymentAttempt } from '@dantweb/oxid-fe-core';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mollieLocale, useMollieInline } from './index';
+import { mollieLocale, useMollieInline, type MollieKeys } from './index';
 
 const props = defineProps<{ basketId: string; returnUrl: string; cancelUrl: string }>();
 const emit = defineEmits<{
@@ -35,7 +35,7 @@ const FIELDS: { name: ComponentName; label: string }[] = [
 ];
 
 const { t, te, locale } = useI18n();
-const { api, config } = useMollieInline();
+const { api, config, loadKeys } = useMollieInline();
 const selected = ref(config.methods[0] ?? CARD);
 const loading = ref(true);
 const busy = ref(false);
@@ -145,15 +145,21 @@ async function submit(): Promise<void> {
 }
 
 onMounted(async () => {
+  let keys: MollieKeys;
+  try {
+    keys = await loadKeys();
+  } catch {
+    return; // the plugin has switched to the hosted page; this component is about to go
+  }
   try {
     await loadScriptOnce(MOLLIE_JS);
     const factory = (window as unknown as { Mollie?: MollieFactory }).Mollie;
     if (!factory || disposed) {
       return;
     }
-    mollie = factory(config.profileId, {
+    mollie = factory(keys.profileId, {
       locale: mollieLocale(String(locale.value), config.locale),
-      testmode: config.testMode,
+      testmode: keys.testMode,
     });
     loading.value = false;
     await nextTick();

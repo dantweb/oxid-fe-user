@@ -35,9 +35,10 @@ their settings, extra files, extra plugins. The app bundle is identical for all 
    load (bundled or external) with which config.
 
 > **What is in `plugins.<name>.config` is public**: it ships to every visitor in `/oxid-config.json`.
-> Only public values belong there (Stripe publishable key, PayPal client id, Mollie profile id, page
-> sizes, labels). Secrets belong to the shop (OXID module settings) and never to the frontend — and the
-> guard above enforces it.
+> Only public behaviour belongs there (page sizes, labels, a payment plugin's `mode`). Secrets belong
+> to the shop (OXID module settings) and never to the frontend. Payment provider keys (Stripe
+> publishable key, PayPal client id, Mollie profile id) are not configured here either: the shop hands
+> them over sealed (`payments-keys.md`) — and the guard above refuses a config that carries one.
 
 ## Reference
 

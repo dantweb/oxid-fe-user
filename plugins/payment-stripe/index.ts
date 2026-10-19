@@ -1,12 +1,30 @@
 import {
   createProviderCheckoutApi,
+  SealedConfigError,
+  sealedKeysForPlugin,
   type PaymentPlugin,
   type PluginContext,
   type ProviderCheckoutApi,
+  type SealedKeys,
+  type SealedValues,
 } from '@dantweb/oxid-fe-core';
+
+export interface StripeKeys {
+  publishableKey: string;
+}
 
 let api: ProviderCheckoutApi | null = null;
 let context: PluginContext | null = null;
+let keys: SealedKeys<StripeKeys> | null = null;
+
+/** The one value the shop may hand over for Stripe (docs/payments-keys.md). */
+export function parseStripeKeys(values: SealedValues): StripeKeys {
+  const publishableKey = values.publishableKey;
+  if (typeof publishableKey !== 'string' || publishableKey === '') {
+    throw new SealedConfigError('The shop did not provide a Stripe publishable key');
+  }
+  return { publishableKey };
+}
 
 function checkoutApi(): ProviderCheckoutApi {
   if (!api) {
@@ -15,19 +33,28 @@ function checkoutApi(): ProviderCheckoutApi {
   return api;
 }
 
-/** What the inline component needs: the provider calls and the instance's public Stripe config. */
+/** What the inline component needs: the provider calls and the key, which only the shop holds. */
 export function useStripeInline(): {
   api: ProviderCheckoutApi;
-  publishableKey: string;
+  loadKeys: () => Promise<StripeKeys>;
 } {
-  return { api: checkoutApi(), publishableKey: String(context?.config.publishable_key ?? '') };
+  return {
+    api: checkoutApi(),
+    loadKeys: () => {
+      if (!keys) {
+        throw new Error('payment-stripe plugin is not set up');
+      }
+      return keys.load();
+    },
+  };
 }
 
 /**
  * Stripe over payment-base's headless contract. Inline ("iframe mode"): Stripe Embedded Checkout
- * renders the whole payment form in Stripe's iframe on the checkout page. Without a publishable key
- * in the instance config (or with `mode: redirect`) the hosted Stripe Checkout page is used.
- * Config: `mode: iframe | redirect`, `publishable_key: pk_…` (public by design).
+ * renders the whole payment form in Stripe's iframe on the checkout page. The publishable key is
+ * NOT configured here: the shop hands it over sealed (docs/payments-keys.md). With `mode: redirect`,
+ * or when that exchange fails, the hosted Stripe Checkout page is used.
+ * Config: `mode: iframe | redirect`.
  */
 const plugin: PaymentPlugin = {
   name: 'payment-stripe',
@@ -35,13 +62,14 @@ const plugin: PaymentPlugin = {
   paymentId: 'oe_payments_stripe_wallet',
   setup(ctx: PluginContext) {
     context = ctx;
+    keys = sealedKeysForPlugin(ctx, 'stripe', parseStripeKeys);
     api = createProviderCheckoutApi(ctx.client, 'stripe', {
       returnArguments: { session_id: 'checkoutSessionId' },
     });
   },
   inlineComponent() {
     const config = context?.config ?? {};
-    return config.mode === 'redirect' || !config.publishable_key
+    return config.mode === 'redirect' || keys?.failed.value
       ? null
       : () => import('./StripeInline.vue');
   },

@@ -20,6 +20,9 @@ const SECRET_KEY = /secret|passw(or)?d|token|api[_-]?key|private|credential|auth
 const SECRET_VALUE =
   /^(sk_(live|test)_|rk_(live|test)_|whsec_|ghp_|gho_|github_pat_|xox[bpa]-|AKIA[0-9A-Z]{8}|-----BEGIN )/;
 
+/** Provider keys and ids a payment SDK needs: the shop owns them (docs/payments-keys.md). */
+const PAYMENT_KEY_FIELD = /key|secret|^client_?id$|^profile_?id$/i;
+
 function pick(source, fields) {
   return Object.fromEntries(fields.filter((field) => field in source).map((f) => [f, source[f]]));
 }
@@ -40,6 +43,31 @@ function findSecrets(value, path, found = []) {
   return found;
 }
 
+/** Key-like fields inside any `payment-*` plugin's config, as "path: reason" lines. */
+function findPaymentKeys(plugins) {
+  const found = [];
+  const walk = (value, path) => {
+    if (!value || typeof value !== 'object') {
+      return;
+    }
+    for (const [key, child] of Object.entries(value)) {
+      const here = `${path}.${key}`;
+      if (PAYMENT_KEY_FIELD.test(key)) {
+        found.push(
+          `${here}: payment provider keys come from the shop, not from this file (docs/payments-keys.md)`,
+        );
+      }
+      walk(child, here);
+    }
+  };
+  for (const [name, entry] of Object.entries(plugins ?? {})) {
+    if (name.startsWith('payment-')) {
+      walk(entry?.config, `plugins.${name}.config`);
+    }
+  }
+  return found;
+}
+
 export function renderPublicConfig(yamlText) {
   const raw = parse(yamlText) ?? {};
   const publicConfig = pick(raw, TOP_LEVEL);
@@ -55,7 +83,7 @@ export function renderPublicConfig(yamlText) {
     );
   }
 
-  const problems = findSecrets(publicConfig, '');
+  const problems = [...findSecrets(publicConfig, ''), ...findPaymentKeys(publicConfig.plugins)];
   const url = publicConfig.shop?.graphql_url;
   if (typeof url === 'string' && /^[a-z]+:\/\/[^/@\s]+@/i.test(url)) {
     problems.push('shop.graphql_url: contains credentials');

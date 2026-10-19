@@ -39,39 +39,38 @@ rule are the same for inline and hosted payments (`done/sprint-04…`).
 
 ## Instance configuration
 
-The public values each provider SDK needs come from the instance's `oxid-config.yaml`
-(`plugins.<name>.config`). They are **public by design** — the same values sit in the page source
-of any checkout using that provider — but they are _not_ secrets-free in general: never put a
-secret key, API key or PayPal secret here (the browser downloads this file).
+Only behaviour is configured here (`plugins.<name>.config`). The **provider keys** — Stripe
+publishable key, PayPal client id, Mollie profile id and test mode — are **not**: the shop holds
+them (module settings `sStripeTestPk`/`sStripeLivePk`, `sPayPalSandboxClientId`/`sPayPalLiveClientId`,
+`sMollieProfileId`/`sMollieMode`) and hands them to the browser sealed when checkout needs them
+(`docs/payments-keys.md`). A key field in a `payment-*` config stops the build. If the exchange
+fails, the plugin switches to the provider's hosted page.
 
 ```yaml
 plugins:
   payment-stripe:
     config:
       mode: iframe # iframe (default) | redirect
-      publishable_key: pk_test_… # Stripe publishable key (shop setting sStripeTestPk / sStripeLivePk)
   payment-paypal:
     config:
       mode: iframe
-      client_id: … # PayPal REST client id (sPayPalSandboxClientId / sPayPalLiveClientId)
       currency: EUR
       intent: capture # must match the shop: capture mode automatic → capture, manual → authorize
   payment-mollie:
     config:
       mode: iframe
-      profile_id: pfl_… # Mollie profile id (sMollieProfileId)
-      test_mode: true # mirrors sMollieMode
       # locale: en_US   # optional: derived from the active storefront language (de → de_DE)
       methods: [creditcard, ideal, bancontact] # offered inline; creditcard uses Components, the rest Mollie's page
 ```
 
 ## Backend support
 
-| Provider | Needed from the module                                                                                                    | Status                                                                        |
-| -------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Stripe   | `uiMode: embedded` on `stripeCheckoutStart` → `clientSecret`                                                              | already there                                                                 |
-| PayPal   | approval URL (carries the PayPal order id) from `paypalCheckoutStart`                                                     | already there                                                                 |
-| Mollie   | `mollieCheckoutStart(uiMode: embedded, cardToken)`; the handler already forwards `mollieCardToken` to the payment request | **added in sprint 10** (module branch `feature/headless-embedded-card-token`) |
+| Provider  | Needed from the module                                                                                                    | Status                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Stripe    | `uiMode: embedded` on `stripeCheckoutStart` → `clientSecret`                                                              | already there                                                                 |
+| PayPal    | approval URL (carries the PayPal order id) from `paypalCheckoutStart`                                                     | already there                                                                 |
+| All three | `paymentClientConfig` (payment-base) + one `ClientConfigProvider` per module: the keys, sealed                            | **sprint 15**                                                                 |
+| Mollie    | `mollieCheckoutStart(uiMode: embedded, cardToken)`; the handler already forwards `mollieCardToken` to the payment request | **added in sprint 10** (module branch `feature/headless-embedded-card-token`) |
 
 ## What "working" means here — the proof
 

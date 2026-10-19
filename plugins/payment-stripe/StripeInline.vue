@@ -22,12 +22,19 @@ const STRIPE_JS = 'https://js.stripe.com/v3/';
 let active: EmbeddedCheckout | null = null;
 
 const { t, locale } = useI18n();
-const { api, publishableKey } = useStripeInline();
+const { api, loadKeys } = useStripeInline();
 const container = ref<HTMLElement | null>(null);
 const loading = ref(true);
 let disposed = false;
 
 onMounted(async () => {
+  let publishableKey: string;
+  try {
+    // before anything is started at the shop: without the key there is nothing to render
+    ({ publishableKey } = await loadKeys());
+  } catch {
+    return; // the plugin has switched to the hosted page; this component is about to go
+  }
   try {
     await loadScriptOnce(STRIPE_JS);
     const started = await api.start(props.basketId, {

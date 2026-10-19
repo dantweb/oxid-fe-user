@@ -44,24 +44,23 @@ plugins:
       products_per_page: 12
   checkout:
     enabled: true
+  # Provider keys (Stripe publishable key, PayPal client id, Mollie profile id) are NOT configured
+  # here: the shop hands them over sealed at checkout time (docs/payments-keys.md). A key field in a
+  # payment plugin's config stops the build.
   payment-paypal:
     enabled: true
     config:
       mode: iframe # iframe (Smart Buttons, default) | redirect (PayPal's approval page)
-      client_id: REPLACE_ME # public by design; empty = hosted page. docs/payments.md
       currency: EUR
       intent: capture # shop capture mode automatic -> capture, manual -> authorize
   payment-stripe:
     enabled: true
     config:
       mode: iframe # iframe (inline, default) | redirect (Stripe's hosted page)
-      publishable_key: pk_test_REPLACE_ME # public by design; empty = hosted page. docs/payments.md
   payment-mollie:
     enabled: true
     config:
       mode: iframe
-      profile_id: pfl_REPLACE_ME # public by design; empty = hosted page. docs/payments.md
-      test_mode: true
       locale: en_US
       methods: [creditcard, ideal, bancontact]
   dashboard:

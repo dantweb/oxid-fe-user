@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
+import { renderPublicConfig } from '../../scripts/public-config.mjs';
 import { parseInstanceConfig } from './helpers/yamlConfig';
 
 /**
@@ -41,6 +42,10 @@ describe.each(files)('$label', ({ file, folder }) => {
 
   it.skipIf(!present)('is valid and bootable', () => {
     expect(() => parseInstanceConfig(readFileSync(file, 'utf-8'))).not.toThrow();
+  });
+
+  it.skipIf(!present)('holds no payment provider key (docs/payments-keys.md)', () => {
+    expect(() => renderPublicConfig(readFileSync(file, 'utf-8'))).not.toThrow();
   });
 
   it.skipIf(!present)('enables only bundled plugins this build contains', () => {

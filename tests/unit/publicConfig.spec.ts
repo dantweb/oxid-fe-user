@@ -13,7 +13,7 @@ theme: { default: default, active: dark }
 plugins:
   shop: { config: { products_per_page: 8 } }
   payment-stripe:
-    config: { mode: iframe, publishable_key: pk_test_abc }
+    config: { mode: iframe }
 `);
     expect(out).toEqual({
       instance: { id: 'a', name: 'Shop' },
@@ -22,7 +22,7 @@ plugins:
       theme: { default: 'default', active: 'dark' },
       plugins: {
         shop: { config: { products_per_page: 8 } },
-        'payment-stripe': { config: { mode: 'iframe', publishable_key: 'pk_test_abc' } },
+        'payment-stripe': { config: { mode: 'iframe' } },
       },
     });
   });
@@ -56,11 +56,43 @@ plugins:
     expect(() => renderPublicConfig(yaml)).toThrow(new RegExp(needle));
   });
 
-  it('accepts the public provider keys (publishable key, client id, profile id)', () => {
-    expect(() =>
-      renderPublicConfig(`
+  it.each([
+    [
+      'a Stripe publishable key',
+      'payment-stripe: { config: { publishable_key: pk_test_abc } }',
+      'publishable_key',
+    ],
+    ['a PayPal client id', 'payment-paypal: { config: { client_id: abc } }', 'client_id'],
+    ['a Mollie profile id', 'payment-mollie: { config: { profile_id: pfl_x } }', 'profile_id'],
+    [
+      'any other key-named field of a payment plugin',
+      'payment-x: { config: { merchantKey: abc } }',
+      'merchantKey',
+    ],
+    ['a nested key field', 'payment-x: { config: { sdk: { client_id: abc } } }', 'sdk.client_id'],
+  ])('refuses %s in a payment plugin — keys come from the shop', (_label, plugin, needle) => {
+    expect(() => renderPublicConfig(`plugins:\n  ${plugin}`)).toThrow(
+      new RegExp(`${needle.replace('.', '\\.')}[^]*payments-keys\\.md`),
+    );
+  });
+
+  it('keeps the behaviour options of a payment plugin', () => {
+    const out = render(`
 plugins:
-  a: { config: { publishable_key: pk_live_x, client_id: abc, profile_id: pfl_x } }`),
+  payment-paypal: { config: { mode: iframe, currency: EUR, intent: capture } }
+  payment-mollie: { config: { test_mode: true, methods: [creditcard, ideal], locale: de_DE } }`);
+
+    expect(out.plugins['payment-paypal'].config).toEqual({
+      mode: 'iframe',
+      currency: 'EUR',
+      intent: 'capture',
+    });
+    expect(out.plugins['payment-mollie'].config).toMatchObject({ test_mode: true });
+  });
+
+  it('a plugin that is not a payment plugin may use a field called client_id', () => {
+    expect(() =>
+      renderPublicConfig('plugins: { analytics: { config: { client_id: abc } } }'),
     ).not.toThrow();
   });
 

@@ -18,18 +18,14 @@ plugins:
   payment-paypal:
     config:
       mode: iframe
-      client_id: BAAWENv6dXLjKG1Q_4kvJgJF83z4nTB6KXY6O8a8P5QDTSW85kDWDNp6d1ER5ewUBcyuTL-yboprVynmWU
       currency: EUR
       intent: capture
   payment-stripe:
     config:
       mode: iframe
-      publishable_key: pk_test_51TuDSdDy2vmJsUOtehDDyjW7LVux6H4KhqkKHBKtscJ0pc8TtNlCSLMpgmcLU2dHeWzmBBIOM2YsUYnSD6eoV0UQ003raZjAtm
   payment-mollie:
     config:
       mode: iframe
-      profile_id: pfl_cVf8bSWdQV
-      test_mode: true
       locale: en_US
       methods: [creditcard, ideal, bancontact]
   dashboard: {}

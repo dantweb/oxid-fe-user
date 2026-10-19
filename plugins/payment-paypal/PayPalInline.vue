@@ -27,7 +27,7 @@ interface PayPalNamespace {
 }
 
 const { t } = useI18n();
-const { api, sdkUrl } = usePayPalInline();
+const { api, loadKeys, sdkUrl } = usePayPalInline();
 const container = ref<HTMLElement | null>(null);
 const loading = ref(true);
 let buttons: PayPalButtons | null = null;
@@ -52,8 +52,14 @@ async function retireAttempt(): Promise<void> {
 }
 
 onMounted(async () => {
+  let scriptUrl: string;
   try {
-    await loadScriptOnce(sdkUrl);
+    scriptUrl = sdkUrl(await loadKeys());
+  } catch {
+    return; // the plugin has switched to the hosted page; this component is about to go
+  }
+  try {
+    await loadScriptOnce(scriptUrl);
     const paypal = (window as unknown as { paypal?: PayPalNamespace }).paypal;
     if (!paypal || disposed || !container.value) {
       return;
