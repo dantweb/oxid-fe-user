@@ -18,6 +18,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: dantweb/oxid-fe-core
+          # TEMPORARY: the core branch that carries the APIs this branch needs (request cache, token
+          # healing, sealed keys). Remove this line once oxid-fe-core is merged to main.
+          ref: feature/stale-token-and-sealed-keys
           ssh-key: ${{ secrets.CORE_DEPLOY_KEY }}
           path: oxid-fe-core
       - uses: actions/setup-node@v4
