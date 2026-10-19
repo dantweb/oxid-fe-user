@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CATALOG_READ } from '../../shop/api/cachePolicy';
 import { formatPrice } from '@dantweb/oxid-fe-core';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -24,7 +25,11 @@ const title =
 onMounted(async () => {
   const request = streamRequest(props.stream);
   try {
-    const data = await client.execute<Record<string, unknown>>(request.document, request.variables);
+    const data = await client.execute<Record<string, unknown>>(
+      request.document,
+      request.variables,
+      CATALOG_READ,
+    );
     products.value = request.pick(data);
   } catch {
     products.value = [];

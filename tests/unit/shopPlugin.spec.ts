@@ -12,10 +12,13 @@ describe('shop plugin', () => {
       '/shop/category/:id',
       '/shop/product/:id',
       '/shop/cart',
+      '/search',
     ]);
     expect(registry.navItems.map((item) => item.to)).toEqual(['/shop', '/shop/cart']);
     expect(registry.messagesFor('en')).toHaveProperty('shop.nav.catalog');
     expect(registry.messagesFor('de')).toHaveProperty('shop.nav.cart');
+    expect(registry.messagesFor('en')).toHaveProperty('shop.search.placeholder');
+    expect(registry.messagesFor('de')).toHaveProperty('shop.search.placeholder');
   });
 
   it('exposes the plugin context after setup and throws before', async () => {

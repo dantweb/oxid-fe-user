@@ -37,5 +37,18 @@
     "back": "Alle Produkte",
     "empty": "Keine Produkte gefunden.",
     "loadFailed": "Der Katalog konnte nicht geladen werden."
+  },
+  "search": {
+    "placeholder": "Kollektion durchsuchen",
+    "label": "Suche",
+    "open": "Suche öffnen",
+    "close": "Suche schließen",
+    "submit": "Suchen",
+    "results": "Ergebnisse für „{query}“",
+    "none": "Nichts gefunden für „{query}“.",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "failed": "Die Suche konnte nicht abgeschlossen werden.",
+    "refine": "Es gibt mehr Treffer, als sich durchblättern lassen — bitte verfeinern Sie die Suche (zum Beispiel mit Größe oder Modell)."
   }
 }

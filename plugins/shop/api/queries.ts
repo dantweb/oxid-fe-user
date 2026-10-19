@@ -22,6 +22,9 @@ export interface ProductDetail extends ProductListItem {
   imageGallery: { thumb: string; images: Array<{ image: string }> };
 }
 
+/** The fields every product list (rail, search, grid) shows. */
+export const PRODUCT_LIST_FIELDS = `id title shortDescription price { price currency { name sign } } imageGallery { thumb }`;
+
 export const PRODUCTS_QUERY = /* GraphQL */ `
   query products($offset: Int!, $limit: Int!) {
     products(pagination: { offset: $offset, limit: $limit }) {

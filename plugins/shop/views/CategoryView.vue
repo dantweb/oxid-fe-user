@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CATALOG_READ } from '../api/cachePolicy';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
@@ -34,12 +35,16 @@ async function load(): Promise<void> {
   failed.value = false;
   try {
     const [categoryData, productData] = await Promise.all([
-      client.execute<{ category: CategoryItem }>(CATEGORY_QUERY, { id: props.id }),
-      client.execute<{ products: ProductListItem[] }>(CATEGORY_PRODUCTS_QUERY, {
-        categoryId: props.id,
-        offset: page.value * pageSize,
-        limit: pageSize,
-      }),
+      client.execute<{ category: CategoryItem }>(CATEGORY_QUERY, { id: props.id }, CATALOG_READ),
+      client.execute<{ products: ProductListItem[] }>(
+        CATEGORY_PRODUCTS_QUERY,
+        {
+          categoryId: props.id,
+          offset: page.value * pageSize,
+          limit: pageSize,
+        },
+        CATALOG_READ,
+      ),
     ]);
     category.value = categoryData.category;
     products.value = productData.products;

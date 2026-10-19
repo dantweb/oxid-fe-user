@@ -37,5 +37,18 @@
     "back": "All products",
     "empty": "No products found.",
     "loadFailed": "The catalog could not be loaded."
+  },
+  "search": {
+    "placeholder": "Search the collection",
+    "label": "Search",
+    "open": "Open search",
+    "close": "Close search",
+    "submit": "Search",
+    "results": "Results for “{query}”",
+    "none": "Nothing found for “{query}”.",
+    "prev": "Previous",
+    "next": "Next",
+    "failed": "The search could not be completed.",
+    "refine": "There are more results than we can page through — please refine your search (for example add a size or model)."
   }
 }

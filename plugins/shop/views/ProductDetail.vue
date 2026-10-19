@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CATALOG_READ } from '../api/cachePolicy';
 import { createSavedListsApi, formatPrice, type SavedListKind } from '@dantweb/oxid-fe-core';
 import { useHead } from '@unhead/vue';
 import { onMounted, ref } from 'vue';
@@ -54,7 +55,11 @@ useHead({
 
 onMounted(async () => {
   try {
-    const data = await client.execute<{ product: ProductDetail }>(PRODUCT_QUERY, { id: props.id });
+    const data = await client.execute<{ product: ProductDetail }>(
+      PRODUCT_QUERY,
+      { id: props.id },
+      CATALOG_READ,
+    );
     product.value = data.product;
   } catch {
     failed.value = true;

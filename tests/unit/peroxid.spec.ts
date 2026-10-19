@@ -2,12 +2,7 @@ import { PluginRegistry, type PluginContext } from '@dantweb/oxid-fe-core';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it } from 'vitest';
 import peroxid, { useStreams } from '../../plugins/peroxid';
-import {
-  DEFAULT_STREAMS,
-  parseStreams,
-  SEARCH_QUERY,
-  streamRequest,
-} from '../../plugins/peroxid/streams';
+import { DEFAULT_STREAMS, parseStreams, streamRequest } from '../../plugins/peroxid/streams';
 import shop from '../../plugins/shop';
 import { useCartStore } from '../../plugins/shop/stores/cart';
 
@@ -51,11 +46,6 @@ describe('peroxid streams', () => {
     expect(request.pick({ products: [{ id: 'p' }] })).toEqual([{ id: 'p' }]);
     expect(request.pick({})).toEqual([]);
   });
-
-  it('searches product titles with the typed variables the storefront expects', () => {
-    expect(SEARCH_QUERY).toContain('$q: String!');
-    expect(SEARCH_QUERY).toContain('filter: { title: { contains: $q } }');
-  });
 });
 
 describe('peroxid plugin contract', () => {
@@ -63,7 +53,7 @@ describe('peroxid plugin contract', () => {
     expect(Object.keys(peroxid.overrides ?? {}).sort()).toEqual(['footer', 'header', 'home']);
     expect(peroxid.requires).toEqual(['shop']);
     expect(peroxid.defaultTheme).toBe('peroxid');
-    expect(peroxid.routes?.map((route) => route.path)).toEqual(['/search']);
+    expect(peroxid.routes ?? []).toEqual([]); // /search belongs to the shop plugin
   });
 
   it('takes over the host slots once registered, and the host keeps its defaults without it', () => {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ProductListItem } from '../shop/api/queries';
+import { PRODUCT_LIST_FIELDS, type ProductListItem } from '../shop/api/queries';
 
 /**
  * A front-page product stream. `action` streams read an OXID promotion action (`oxnewest` =
@@ -37,8 +37,6 @@ export function parseStreams(raw: unknown): StreamConfig[] {
   return result.data;
 }
 
-const PRODUCT_FIELDS = `id title shortDescription price { price currency { name sign } } imageGallery { thumb }`;
-
 interface StreamRequest {
   document: string;
   variables: Record<string, unknown>;
@@ -49,7 +47,7 @@ interface StreamRequest {
 export function streamRequest(stream: StreamConfig): StreamRequest {
   if (stream.type === 'action') {
     return {
-      document: `query streamAction($id: ID!) { action(actionId: $id) { products { ${PRODUCT_FIELDS} } } }`,
+      document: `query streamAction($id: ID!) { action(actionId: $id) { products { ${PRODUCT_LIST_FIELDS} } } }`,
       variables: { id: stream.ref },
       pick: (data) =>
         ((data.action as { products?: ProductListItem[] } | null)?.products ?? []).slice(
@@ -60,13 +58,9 @@ export function streamRequest(stream: StreamConfig): StreamRequest {
   }
   return {
     document: `query streamCategory($id: ID!, $limit: Int!) {
-      products(filter: { category: { equals: $id } }, pagination: { offset: 0, limit: $limit }) { ${PRODUCT_FIELDS} }
+      products(filter: { category: { equals: $id } }, pagination: { offset: 0, limit: $limit }) { ${PRODUCT_LIST_FIELDS} }
     }`,
     variables: { id: stream.ref, limit: stream.limit },
     pick: (data) => (data.products as ProductListItem[] | undefined) ?? [],
   };
 }
-
-export const SEARCH_QUERY = `query search($q: String!, $limit: Int!, $offset: Int!) {
-  products(filter: { title: { contains: $q } }, pagination: { offset: $offset, limit: $limit }) { ${PRODUCT_FIELDS} }
-}`;

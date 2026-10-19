@@ -3,21 +3,19 @@ import { formatPrice } from '@dantweb/oxid-fe-core';
 import { onBeforeUnmount, onMounted, ref, useId, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import type { ProductListItem } from '../../shop/api/queries';
-import { usePeroxidContext } from '../index';
-import { SEARCH_QUERY } from '../streams';
+import type { ProductListItem } from '../api/queries';
+import { useShopContext } from '../index';
+import { fetchSuggestions, MIN_CHARS, normalizeTerm } from './searchApi';
 
 const props = defineProps<{ autofocus?: boolean }>();
 const emit = defineEmits<{ done: [] }>();
 
-const MIN_CHARS = 2;
-const SUGGESTION_LIMIT = 5;
 const DEBOUNCE_MS = 250;
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const { client } = usePeroxidContext();
+const { client } = useShopContext();
 
 const root = ref<HTMLElement | null>(null);
 const input = ref<HTMLInputElement | null>(null);
@@ -32,13 +30,13 @@ let sequence = 0;
 
 watch(query, (value) => {
   clearTimeout(timer);
-  const term = value.trim();
+  const term = normalizeTerm(value);
   if (term.length < MIN_CHARS) {
     suggestions.value = [];
     open.value = false;
     return;
   }
-  timer = setTimeout(() => void fetchSuggestions(term), DEBOUNCE_MS);
+  timer = setTimeout(() => void showSuggestions(term), DEBOUNCE_MS);
 });
 
 watch(
@@ -50,20 +48,16 @@ watch(
   },
 );
 
-async function fetchSuggestions(term: string): Promise<void> {
+async function showSuggestions(term: string): Promise<void> {
   const mine = ++sequence;
   try {
-    const data = await client.execute<{ products: ProductListItem[] }>(SEARCH_QUERY, {
-      q: term,
-      limit: SUGGESTION_LIMIT,
-      offset: 0,
-    });
+    const found = await fetchSuggestions(client, term);
     if (mine !== sequence) {
       return; // a newer keystroke superseded this answer
     }
-    suggestions.value = data.products;
+    suggestions.value = found;
     active.value = -1;
-    open.value = data.products.length > 0;
+    open.value = found.length > 0;
   } catch {
     suggestions.value = [];
     open.value = false;
@@ -76,7 +70,7 @@ function close(): void {
 }
 
 function submit(): void {
-  const term = query.value.trim();
+  const term = normalizeTerm(query.value);
   if (!term) {
     return;
   }
@@ -140,10 +134,10 @@ onBeforeUnmount(() => {
         autocomplete="off"
         enterkeyhint="search"
         role="combobox"
-        :aria-label="t('peroxid.search.label')"
+        :aria-label="t('shop.search.label')"
         :aria-expanded="open"
         :aria-controls="listId"
-        :placeholder="t('peroxid.search.placeholder')"
+        :placeholder="t('shop.search.placeholder')"
         data-testid="pxd-search-input"
         @keydown="onKeydown"
         @focus="open = suggestions.length > 0"
@@ -151,7 +145,7 @@ onBeforeUnmount(() => {
       <button
         type="submit"
         class="pxd-search__submit"
-        :aria-label="t('peroxid.search.submit')"
+        :aria-label="t('shop.search.submit')"
         data-testid="pxd-search-submit"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">

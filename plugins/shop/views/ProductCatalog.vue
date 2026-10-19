@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CATALOG_READ } from '../api/cachePolicy';
 import { useHead } from '@unhead/vue';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -28,10 +29,14 @@ async function load(): Promise<void> {
   loading.value = true;
   failed.value = false;
   try {
-    const data = await client.execute<{ products: ProductListItem[] }>(PRODUCTS_QUERY, {
-      offset: page.value * pageSize,
-      limit: pageSize,
-    });
+    const data = await client.execute<{ products: ProductListItem[] }>(
+      PRODUCTS_QUERY,
+      {
+        offset: page.value * pageSize,
+        limit: pageSize,
+      },
+      CATALOG_READ,
+    );
     products.value = data.products;
   } catch {
     failed.value = true;
@@ -48,7 +53,7 @@ function goTo(nextPage: number): void {
 onMounted(() => {
   void load();
   void client
-    .execute<{ categories: CategoryItem[] }>(CATEGORIES_QUERY)
+    .execute<{ categories: CategoryItem[] }>(CATEGORIES_QUERY, undefined, CATALOG_READ)
     .then((data) => (categories.value = data.categories))
     .catch(() => undefined);
 });

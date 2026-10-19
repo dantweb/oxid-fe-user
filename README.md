@@ -9,8 +9,8 @@ GraphQL API (`graphql-base` + `graphql-storefront`). Modelled on
 
 ```
 src/            host: bootstrap, core wiring, router, i18n, layout, login
-plugins/shop/   first-party shop plugin: catalog, category, product detail, guest cart
-plugins/peroxid/ layout plugin: overrides header/footer/front page (search, cart icon, hero, streams)
+plugins/shop/   first-party shop plugin: catalog, category, product detail, guest cart, search
+plugins/peroxid/ layout plugin: overrides header/footer/front page (cart icon, hero, streams; places the shop's search box)
 oxid-config.yaml.dist   template of the per-instance configuration (docs/instance-configuration.md)
 resources/themes/       themes: <id>/config.json + styles/styles.less + images/ (docs/theming.md)
 Makefile                theme, compile, build, run, dev, debug, … — `make help`

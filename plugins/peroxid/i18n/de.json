@@ -4,18 +4,6 @@
   "cart": "Warenkorb",
   "cartCount": "Warenkorb, {count} Produkte",
   "logout": "Abmelden",
-  "search": {
-    "placeholder": "Kollektion durchsuchen",
-    "label": "Suche",
-    "open": "Suche öffnen",
-    "close": "Suche schließen",
-    "submit": "Suchen",
-    "results": "Ergebnisse für „{query}“",
-    "none": "Nichts gefunden für „{query}“.",
-    "prev": "Zurück",
-    "next": "Weiter",
-    "failed": "Die Suche konnte nicht abgeschlossen werden."
-  },
   "hero": {
     "eyebrow": "Die Peroxid-Auswahl",
     "title": "Objekte, die bleiben",

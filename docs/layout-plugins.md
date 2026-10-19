@@ -61,8 +61,11 @@ sticky:
 
 - brand (the theme logo, or the shop name as a wordmark), primary navigation from the enabled
   plugins' nav items;
-- **search** in the header: type-ahead suggestions (storefront `products(filter: {title})`),
-  Enter opens `/search?q=…` with paged results;
+- **search** in the header — the search itself belongs to the **`shop` plugin**
+  (`plugins/shop/search/`: box, `/search` page, query, limits); peroxid only places the box.
+  Type-ahead suggestions and paged results use `products(filter: {title: {contains}})`; the shop
+  core is not changed, so protection against huge catalogues is in the storefront (limits, cache)
+  — see `dev_log/20261019/reports/search-scale-spike.md`. Enter opens `/search?q=…`;
 - account entry and the **cart as an icon**: a badge shows the **number of distinct SKUs** in the
   cart (two units of one product count once); hidden when the cart is empty;
 - phones: navigation behind a menu button, search behind a search button that opens a full-width

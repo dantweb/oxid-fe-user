@@ -6,7 +6,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useCartStore } from '../../shop/stores/cart';
 import { usePeroxidContext } from '../index';
 import { useCompact } from '../useCompact';
-import SearchBox from './SearchBox.vue';
+import SearchBox from '../../shop/search/SearchBox.vue';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -104,7 +104,7 @@ function logout(): void {
           v-if="compact"
           type="button"
           class="pxd-iconbtn"
-          :aria-label="searchOpen ? t('peroxid.search.close') : t('peroxid.search.open')"
+          :aria-label="searchOpen ? t('shop.search.close') : t('shop.search.open')"
           :aria-expanded="searchOpen"
           data-testid="pxd-search-toggle"
           @click="toggleSearch"

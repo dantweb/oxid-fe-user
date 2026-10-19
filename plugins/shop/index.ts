@@ -28,6 +28,7 @@ const plugin: IPlugin = {
       props: true,
     },
     { path: '/shop/cart', component: () => import('./views/CartView.vue') },
+    { path: '/search', component: () => import('./search/SearchView.vue') },
   ],
   navItems: [
     { labelKey: 'shop.nav.catalog', to: '/shop', order: 10 },

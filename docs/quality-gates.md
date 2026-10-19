@@ -46,3 +46,19 @@ One source of truth for local work and CI — the same commands, byte-identical
   refusal is shown; `E2E_SHOP_ALLOWS_ACCOUNT_MANAGEMENT=1` (with `blAllowUsersToManageTheirReviews` and
   `blAllowUsersToDeleteTheirAccount` switched on in the shop) proves the real deletion.
   `account-evidence.spec.ts` regenerates `docs/dev_log/20261016/reports/account/`.
+
+## Before every commit: `bin/pre-commit-check.sh`
+
+One script, identical in `oxid-fe-core`, `oxid-fe-user` and `hydroxid-project`. It runs every gate
+above that the repo defines (lint + format, types, knip, `npm audit`, unit tests with coverage,
+build, violations report, Playwright e2e), collects all results and ends with `COMMITABLE` or
+`NON-COMMITABLE` (exit 0 / 1).
+
+```bash
+./bin/pre-commit-check.sh            # everything, including e2e
+./bin/pre-commit-check.sh --no-e2e   # no Playwright (no running shop needed)
+./bin/pre-commit-check.sh --fast     # static analysis + unit tests only
+```
+
+`npm audit` fails on any advisory — advisories are never waived; patch the dependency instead.
+oxid-fe-user's e2e needs a running shop (see above); hydroxid-project's e2e serves its own build.

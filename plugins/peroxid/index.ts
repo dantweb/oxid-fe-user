@@ -21,7 +21,7 @@ export const useStreams = (): StreamConfig[] => streams;
 
 /**
  * Layout plugin (docs/layout-plugins.md): takes over the header, the footer and the front page,
- * adds site search. Works on any theme; its `defaultTheme` is the partner look.
+ * its search comes from the shop plugin. Works on any theme; its `defaultTheme` is the partner look.
  */
 const plugin: IPlugin = {
   name: 'peroxid',
@@ -33,7 +33,6 @@ const plugin: IPlugin = {
     footer: () => import('./components/PeroxidFooter.vue'),
     home: () => import('./views/PeroxidHome.vue'),
   },
-  routes: [{ path: '/search', component: () => import('./views/SearchView.vue') }],
   messages: { en, de },
   defaultConfig: { streams: DEFAULT_STREAMS },
   setup(ctx) {

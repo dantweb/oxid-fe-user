@@ -4,6 +4,7 @@ import {
   EventBus,
   GraphqlClient,
   PluginRegistry,
+  ResponseCache,
   TokenStorage,
   type ResolvedTheme,
 } from '@dantweb/oxid-fe-core';
@@ -28,7 +29,7 @@ export const themeKey: InjectionKey<ResolvedTheme | null> = Symbol('oxfe-theme')
 
 /** Wires the core services. The app always talks same-origin `/graphql/` (dev proxy / nginx). */
 export function createCore(graphqlUrl = '/graphql/'): AppCore {
-  const client = new GraphqlClient({ url: graphqlUrl });
+  const client = new GraphqlClient({ url: graphqlUrl, cache: new ResponseCache() });
   const events = new EventBus();
   const auth = new AuthService(client, new TokenStorage(), events);
   return {

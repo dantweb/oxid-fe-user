@@ -4,18 +4,6 @@
   "cart": "Cart",
   "cartCount": "Cart, {count} products",
   "logout": "Sign out",
-  "search": {
-    "placeholder": "Search the collection",
-    "label": "Search",
-    "open": "Open search",
-    "close": "Close search",
-    "submit": "Search",
-    "results": "Results for “{query}”",
-    "none": "Nothing found for “{query}”.",
-    "prev": "Previous",
-    "next": "Next",
-    "failed": "The search could not be completed."
-  },
   "hero": {
     "eyebrow": "The Peroxid edit",
     "title": "Objects made to be kept",
