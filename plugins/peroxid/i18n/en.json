@@ -23,5 +23,8 @@
     "rights": "All rights reserved.",
     "shop": "Shop",
     "search": "Search"
+  },
+  "language": {
+    "label": "Language"
   }
 }

@@ -321,4 +321,28 @@ test.describe(`peroxid layout on a real device profile`, () => {
       await expectNoHorizontalScroll(page, path);
     }
   });
+  test('language switch by touch: in the drawer, a full tap target, and the page follows', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await settle(page);
+    // a folded phone shows the drawer; an unfolded one is wide enough for the desktop dropdown
+    if (isCompact(page)) {
+      await page.getByTestId('pxd-menu-toggle').tap();
+    } else {
+      await page.getByTestId('pxd-language').tap();
+    }
+    const options = page.getByTestId('pxd-language-option');
+    await expect(options).toHaveText(['English', 'Deutsch']);
+    await expectInsideViewport(page, options.nth(1), 'language option');
+    await expectTapTarget(options.nth(1), 'language option');
+    await expectNoHorizontalScroll(page, 'the languages');
+
+    await options.nth(1).tap();
+
+    await expect(page.locator('html')).toHaveAttribute('lang', 'de', { timeout: 20_000 });
+    await expect(page.getByTestId('pxd-rail-title').first()).toHaveText('Neuheiten', {
+      timeout: 20_000,
+    });
+  });
 });

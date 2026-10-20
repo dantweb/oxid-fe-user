@@ -23,5 +23,8 @@
     "rights": "Alle Rechte vorbehalten.",
     "shop": "Shop",
     "search": "Suche"
+  },
+  "language": {
+    "label": "Sprache"
   }
 }

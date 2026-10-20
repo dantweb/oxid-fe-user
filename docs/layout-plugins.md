@@ -66,6 +66,11 @@ sticky:
   Type-ahead suggestions and paged results use `products(filter: {title: {contains}})`; the shop
   core is not changed, so protection against huge catalogues is in the storefront (limits, cache)
   — see `dev_log/20261019/reports/search-scale-spike.md`. Enter opens `/search?q=…`;
+- the **language change** as Apex shows it: a button with the current language's name opens the
+  list of the instance's languages by their own names ("English", "Deutsch" — from the browser's
+  `Intl.DisplayNames`, no copy to maintain), the active one marked; on phones it sits in the
+  drawer. It is the same switch as the default header's (core `useLocaleSwitch`): the choice is
+  stored and the page reloads so UI copy **and** shop content follow. Hidden with one language;
 - account entry and the **cart as an icon**: a badge shows the **number of distinct SKUs** in the
   cart (two units of one product count once); hidden when the cart is empty;
 - phones: navigation behind a menu button, search behind a search button that opens a full-width

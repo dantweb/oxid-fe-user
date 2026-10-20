@@ -1,21 +1,10 @@
 <script setup lang="ts">
-import { inject } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { instanceKey } from '../core';
-import { LOCALE_STORAGE_KEY } from '../i18n';
+import { useLocaleSwitch } from '@dantweb/oxid-fe-core';
 
-const { locale, availableLocales } = useI18n();
-// the instance's order (oxid-config.yaml `i18n.locales`), not vue-i18n's alphabetical one
-const locales = inject(instanceKey)?.i18n.locales ?? availableLocales;
+const { locale, locales, switchTo } = useLocaleSwitch();
 
 function change(event: Event): void {
-  const next = (event.target as HTMLSelectElement).value;
-  locale.value = next;
-  try {
-    globalThis.localStorage?.setItem(LOCALE_STORAGE_KEY, next);
-  } catch {
-    /* choice lasts for this page view */
-  }
+  switchTo((event.target as HTMLSelectElement).value);
 }
 </script>
 

@@ -7,6 +7,8 @@ import { useCartStore } from '../../shop/stores/cart';
 import { usePeroxidContext } from '../index';
 import { useCompact } from '../useCompact';
 import SearchBox from '../../shop/search/SearchBox.vue';
+import LanguageMenu from './LanguageMenu.vue';
+import LanguageOptions from './LanguageOptions.vue';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -115,6 +117,8 @@ function logout(): void {
           </svg>
         </button>
 
+        <LanguageMenu v-if="!compact" />
+
         <router-link
           :to="authenticated ? '/dashboard' : '/login'"
           class="pxd-iconbtn"
@@ -164,6 +168,10 @@ function logout(): void {
       <button v-if="authenticated" type="button" data-testid="pxd-logout" @click="logout">
         {{ t('peroxid.logout') }}
       </button>
+      <div class="pxd-drawer__language">
+        <span class="pxd-drawer__label">{{ t('peroxid.language.label') }}</span>
+        <LanguageOptions @chosen="menuOpen = false" />
+      </div>
     </nav>
   </header>
 </template>
@@ -328,5 +336,18 @@ function logout(): void {
     letter-spacing: 0.14em;
     text-align: center;
   }
+}
+.pxd-drawer__language {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--oxfe-color-border, #e4ded3);
+}
+.pxd-drawer__label {
+  display: block;
+  padding: 8px 16px 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--oxfe-color-text-muted, #6b655b);
 }
 </style>
