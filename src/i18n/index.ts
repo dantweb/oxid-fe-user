@@ -11,8 +11,8 @@ const CATALOGS: Record<string, Record<string, unknown>> = { en, de };
 type I18nConfig = InstanceConfig['i18n'];
 
 /**
- * Initial language: the shopper's saved choice, else the browser language, else the instance
- * default — each only if the instance actually offers it.
+ * Initial language: the shopper's saved choice, else the browser language (unless the instance
+ * sets `browser_language: false`), else the instance default — each only if the instance offers it.
  */
 export function pickLocale(
   config: I18nConfig,
@@ -23,7 +23,9 @@ export function pickLocale(
   if (savedLocale && offered.has(savedLocale)) {
     return savedLocale;
   }
-  const browser = browserLanguage?.toLowerCase().split('-')[0];
+  const browser = config.browser_language
+    ? browserLanguage?.toLowerCase().split('-')[0]
+    : undefined;
   if (browser && offered.has(browser)) {
     return browser;
   }

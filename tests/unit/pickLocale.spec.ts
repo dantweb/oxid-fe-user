@@ -22,4 +22,10 @@ describe('pickLocale', () => {
   it('a single-language instance always answers in that language', () => {
     expect(pickLocale(germanOnly, 'en-GB', null)).toBe('de');
   });
+
+  it('browser_language: false — the instance default opens first, the browser is ignored', () => {
+    const fixed = { ...both, browser_language: false };
+    expect(pickLocale(fixed, 'de-AT', null)).toBe('en');
+    expect(pickLocale(fixed, 'de-AT', 'de')).toBe('de'); // a saved choice (the dropdown) still wins
+  });
 });

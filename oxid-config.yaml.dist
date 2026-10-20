@@ -24,6 +24,7 @@ i18n:
   default_locale: en
   fallback_locale: en
   locales: [en, de] # more than one -> a language switcher appears in the header
+  # browser_language: false # open in default_locale even for a visitor whose browser prefers another offered language
 
 # Theme of this instance (resources/themes/<id>/, see docs/theming.md).
 #   default: fallback theme, used when `active` cannot be loaded

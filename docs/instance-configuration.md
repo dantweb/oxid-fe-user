@@ -42,19 +42,20 @@ their settings, extra files, extra plugins. The app bundle is identical for all 
 
 ## Reference
 
-| Key                      | Default           | Meaning                                                                                                                         |
-| ------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `instance.id`            | `default`         | machine name of the instance (logs, support)                                                                                    |
-| `instance.name`          | `OXID Storefront` | shop name — header, footer, `<title>` suffix (`app.title` in every locale)                                                      |
-| `shop.graphql_url`       | `/graphql/`       | the shop's GraphQL endpoint as the browser reaches it; same-origin recommended (nginx proxies it to `API_UPSTREAM`)             |
-| `i18n.locales`           | `[en, de]`        | languages offered by this instance; **more than one** shows a language switcher; bundled catalogs: `en`, `de`                   |
-| `i18n.default_locale`    | `en`              | initial language (must be in `locales`); the browser language wins if it is in `locales`                                        |
-| `i18n.fallback_locale`   | `en`              | catalog used for missing keys                                                                                                   |
-| `theme.default`          | `default`         | fallback theme when `active` cannot be loaded (see `theming.md`)                                                                |
-| `theme.active`           | —                 | the theme this instance runs (`resources/themes/<id>/`). Omitted: the `defaultTheme` of an enabled plugin, else `theme.default` |
-| `plugins.<name>.enabled` | `true`            | `false` → plugin not loaded: no routes, no nav entry                                                                            |
-| `plugins.<name>.source`  | `bundled`         | `bundled` = compiled into the app; `external` = loaded at runtime from `<instance>/plugins/<name>/index.js`                     |
-| `plugins.<name>.config`  | `{}`              | merged over the plugin's `defaultConfig` (e.g. `products_per_page`)                                                             |
+| Key                      | Default           | Meaning                                                                                                                                                                                           |
+| ------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `instance.id`            | `default`         | machine name of the instance (logs, support)                                                                                                                                                      |
+| `instance.name`          | `OXID Storefront` | shop name — header, footer, `<title>` suffix (`app.title` in every locale)                                                                                                                        |
+| `shop.graphql_url`       | `/graphql/`       | the shop's GraphQL endpoint as the browser reaches it; same-origin recommended (nginx proxies it to `API_UPSTREAM`)                                                                               |
+| `i18n.locales`           | `[en, de]`        | languages offered by this instance; **more than one** shows a language switcher; bundled catalogs: `en`, `de`                                                                                     |
+| `i18n.default_locale`    | `en`              | initial language (must be in `locales`); the browser language wins if it is in `locales`                                                                                                          |
+| `i18n.browser_language`  | `true`            | first visit: `true` opens in the browser's language when it is in `locales`; `false` always opens in `default_locale` (the shopper switches with the header dropdown; a saved choice always wins) |
+| `i18n.fallback_locale`   | `en`              | catalog used for missing keys                                                                                                                                                                     |
+| `theme.default`          | `default`         | fallback theme when `active` cannot be loaded (see `theming.md`)                                                                                                                                  |
+| `theme.active`           | —                 | the theme this instance runs (`resources/themes/<id>/`). Omitted: the `defaultTheme` of an enabled plugin, else `theme.default`                                                                   |
+| `plugins.<name>.enabled` | `true`            | `false` → plugin not loaded: no routes, no nav entry                                                                                                                                              |
+| `plugins.<name>.source`  | `bundled`         | `bundled` = compiled into the app; `external` = loaded at runtime from `<instance>/plugins/<name>/index.js`                                                                                       |
+| `plugins.<name>.config`  | `{}`              | merged over the plugin's `defaultConfig` (e.g. `products_per_page`)                                                                                                                               |
 
 ## The `public/` overlay
 
