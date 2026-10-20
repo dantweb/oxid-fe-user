@@ -31,7 +31,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['scripts/**/*.mjs'],
+    files: ['scripts/**/*.mjs', 'scripts/perf/**/*.ts'],
     languageOptions: { globals: globals.node },
     rules: { 'no-console': 'off' },
   },

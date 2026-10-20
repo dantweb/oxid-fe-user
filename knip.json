@@ -1,4 +1,14 @@
 {
-  "entry": ["plugins/*/index.ts", "tests/e2e/**/*.spec.ts", "scripts/public-config-cli.mjs"],
-  "project": ["src/**/*.{ts,vue}", "plugins/**/*.{ts,vue}", "scripts/**/*.mjs"]
+  "entry": [
+    "plugins/*/index.ts",
+    "tests/e2e/**/*.spec.ts",
+    "scripts/public-config-cli.mjs",
+    "scripts/perf/search-index/{generate-tsv,load-rods,run-benchmark,migrate,build-report}.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,vue}",
+    "plugins/**/*.{ts,vue}",
+    "scripts/**/*.mjs",
+    "scripts/perf/**/*.ts"
+  ]
 }
