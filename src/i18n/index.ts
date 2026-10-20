@@ -23,9 +23,9 @@ export function pickLocale(
   if (savedLocale && offered.has(savedLocale)) {
     return savedLocale;
   }
-  const browser = config.browser_language
-    ? browserLanguage?.toLowerCase().split('-')[0]
-    : undefined;
+  // absent (plain objects in tests) counts as true, the schema's default
+  const browser =
+    config.browser_language === false ? undefined : browserLanguage?.toLowerCase().split('-')[0];
   if (browser && offered.has(browser)) {
     return browser;
   }

@@ -1,8 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { pickLocale } from '../../src/i18n';
 
-const both = { default_locale: 'en', fallback_locale: 'en', locales: ['en', 'de'] };
-const germanOnly = { default_locale: 'de', fallback_locale: 'de', locales: ['de'] };
+const both = {
+  default_locale: 'en',
+  fallback_locale: 'en',
+  locales: ['en', 'de'],
+  browser_language: true,
+};
+const germanOnly = {
+  default_locale: 'de',
+  fallback_locale: 'de',
+  locales: ['de'],
+  browser_language: true,
+};
 
 describe('pickLocale', () => {
   it('prefers the shopper’s saved choice when the instance offers it', () => {
