@@ -1,9 +1,9 @@
 import '@dantweb/oxid-fe-core/styles/variables.css';
 import '@dantweb/oxid-fe-core/styles/components.css';
-import { loadTheme, type IPlugin } from '@dantweb/oxid-fe-core';
+import { loadTheme, localeSwitchKey, type IPlugin } from '@dantweb/oxid-fe-core';
 import { createHead } from '@unhead/vue/client';
 import { createPinia } from 'pinia';
-import { createApp } from 'vue';
+import { createApp, type Ref } from 'vue';
 import App from './App.vue';
 import { loadInstanceConfig } from './config/load';
 import { loadConfiguredPlugins } from './config/plugins';
@@ -68,6 +68,11 @@ async function bootstrap(options: StartStorefrontOptions): Promise<void> {
   // the shop answers in the storefront's language (follows a language switch), not the browser's
   core.client.setLanguageProvider(() => activeLocale(i18n));
   app.use(i18n);
+  // the one language switch, for the host header and any layout plugin (core: useLocaleSwitch)
+  app.provide(localeSwitchKey, {
+    locale: i18n.global.locale as Ref<string>,
+    locales: config.i18n.locales,
+  });
   app.use(createAppRouter(core.registry, core.auth));
   app.mount('#app');
 

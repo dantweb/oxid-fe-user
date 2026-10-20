@@ -1,4 +1,4 @@
-import type { PluginRegistry } from '@dantweb/oxid-fe-core';
+import { LOCALE_STORAGE_KEY, type PluginRegistry } from '@dantweb/oxid-fe-core';
 import { unref } from 'vue';
 import { createI18n, type I18n, type LocaleMessageDictionary, type VueMessageType } from 'vue-i18n';
 import type { InstanceConfig } from '../config/schema';
@@ -7,8 +7,6 @@ import en from './en.json';
 
 /** Message catalogs shipped with the app; an instance may offer any subset of these locales. */
 const CATALOGS: Record<string, Record<string, unknown>> = { en, de };
-
-export const LOCALE_STORAGE_KEY = 'oxfe_locale';
 
 type I18nConfig = InstanceConfig['i18n'];
 

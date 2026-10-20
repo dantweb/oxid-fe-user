@@ -84,3 +84,13 @@ everything, including the login. Core now treats the shop's refusal as the truth
 dropped (`SessionExpired` if it was a customer's), a **query** is retried once without it, a
 mutation is not replayed, and the `token` calls (login, guest token) never carry a token. A stored
 value that is not a JWT is dropped on read. `tests/e2e/stale-token.spec.ts` seeds a forged token.
+
+## Language switch
+
+One implementation, in core: the host provides its vue-i18n locale ref and the instance's ordered
+locales through `localeSwitchKey`; the host header's `<select>` and peroxid's Apex-style dropdown
+(`plugins/peroxid/components/LanguageMenu.vue`, `LanguageOptions.vue`) both call
+`useLocaleSwitch().switchTo(code)`. The choice is stored under `oxfe_locale` (read at boot by
+`pickLocale`) and the page reloads — like the shop's own language links — so every view fetches its
+shop content in the new language (the request cache is keyed by language). Names come from
+`languageName()` (`Intl.DisplayNames`, upper-cased code as fallback).
