@@ -1,6 +1,6 @@
 {
   "name": "@dantweb/oxid-fe-user",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Standalone Vue 3 storefront for headless OXID eShop — plugin-host app on @dantweb/oxid-fe-core.",
   "license": "BUSL-1.1",
   "private": true,

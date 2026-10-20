@@ -34,6 +34,8 @@ export const instanceConfigSchema = z
         default_locale: z.string().min(1).default('en'),
         fallback_locale: z.string().min(1).default('en'),
         locales: z.array(z.string().min(1)).min(1).default(['en', 'de']),
+        /** first visit: use the browser's language when offered (true) or always the default (false) */
+        browser_language: z.boolean().default(true),
       })
       .default({}),
     theme: z
