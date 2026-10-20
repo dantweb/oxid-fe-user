@@ -20,9 +20,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: dantweb/oxid-fe-core
-          # TEMPORARY: the core branch that carries useLocaleSwitch (sprint 16). Remove this line
-          # once oxid-fe-core feature/locale-switch is merged to main.
-          ref: feature/locale-switch
           ssh-key: ${{ secrets.CORE_DEPLOY_KEY }}
           path: oxid-fe-core
       - uses: actions/setup-node@v4
