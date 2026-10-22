@@ -1,7 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import {
   ORDERABLE_PRODUCT_ID,
-  STRIPE_CARD_DETAILS,
   STRIPE_TEST_CARDS,
   TEST_USER,
   TEST_USER_CONFIGURED,
