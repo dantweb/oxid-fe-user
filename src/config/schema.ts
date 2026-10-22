@@ -28,7 +28,17 @@ export const instanceConfigSchema = z
         name: z.string().min(1).default('OXID Storefront'),
       })
       .default({}),
-    shop: z.object({ graphql_url: z.string().min(1).default('/graphql/') }).default({}),
+    shop: z
+      .object({
+        graphql_url: z.string().min(1).default('/graphql/'),
+        /** subshop id sent as `?shp=`; omitted: the shop's default shop */
+        id: z.number().int().min(1).optional(),
+        /** locale → the shop's numeric language id, sent as `?lang=` (the demo shop's ids by default) */
+        language_ids: z
+          .record(z.string().min(1), z.number().int().min(0))
+          .default({ de: 0, en: 1 }),
+      })
+      .default({}),
     i18n: z
       .object({
         default_locale: z.string().min(1).default('en'),

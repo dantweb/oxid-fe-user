@@ -2,7 +2,7 @@
  * The ONLY instance configuration the browser receives.
  *
  * `oxid-config.yaml` is a deployment file: it stays on the server and is never served. This script
- * renders the browser's `oxid-config.json` from it — an ALLOW-LIST (instance, shop.graphql_url,
+ * renders the browser's `oxid-config.json` from it — an ALLOW-LIST (instance, shop.graphql_url / id / language_ids,
  * i18n, theme, and per plugin: enabled / source / config) — and refuses to render at all when
  * anything in it looks like a secret (key names such as secret / password / token / api_key, or
  * values such as sk_live_…, whsec_…, ghp_…, private keys, credentials inside a URL). A mistake
@@ -13,7 +13,7 @@
 import { parse } from 'yaml';
 
 const TOP_LEVEL = ['instance', 'shop', 'i18n', 'theme', 'plugins'];
-const SHOP_FIELDS = ['graphql_url'];
+const SHOP_FIELDS = ['graphql_url', 'id', 'language_ids'];
 const PLUGIN_FIELDS = ['enabled', 'source', 'config'];
 
 const SECRET_KEY = /secret|passw(or)?d|token|api[_-]?key|private|credential|authorization|bearer/i;

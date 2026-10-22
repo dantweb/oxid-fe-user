@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Request } from '@playwright/test';
 import { withInstanceConfig } from './helpers/config';
 
 /**
@@ -45,4 +45,67 @@ test('an English instance asks the shop in English although the browser is Germa
   const languages = await graphqlLanguages(browser, ENGLISH_ONLY, 'de-DE');
 
   expect(new Set(languages)).toEqual(new Set(['en']));
+});
+
+/** Sprint 139b: the documented `?lang=` id travels with every request, next to Accept-Language. */
+function collectGraphqlRequests(page: import('@playwright/test').Page): Request[] {
+  const seen: Request[] = [];
+  page.on('request', (request) => {
+    if (request.url().includes('/graphql')) {
+      seen.push(request);
+    }
+  });
+  return seen;
+}
+
+const langOf = (request: Request): string | null => new URL(request.url()).searchParams.get('lang');
+
+test('a German-only instance sends lang=0 on every request, still with Accept-Language', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ locale: 'en-US' });
+  const page = await context.newPage();
+  await withInstanceConfig(page, GERMAN_ONLY);
+  const requests = collectGraphqlRequests(page);
+  await page.goto('/shop');
+  await expect(page.getByTestId('product-card').first()).toBeVisible({ timeout: 30_000 });
+
+  expect(requests.length).toBeGreaterThan(0);
+  expect(new Set(requests.map(langOf))).toEqual(new Set(['0']));
+  expect(new Set(requests.map((r) => r.headers()['accept-language']))).toEqual(new Set(['de']));
+  await context.close();
+});
+
+test('an English-only instance sends lang=1 on every request, still with Accept-Language', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ locale: 'de-DE' });
+  const page = await context.newPage();
+  await withInstanceConfig(page, ENGLISH_ONLY);
+  const requests = collectGraphqlRequests(page);
+  await page.goto('/shop');
+  await expect(page.getByTestId('product-card').first()).toBeVisible({ timeout: 30_000 });
+
+  expect(new Set(requests.map(langOf))).toEqual(new Set(['1']));
+  expect(new Set(requests.map((r) => r.headers()['accept-language']))).toEqual(new Set(['en']));
+  await context.close();
+});
+
+test('the language id follows the language switch', async ({ browser }) => {
+  const context = await browser.newContext({ locale: 'en-US' });
+  const page = await context.newPage();
+  await withInstanceConfig(
+    page,
+    'i18n: { default_locale: en, locales: [en, de] }\nplugins:\n  shop: {}\n',
+  );
+  const requests = collectGraphqlRequests(page);
+  await page.goto('/shop');
+  await expect(page.getByTestId('product-card').first()).toBeVisible({ timeout: 30_000 });
+  expect(new Set(requests.map(langOf))).toEqual(new Set(['1']));
+
+  requests.length = 0;
+  await page.getByTestId('locale-switcher').selectOption('de');
+  await expect.poll(() => requests.length, { timeout: 15_000 }).toBeGreaterThan(0);
+  expect(new Set(requests.map(langOf))).toEqual(new Set(['0']));
+  await context.close();
 });
