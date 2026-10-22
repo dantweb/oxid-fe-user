@@ -43,5 +43,32 @@
   "errors": {
     "basket": "Der Warenkorb konnte nicht vorbereitet werden: {message}",
     "start": "Die Zahlung konnte nicht gestartet werden: {message}"
+  },
+  "guest": {
+    "intro": "Kein Konto nötig: Geben Sie Ihre E-Mail-Adresse an und wohin die Bestellung gehen soll.",
+    "haveAccount": "Ich habe bereits ein Konto",
+    "detailsHeadline": "1 · Ihre Angaben",
+    "email": "E-Mail-Adresse",
+    "invoiceAddress": "Rechnungsadresse",
+    "deliverElsewhere": "An eine andere Adresse liefern",
+    "deliveryAddress": "Lieferadresse",
+    "emptyCart": "Ihr Warenkorb ist leer.",
+    "noPayment": "In diesem Shop ist keine Zahlungsart verfügbar.",
+    "logInInstead": "Anmelden oder eine andere E-Mail-Adresse verwenden",
+    "salutation": {
+      "label": "Anrede",
+      "MR": "Herr",
+      "MRS": "Frau"
+    },
+    "invalid": {
+      "required": "Bitte füllen Sie dieses Feld aus.",
+      "email": "Bitte geben Sie eine gültige E-Mail-Adresse an."
+    },
+    "providers": {
+      "payment-stripe": "Karte und Wallets (Stripe)",
+      "payment-paypal": "PayPal",
+      "payment-mollie": "Mollie"
+    },
+    "paymentHeadline": "2 · Zahlung"
   }
 }

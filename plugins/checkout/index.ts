@@ -18,20 +18,20 @@ const plugin: IPlugin = {
   routes: [
     {
       path: '/checkout',
-      component: () => import('./views/CheckoutView.vue'),
-      meta: { requiresAuth: true },
+      component: () => import('./views/CheckoutEntry.vue'),
+      meta: { guestCheckout: true },
     },
     {
       path: '/checkout/return/:provider',
       component: () => import('./views/ReturnView.vue'),
       props: true,
-      meta: { requiresAuth: true },
+      meta: { guestCheckout: true },
     },
     {
       path: '/checkout/cancel/:provider',
       component: () => import('./views/CancelView.vue'),
       props: true,
-      meta: { requiresAuth: true },
+      meta: { guestCheckout: true },
     },
   ],
   messages: { en, de },

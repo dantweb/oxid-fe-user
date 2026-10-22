@@ -75,7 +75,7 @@ async function bootstrap(options: StartStorefrontOptions): Promise<void> {
     locale: i18n.global.locale as Ref<string>,
     locales: config.i18n.locales,
   });
-  app.use(createAppRouter(core.registry, core.auth));
+  app.use(createAppRouter(core.registry, core.auth, config));
   app.mount('#app');
 
   // Guest session (anonymous token) for basket work later; browsing works without it.

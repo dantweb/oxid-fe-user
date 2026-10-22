@@ -54,6 +54,12 @@ export const instanceConfigSchema = z
         active: z.string().min(1).optional(),
       })
       .default({}),
+    checkout: z
+      .object({
+        /** pay without an account (anonymous token + guest details); false: checkout needs a login */
+        guest: z.boolean().default(true),
+      })
+      .default({}),
     debug: z
       .object({
         /** show a collapsible code + raw message block under error texts (developers only) */

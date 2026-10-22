@@ -3,7 +3,7 @@
  *
  * `oxid-config.yaml` is a deployment file: it stays on the server and is never served. This script
  * renders the browser's `oxid-config.json` from it — an ALLOW-LIST (instance, shop.graphql_url / id / language_ids,
- * i18n, theme, debug, and per plugin: enabled / source / config) — and refuses to render at all when
+ * i18n, theme, checkout.guest, debug, and per plugin: enabled / source / config) — and refuses to render at all when
  * anything in it looks like a secret (key names such as secret / password / token / api_key, or
  * values such as sk_live_…, whsec_…, ghp_…, private keys, credentials inside a URL). A mistake
  * therefore stops the build or the container start, instead of reaching a visitor.
@@ -12,8 +12,9 @@
  */
 import { parse } from 'yaml';
 
-const TOP_LEVEL = ['instance', 'shop', 'i18n', 'theme', 'debug', 'plugins'];
+const TOP_LEVEL = ['instance', 'shop', 'i18n', 'theme', 'checkout', 'debug', 'plugins'];
 const SHOP_FIELDS = ['graphql_url', 'id', 'language_ids'];
+const CHECKOUT_FIELDS = ['guest'];
 const DEBUG_FIELDS = ['errors'];
 const PLUGIN_FIELDS = ['enabled', 'source', 'config'];
 
@@ -74,6 +75,9 @@ export function renderPublicConfig(yamlText) {
   const publicConfig = pick(raw, TOP_LEVEL);
   if (publicConfig.shop && typeof publicConfig.shop === 'object') {
     publicConfig.shop = pick(publicConfig.shop, SHOP_FIELDS);
+  }
+  if (publicConfig.checkout && typeof publicConfig.checkout === 'object') {
+    publicConfig.checkout = pick(publicConfig.checkout, CHECKOUT_FIELDS);
   }
   if (publicConfig.debug && typeof publicConfig.debug === 'object') {
     publicConfig.debug = pick(publicConfig.debug, DEBUG_FIELDS);
