@@ -3,6 +3,7 @@ import { isPaymentPlugin } from '@dantweb/oxid-fe-core';
 import { onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
+import { dropQueryString } from '../../../src/navigation';
 import { useCheckoutContext } from '../index';
 import { useCheckoutStore } from '../stores/checkout';
 
@@ -16,6 +17,7 @@ const { registry } = useCheckoutContext();
 const done = ref(false);
 
 onMounted(async () => {
+  dropQueryString(); // a provider's own parameters (PayPal `token`) have no use here
   const attempt = checkout.attempt;
   const plugin = registry.all().find((p) => p.name === props.provider && isPaymentPlugin(p));
   if (attempt && plugin && isPaymentPlugin(plugin) && attempt.provider === props.provider) {

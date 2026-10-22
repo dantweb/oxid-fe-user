@@ -5,6 +5,7 @@ import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { coreKey } from '../core';
+import { dropQueryString } from '../navigation';
 
 const core = inject(coreKey);
 if (!core) {
@@ -25,6 +26,8 @@ const RESET = /* GraphQL */ `
 /** The update key the shop's mail carries (`?uid=…`). */
 const route = useRoute();
 const key = typeof route.query.uid === 'string' ? route.query.uid : '';
+// the key lives in component state from here on, not in the address bar or the history (138c)
+dropQueryString();
 const password = ref('');
 const repeat = ref('');
 const done = ref(false);
