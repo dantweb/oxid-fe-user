@@ -1,9 +1,14 @@
 /** Shared e2e data. Credentials come from tests/e2e/.env (see .env.dist), like the Stripe module's suite. */
 
+/** The shop customer the checkout specs sign in as. No default: a committed login is a leak. */
 export const TEST_USER = {
-  email: process.env.TEST_USER_EMAIL ?? 'playwright.user@oxid-esales.dev',
-  password: process.env.TEST_USER_PASSWORD ?? 'useruser',
+  email: process.env.TEST_USER_EMAIL ?? '',
+  password: process.env.TEST_USER_PASSWORD ?? '',
 };
+/** `test.skip(!TEST_USER_CONFIGURED, TEST_USER_MISSING)` in every spec that signs in as TEST_USER. */
+export const TEST_USER_CONFIGURED = TEST_USER.email !== '' && TEST_USER.password !== '';
+export const TEST_USER_MISSING =
+  'TEST_USER_EMAIL / TEST_USER_PASSWORD not set (tests/e2e/.env, see .env.dist)';
 
 export const STRIPE_TEST_CARDS = {
   VISA_SUCCESS: '4242424242424242',

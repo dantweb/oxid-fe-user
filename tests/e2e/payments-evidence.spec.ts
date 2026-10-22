@@ -1,6 +1,9 @@
 import { test } from '@playwright/test';
 import { confirmTerms, openPaymentStep } from './helpers/checkout';
 import { paypalButtons } from './helpers/paypal';
+import { TEST_USER_CONFIGURED, TEST_USER_MISSING } from './fixtures/test-data';
+
+test.skip(!TEST_USER_CONFIGURED, TEST_USER_MISSING);
 
 /** Evidence for docs/dev_log/20261016/reports/payments: each method's inline UI on the checkout page. */
 const OUT = 'docs/dev_log/20261016/reports/payments';

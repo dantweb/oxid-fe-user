@@ -12,6 +12,9 @@ import {
   PAYPAL_BUYER,
   paypalButtons,
 } from './helpers/paypal';
+import { TEST_USER_CONFIGURED, TEST_USER_MISSING } from './fixtures/test-data';
+
+test.skip(!TEST_USER_CONFIGURED, TEST_USER_MISSING);
 
 /**
  * PayPal in iframe mode: Smart Buttons on the checkout page; the approval happens in PayPal's popup,

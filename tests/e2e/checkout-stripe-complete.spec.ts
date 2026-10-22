@@ -4,9 +4,13 @@ import {
   STRIPE_CARD_DETAILS,
   STRIPE_TEST_CARDS,
   TEST_USER,
+  TEST_USER_CONFIGURED,
+  TEST_USER_MISSING,
 } from './fixtures/test-data';
 import { HOSTED_PAYMENTS_CONFIG, withInstanceConfig } from './helpers/config';
 import { signIn } from './helpers/session';
+
+test.skip(!TEST_USER_CONFIGURED, TEST_USER_MISSING);
 
 /**
  * A completed payment, end to end: storefront checkout → Stripe's hosted page

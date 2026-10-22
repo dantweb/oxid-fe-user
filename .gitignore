@@ -10,3 +10,6 @@ playwright-report/
 
 # compiled themes (npm run build:themes)
 /public/themes/
+
+# Secret-scan reports produced by .github/workflows/gitleaks.yml
+gitleaks-*.sarif

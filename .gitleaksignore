@@ -1,0 +1,13 @@
+# Historical findings pinned by exact fingerprint (commit:file:rule:line), one per line.
+# Written 2026-10-22 (subsprint 138a). Every entry below was redacted in the working tree
+# in the same subsprint or is a documented false positive; none of them narrows the scan.
+# A history rewrite is the user's decision (138a A4); until then these keep the full-history
+# scan green without hiding anything new.
+
+# 810203b4: Sprint 10: the Stripe publishable key in two instance configs (public id; removed from the tree in 5c65b6c, rewrite decision pending, 138a A4)
+810203b4906ba58aecde39a56cc75d1dc4b2a469:instances/example-b/oxid-config.yaml:stripe-publishable-key:24
+810203b4906ba58aecde39a56cc75d1dc4b2a469:instances/example-peroxid/oxid-config.yaml:stripe-publishable-key:27
+
+# a4a00621: the pay1 test login in .env.dist and the e2e fixture fallback; redacted in the tree by 138a, password to be rotated (A3)
+a4a006211ecacd8e6541c2d45e27eead03f59ece:tests/e2e/.env.dist:credential-pair-email-then-password:3
+a4a006211ecacd8e6541c2d45e27eead03f59ece:tests/e2e/fixtures/test-data.ts:credential-pair-email-then-password:4
