@@ -26,14 +26,17 @@ async function checkoutWith(page: import('@playwright/test').Page, productId: st
   await ensureAddress(page);
 }
 
-test('a product the shop refuses: the reason is shown with a way back — not a blank step', async ({
+test('a product the shop refuses: a translated reason is shown with a way back — not a blank step', async ({
   page,
 }) => {
   await checkoutWith(page, PRODUCT_NOT_ORDERABLE);
 
-  await expect(page.getByTestId('checkout-error')).toContainText(/can not be ordered/, {
-    timeout: 30_000,
-  });
+  // sprint 138f: a translated sentence, never the shop's own reason text
+  await expect(page.getByTestId('checkout-error').first()).toContainText(
+    /The basket could not be prepared/,
+    { timeout: 30_000 },
+  );
+  await expect(page.getByTestId('checkout-error').first()).not.toContainText(/can not be ordered/);
   await expect(page.getByTestId('checkout-error-cart')).toHaveAttribute('href', '/shop/cart');
   await expect(page.getByTestId('confirm-terms')).toHaveCount(0);
 });

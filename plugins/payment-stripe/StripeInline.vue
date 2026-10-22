@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { useStripeInline } from './index';
 
 const props = defineProps<{ basketId: string; returnUrl: string; cancelUrl: string }>();
-const emit = defineEmits<{ attempt: [InlinePaymentAttempt]; failed: [string] }>();
+const emit = defineEmits<{ attempt: [InlinePaymentAttempt]; failed: [unknown] }>();
 
 interface EmbeddedCheckout {
   mount(target: HTMLElement): void;
@@ -72,7 +72,7 @@ onMounted(async () => {
     active = checkout;
     loading.value = false;
   } catch (cause) {
-    emit('failed', cause instanceof Error ? cause.message : String(cause));
+    emit('failed', cause);
   }
 });
 

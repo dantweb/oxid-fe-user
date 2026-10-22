@@ -55,3 +55,11 @@ describe('endpointParamsFor — what the client appends to the endpoint', () => 
     expect(endpointParamsFor(shopOf(''), 'fr')).toEqual({});
   });
 });
+
+describe('debug.errors', () => {
+  it('is off by default and accepts a boolean only', () => {
+    expect(parseInstanceConfig('').debug.errors).toBe(false);
+    expect(parseInstanceConfig('debug: { errors: true }').debug.errors).toBe(true);
+    expect(() => parseInstanceConfig('debug: { errors: yes please }')).toThrow(/invalid/);
+  });
+});

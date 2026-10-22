@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GraphqlError } from '@dantweb/oxid-fe-core';
+import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EMAIL_UPDATE } from '../api/queries';
@@ -10,7 +10,7 @@ const { t } = useI18n();
 const { client } = useDashboardContext();
 const email = ref(summary.value?.email ?? '');
 const saved = ref(false);
-const error = ref<string | null>(null);
+const error = ref<unknown>(null);
 const busy = ref(false);
 
 watch(
@@ -31,7 +31,7 @@ async function save(): Promise<void> {
     await refreshSummary(client);
     saved.value = true;
   } catch (cause) {
-    error.value = cause instanceof GraphqlError ? cause.message : t('dashboard.email.failed');
+    error.value = cause ?? new Error('unknown');
   } finally {
     busy.value = false;
   }
@@ -44,9 +44,14 @@ async function save(): Promise<void> {
       {{ t('dashboard.email.label') }}
       <input v-model="email" class="form-control" type="email" name="email" required />
     </label>
-    <p v-if="error" class="alert alert-danger" role="alert" data-testid="email-error">
-      {{ error }}
-    </p>
+    <ErrorAlert
+      v-if="error"
+      :error="error"
+      fallback="dashboard.email.failed"
+      class="alert alert-danger"
+      role="alert"
+      data-testid="email-error"
+    />
     <p v-if="saved" class="alert alert-success" data-testid="email-saved">
       {{ t('dashboard.email.saved') }}
     </p>

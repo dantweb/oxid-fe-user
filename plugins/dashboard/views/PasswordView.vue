@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GraphqlError } from '@dantweb/oxid-fe-core';
+import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PASSWORD_CHANGE } from '../api/queries';
@@ -12,7 +12,7 @@ const oldPassword = ref('');
 const newPassword = ref('');
 const repeatPassword = ref('');
 const changed = ref(false);
-const error = ref<string | null>(null);
+const error = ref<unknown>(null);
 const busy = ref(false);
 
 async function changePassword(): Promise<void> {
@@ -35,7 +35,7 @@ async function changePassword(): Promise<void> {
     newPassword.value = '';
     repeatPassword.value = '';
   } catch (cause) {
-    error.value = cause instanceof GraphqlError ? cause.message : t('dashboard.password.failed');
+    error.value = cause ?? new Error('unknown');
   } finally {
     busy.value = false;
   }
@@ -79,9 +79,14 @@ async function changePassword(): Promise<void> {
           autocomplete="new-password"
         />
       </label>
-      <p v-if="error" class="alert alert-danger" role="alert" data-testid="password-error">
-        {{ error }}
-      </p>
+      <ErrorAlert
+        v-if="error"
+        :error="error"
+        fallback="dashboard.password.failed"
+        class="alert alert-danger"
+        role="alert"
+        data-testid="password-error"
+      />
       <p v-if="changed" class="alert alert-success" data-testid="password-changed">
         {{ t('dashboard.password.changed') }}
       </p>

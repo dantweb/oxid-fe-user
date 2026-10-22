@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { addressSchema, GraphqlError, type AddressInput } from '@dantweb/oxid-fe-core';
+import { addressSchema, type AddressInput } from '@dantweb/oxid-fe-core';
+import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { onMounted, reactive, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
@@ -36,7 +37,7 @@ const invoice = reactive<AddressInput>({
   countryId: DEFAULT_COUNTRY_ID,
 });
 const invoiceSaved = ref(false);
-const invoiceError = ref<string | null>(null);
+const invoiceError = ref<unknown>(null);
 
 const deliveryAddresses = ref<DeliveryAddress[]>([]);
 const adding = ref(false);
@@ -96,7 +97,7 @@ async function saveInvoice(): Promise<void> {
     await client.execute(SET_INVOICE_ADDRESS, { address: parsed.data });
     invoiceSaved.value = true;
   } catch (cause) {
-    invoiceError.value = cause instanceof GraphqlError ? cause.message : String(cause);
+    invoiceError.value = cause ?? new Error('unknown');
   }
 }
 
@@ -147,7 +148,12 @@ async function removeDelivery(id: string): Promise<void> {
         >{{ t('checkout.address.city')
         }}<input v-model="invoice.city" class="form-control" name="city"
       /></label>
-      <p v-if="invoiceError" class="alert alert-danger" role="alert">{{ invoiceError }}</p>
+      <ErrorAlert
+        v-if="invoiceError"
+        :error="invoiceError"
+        class="alert alert-danger"
+        role="alert"
+      />
       <p v-if="invoiceSaved" class="alert alert-success" data-testid="invoice-saved">
         {{ t('dashboard.addresses.saved') }}
       </p>

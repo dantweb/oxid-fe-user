@@ -17,6 +17,6 @@
     "giropay": "giropay",
     "sofort": "SOFORT"
   },
-  "tokenFailed": "The card details were not accepted: {message}",
+  "tokenFailed": "The card details were not accepted. Please check them and try again.",
   "redirecting": "Taking you to Mollie…"
 }

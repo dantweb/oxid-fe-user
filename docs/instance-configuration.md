@@ -19,7 +19,7 @@ their settings, extra files, extra plugins. The app bundle is identical for all 
 1. `oxid-config.yaml` is a **server-side deployment file. It is never served to a browser.** At
    container start (`docker-entrypoint.d/30-render-public-config.sh`) `scripts/public-config.mjs`
    renders the browser's **`/oxid-config.json`** from it: an **allow-list** — `instance`,
-   `shop.graphql_url` / `id` / `language_ids`, `i18n`, `theme`, and per plugin only `enabled` / `source` / `config`.
+   `shop.graphql_url` / `id` / `language_ids`, `i18n`, `theme`, `debug.errors`, and per plugin only `enabled` / `source` / `config`.
    Everything else in the YAML (other sections, other plugin fields) never leaves the server.
 2. **Secret guard:** the renderer refuses to render — and the container does not start, the dev
    server answers 500 — when the allow-listed part contains a secret-looking key (`secret`,
@@ -53,6 +53,7 @@ their settings, extra files, extra plugins. The app bundle is identical for all 
 | `i18n.default_locale`    | `en`               | initial language (must be in `locales`); the browser language wins if it is in `locales`                                                                                                                                                                     |
 | `i18n.browser_language`  | `true`             | first visit: `true` opens in the browser's language when it is in `locales`; `false` always opens in `default_locale` (the shopper switches with the header dropdown; a saved choice always wins)                                                            |
 | `i18n.fallback_locale`   | `en`               | catalog used for missing keys                                                                                                                                                                                                                                |
+| `debug.errors`           | `false`            | developer aid: shows a collapsible "details" block (error code, raw message) under every error text. Off by default: the shopper only ever sees the translated text of `errors.<code>` (`src/i18n/*.json`)                                                   |
 | `theme.default`          | `default`          | fallback theme when `active` cannot be loaded (see `theming.md`)                                                                                                                                                                                             |
 | `theme.active`           | —                  | the theme this instance runs (`resources/themes/<id>/`). Omitted: the `defaultTheme` of an enabled plugin, else `theme.default`                                                                                                                              |
 | `plugins.<name>.enabled` | `true`             | `false` → plugin not loaded: no routes, no nav entry                                                                                                                                                                                                         |

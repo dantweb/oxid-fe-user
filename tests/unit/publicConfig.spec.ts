@@ -110,4 +110,9 @@ shop: { graphql_url: /graphql/, id: 2, language_ids: { de: 0, en: 1 } }
 `);
     expect(out.shop).toEqual({ graphql_url: '/graphql/', id: 2, language_ids: { de: 0, en: 1 } });
   });
+
+  it('renders debug.errors and nothing else under debug (allow-list)', () => {
+    const out = render('debug: { errors: true, trace: all }');
+    expect(out.debug).toEqual({ errors: true });
+  });
 });

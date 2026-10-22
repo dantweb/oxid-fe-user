@@ -316,9 +316,14 @@ test('delete my account: cancel keeps it; the confirmation deletes it when the s
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 });
     expect(await canSignIn(request, leaving)).toBe(false);
   } else {
-    await expect(page.getByTestId('delete-error')).toContainText(/not enabled/i, {
-      timeout: 20_000,
-    });
+    // sprint 138f: the translated text, not the shop's own reason ("… not enabled")
+    await expect(page.getByTestId('delete-error')).toContainText(
+      'The account could not be deleted',
+      {
+        timeout: 20_000,
+      },
+    );
+    await expect(page.getByTestId('delete-error')).not.toContainText(/not enabled/i);
     await expect(page).toHaveURL(/\/dashboard\/delete$/);
     expect(await canSignIn(request, leaving)).toBe(true); // nothing was lost
   }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GraphqlError } from '@dantweb/oxid-fe-core';
+import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -11,7 +11,7 @@ const { t } = useI18n();
 const router = useRouter();
 const { client, auth } = useDashboardContext();
 const busy = ref(false);
-const error = ref<string | null>(null);
+const error = ref<unknown>(null);
 
 /** Only the second, explicit step deletes — like Apex's confirmation page. */
 async function confirmDelete(): Promise<void> {
@@ -19,10 +19,10 @@ async function confirmDelete(): Promise<void> {
   error.value = null;
   try {
     await client.execute(CUSTOMER_DELETE);
-    auth.logout();
+    void auth.logout();
     await router.push('/');
   } catch (cause) {
-    error.value = cause instanceof GraphqlError ? cause.message : t('dashboard.delete.failed');
+    error.value = cause ?? new Error('unknown');
     busy.value = false;
   }
 }
@@ -34,9 +34,14 @@ async function confirmDelete(): Promise<void> {
     <p class="alert alert-danger" data-testid="delete-warning">
       {{ t('dashboard.delete.warning') }}
     </p>
-    <p v-if="error" class="alert alert-danger" role="alert" data-testid="delete-error">
-      {{ error }}
-    </p>
+    <ErrorAlert
+      v-if="error"
+      :error="error"
+      fallback="dashboard.delete.failed"
+      class="alert alert-danger"
+      role="alert"
+      data-testid="delete-error"
+    />
     <div class="actions">
       <button
         type="button"

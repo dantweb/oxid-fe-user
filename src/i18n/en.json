@@ -43,5 +43,28 @@
     "failed": "The password could not be changed — the link may have expired.",
     "done": "Your password has been changed.",
     "noKey": "This link is incomplete. Request a new one."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "details": "Details for developers",
+    "basket_not_found": "Your basket could not be found. Please reload the page and try again.",
+    "payment_not_supported": "This payment method is not available for your order. Please choose another one.",
+    "terms_not_confirmed": "Please accept the terms and conditions to continue.",
+    "return_url_rejected": "The payment could not be started from this address. Please contact the shop.",
+    "provider_failed": "The payment provider could not process the payment. Please try again or choose another payment method.",
+    "contract_not_found": "We could not find this payment. Please check your orders or contact the shop.",
+    "invalid_token": "Your session has expired. Please sign in again.",
+    "invalid_login": "The e-mail address or the password is wrong.",
+    "account_exists": "An account with this e-mail address already exists. Please log in or use another e-mail address.",
+    "guest_details_required": "Please enter your e-mail address and your addresses to continue.",
+    "network_error": "The shop cannot be reached. Please check your connection and try again.",
+    "http_error": "The shop did not answer as expected. Please try again in a moment.",
+    "provider": {
+      "card_declined": "Your card was declined. Please try another card or payment method.",
+      "insufficient_funds": "Your card has insufficient funds. Please try another card or payment method.",
+      "expired_card": "Your card has expired. Please use another card.",
+      "incorrect_cvc": "The security code of your card is wrong. Please check it and try again.",
+      "processing_error": "Your card could not be processed. Please try again."
+    }
   }
 }

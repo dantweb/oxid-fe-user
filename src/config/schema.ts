@@ -54,6 +54,12 @@ export const instanceConfigSchema = z
         active: z.string().min(1).optional(),
       })
       .default({}),
+    debug: z
+      .object({
+        /** show a collapsible code + raw message block under error texts (developers only) */
+        errors: z.boolean().default(false),
+      })
+      .default({}),
     plugins: z.record(pluginEntrySchema).default(defaultPlugins),
   })
   .superRefine((config, ctx) => {

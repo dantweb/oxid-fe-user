@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GraphqlError } from '@dantweb/oxid-fe-core';
+import ErrorAlert from '../errors/ErrorAlert.vue';
 import { useHead } from '@unhead/vue';
 import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -28,7 +28,7 @@ const key = typeof route.query.uid === 'string' ? route.query.uid : '';
 const password = ref('');
 const repeat = ref('');
 const done = ref(false);
-const error = ref<string | null>(null);
+const error = ref<unknown>(null);
 const busy = ref(false);
 
 async function submit(): Promise<void> {
@@ -46,7 +46,7 @@ async function submit(): Promise<void> {
     });
     done.value = true;
   } catch (cause) {
-    error.value = cause instanceof GraphqlError ? cause.message : t('reset.failed');
+    error.value = cause ?? new Error('unknown');
   } finally {
     busy.value = false;
   }
@@ -88,9 +88,14 @@ async function submit(): Promise<void> {
           autocomplete="new-password"
         />
       </label>
-      <p v-if="error" class="alert alert-danger" role="alert" data-testid="reset-error">
-        {{ error }}
-      </p>
+      <ErrorAlert
+        v-if="error"
+        :error="error"
+        fallback="reset.failed"
+        class="alert alert-danger"
+        role="alert"
+        data-testid="reset-error"
+      />
       <button class="btn btn-primary" type="submit" :disabled="busy" data-testid="reset-submit">
         {{ t('reset.submit') }}
       </button>
