@@ -119,3 +119,6 @@ Notes:
   of these storages.
 - **URLs** carry nothing after use: the return page and the password-reset page remove their query string
   with `history.replaceState` (sprint 138c).
+  The container's nginx logs with the `headless` format (`nginx/default.conf.template`, sprint 138d): the
+  path (`$uri`), never the request line, so a query string cannot reach the access log either. The host
+  nginx in front of it (pay1) is outside this repo: its owner must use the same format.
