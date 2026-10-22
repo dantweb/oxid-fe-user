@@ -6,6 +6,12 @@ interface OrderItem {
   title: string;
 }
 
+/** The payment contract behind an order (payment-base's `Order.paymentContract`; null: classic payment). */
+export interface OrderPaymentContract {
+  state: string;
+  provider: string;
+}
+
 export interface CustomerOrder {
   id: string;
   orderNumber: number;
@@ -14,6 +20,7 @@ export interface CustomerOrder {
   cancelled: boolean;
   cost: { total: number; currency: { name: string } };
   items: OrderItem[];
+  paymentContract?: OrderPaymentContract | null;
 }
 
 export interface DeliveryAddress {
@@ -26,26 +33,47 @@ export interface DeliveryAddress {
   city: string;
 }
 
+/** Everything the storefront `Order` type has on its own — the part every shop answers. */
+const ORDER_FIELDS = /* GraphQL */ `
+  id
+  orderNumber
+  ordered
+  paid
+  cancelled
+  cost {
+    total
+    currency {
+      name
+    }
+  }
+  items {
+    id
+    amount
+    title
+  }
+`;
+
+/** `Order.paymentContract` exists when payment-base 1.4+ runs next to graphql-storefront (sprint 139c). */
 export const ORDERS_QUERY = /* GraphQL */ `
   query accountOrders {
     customer {
       orders {
-        id
-        orderNumber
-        ordered
-        paid
-        cancelled
-        cost {
-          total
-          currency {
-            name
-          }
+        ${ORDER_FIELDS}
+        paymentContract {
+          state
+          provider
         }
-        items {
-          id
-          amount
-          title
-        }
+      }
+    }
+  }
+`;
+
+/** The same list for a shop without that field. */
+export const ORDERS_QUERY_WITHOUT_CONTRACT = /* GraphQL */ `
+  query accountOrders {
+    customer {
+      orders {
+        ${ORDER_FIELDS}
       }
     }
   }

@@ -3,7 +3,8 @@ import { formatPrice } from '@dantweb/oxid-fe-core';
 import { computed, onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
-import { ORDERS_QUERY, type CustomerOrder } from '../api/queries';
+import { loadOrders } from '../api/orders';
+import type { CustomerOrder } from '../api/queries';
 import AccountLayout from '../components/AccountLayout.vue';
 import { useDashboardContext } from '../index';
 
@@ -19,8 +20,7 @@ const loaded = ref(false);
 const order = computed(() => orders.value.find((entry) => entry.id === props.id) ?? null);
 
 onMounted(async () => {
-  const data = await client.execute<{ customer: { orders: CustomerOrder[] } }>(ORDERS_QUERY);
-  orders.value = data.customer.orders;
+  orders.value = await loadOrders(client);
   loaded.value = true;
 });
 </script>

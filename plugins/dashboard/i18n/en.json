@@ -9,7 +9,17 @@
     "status": "Status",
     "paid": "paid",
     "open": "open",
-    "cancelled": "cancelled"
+    "cancelled": "cancelled",
+    "payment": {
+      "completed": "payment completed",
+      "processing": "payment being processed",
+      "authorized": "payment authorized",
+      "pending": "payment pending",
+      "failed": "payment failed",
+      "cancelled": "payment cancelled",
+      "expired": "payment expired",
+      "unknown": "payment status unknown"
+    }
   },
   "order": {
     "headline": "Order {number}",
