@@ -7,6 +7,9 @@ on the shop. Sprints 139b, 138f, 138e, 138c, 138d, 139c, 140c.
 
 ### Added
 
+- **138h — docs.** `docs/payments-keys.md` "Traces" table (what the headless flow leaves where, and what it does
+  not); `docs/quality-gates.md` warns that Playwright traces hold the bearer token and the test login.
+
 - **140c — checkout without an account.** `GuestDetailsForm` (e-mail, invoice address, "deliver elsewhere",
   country select from the shop), `GuestCheckoutView`, `CheckoutEntry` (customer or guest checkout by session).
   The checkout routes drop `requiresAuth` (`meta.guestCheckout`); instance option `checkout.guest` (default

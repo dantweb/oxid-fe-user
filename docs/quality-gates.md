@@ -62,3 +62,10 @@ build, violations report, Playwright e2e), collects all results and ends with `C
 
 `npm audit` fails on any advisory — advisories are never waived; patch the dependency instead.
 oxid-fe-user's e2e needs a running shop (see above); hydroxid-project's e2e serves its own build.
+
+## Playwright traces hold secrets
+
+`retain-on-failure` traces, videos and `error-context.md` under `test-results/` keep the bearer
+token, the test login and everything typed into forms. On a shared machine delete `test-results/`
+after a failed run; CI never uploads them from this repository (and must not: a published trace is a
+published password).
