@@ -3,6 +3,7 @@ import { registerCustomer, signIn } from './helpers/session';
 import { ORDERABLE_PRODUCT_ID, STRIPE_TEST_CARDS } from './fixtures/test-data';
 import { HOSTED_PAYMENTS_CONFIG, withInstanceConfig } from './helpers/config';
 import { payOnStripeHostedPage } from './helpers/stripe';
+import { finishOnMollieTestPage } from './helpers/mollie';
 
 /**
  * Sprint 140c C1 — checkout without an account. A fresh browser context (no login, no stored
@@ -73,6 +74,43 @@ async function guestWithCart(
   await expect(page.getByTestId('added-note')).toBeVisible();
   return { context, page };
 }
+
+test('a guest pays with Mollie (hosted page) and gets an order number', async ({ browser }) => {
+  // 140c acceptance asks for all three providers; Mollie's hosted checkout lists the methods first,
+  // then its test page asks for the final status. (PayPal cannot run against this SDK shop: it serves
+  // a PayPal module copy without the `guest` argument.)
+  const { context, page } = await guestWithCart(browser);
+  await page.goto('/checkout');
+  const form = page.getByTestId('guest-form');
+  await expect(form).toBeVisible({ timeout: 30_000 });
+  await fillGuestForm(form, GUEST.email());
+
+  await page.getByTestId('payment-oe_payments_mollie').check();
+  await page.getByTestId('confirm-terms').check();
+  await page.getByTestId('pay-now').click();
+
+  await page.waitForURL(/mollie\.com/, { timeout: 60_000 });
+  const method = page
+    .getByRole('link', { name: /ideal/i })
+    .or(page.getByRole('button', { name: /ideal/i }));
+  if (
+    await method
+      .first()
+      .isVisible({ timeout: 15_000 })
+      .catch(() => false)
+  ) {
+    await method.first().click();
+  }
+  await finishOnMollieTestPage(page, 'Paid');
+
+  await page.waitForURL(/\/checkout\/return\/payment-mollie/, { timeout: 90_000 });
+  const committed = page.getByTestId('return-committed');
+  await expect(committed).toBeVisible({ timeout: 90_000 });
+  expect((await committed.innerText()).match(/\d+/)?.[0], 'order number').toBeTruthy();
+  expect(new URL(page.url()).search).toBe('');
+  await page.screenshot({ path: `${EVIDENCE}/guest-order-confirmed-mollie.png` });
+  await context.close();
+});
 
 test('an empty guest form says what is missing and starts nothing', async ({ browser }) => {
   const { context, page } = await guestWithCart(browser);
@@ -205,3 +243,13 @@ test('the guest form fits a phone: no horizontal scroll, tap targets of 44 px', 
   await page.screenshot({ path: `${EVIDENCE}/guest-form-phone.png`, fullPage: true });
   await context.close();
 });
+
+async function fillGuestForm(form: import('@playwright/test').Locator, email: string) {
+  await form.locator('input[name=email]').fill(email);
+  await form.locator('input[name=firstName]').fill(GUEST.firstName);
+  await form.locator('input[name=lastName]').fill(GUEST.lastName);
+  await form.locator('input[name=street]').fill(GUEST.street);
+  await form.locator('input[name=streetNumber]').fill(GUEST.streetNumber);
+  await form.locator('input[name=zipCode]').fill(GUEST.zipCode);
+  await form.locator('input[name=city]').fill(GUEST.city);
+}

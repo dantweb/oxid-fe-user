@@ -7,6 +7,8 @@ on the shop. Sprints 139b, 138f, 138e, 138c, 138d, 139c, 140c.
 
 ### Added
 
+- **140c — Mollie guest e2e.** `guest-checkout.spec.ts` also pays a guest order on Mollie's hosted page (status Paid) and
+  lands on the return page with the order number; PayPal cannot run against the SDK shop (its PayPal copy lacks `guest`).
 - **138h — docs.** `docs/payments-keys.md` "Traces" table (what the headless flow leaves where, and what it does
   not); `docs/quality-gates.md` warns that Playwright traces hold the bearer token and the test login.
 
