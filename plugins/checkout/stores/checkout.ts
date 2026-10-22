@@ -1,3 +1,4 @@
+import type { GuestDetails } from '@dantweb/oxid-fe-core';
 import { defineStore } from 'pinia';
 
 interface CheckoutAttempt {
@@ -24,7 +25,9 @@ function loadAttempt(): CheckoutAttempt | null {
 }
 
 export const useCheckoutStore = defineStore('checkout', {
-  state: () => ({ attempt: loadAttempt() }),
+  // `guest` (sprint 140c) is deliberately NOT persisted: e-mail and addresses of a shopper without
+  // an account stay in this page view's memory and are gone with a reload (138e policy).
+  state: () => ({ attempt: loadAttempt(), guest: null as GuestDetails | null }),
   actions: {
     setAttempt(attempt: CheckoutAttempt): void {
       this.attempt = attempt;
@@ -34,8 +37,12 @@ export const useCheckoutStore = defineStore('checkout', {
         /* state survives in memory for this tab */
       }
     },
+    setGuest(details: GuestDetails): void {
+      this.guest = details;
+    },
     clear(): void {
       this.attempt = null;
+      this.guest = null;
       try {
         globalThis.sessionStorage?.removeItem(STORAGE_KEY);
       } catch {

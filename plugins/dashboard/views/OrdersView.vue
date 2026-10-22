@@ -3,8 +3,10 @@ import { formatPrice } from '@dantweb/oxid-fe-core';
 import { onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
-import { ORDERS_QUERY, type CustomerOrder } from '../api/queries';
+import { loadOrders } from '../api/orders';
+import type { CustomerOrder } from '../api/queries';
 import AccountLayout from '../components/AccountLayout.vue';
+import OrderPaymentBadge from '../components/OrderPaymentBadge.vue';
 import { useDashboardContext } from '../index';
 
 const { t } = useI18n();
@@ -15,8 +17,7 @@ const orders = ref<CustomerOrder[]>([]);
 const loaded = ref(false);
 
 onMounted(async () => {
-  const data = await client.execute<{ customer: { orders: CustomerOrder[] } }>(ORDERS_QUERY);
-  orders.value = [...data.customer.orders].sort((a, b) => b.orderNumber - a.orderNumber);
+  orders.value = [...(await loadOrders(client))].sort((a, b) => b.orderNumber - a.orderNumber);
   loaded.value = true;
 });
 
@@ -52,7 +53,10 @@ function statusOf(order: CustomerOrder): string {
           </td>
           <td>{{ order.ordered ? new Date(order.ordered).toLocaleDateString() : '—' }}</td>
           <td>{{ formatPrice(order.cost.total, order.cost.currency.name) }}</td>
-          <td>{{ statusOf(order) }}</td>
+          <td>
+            {{ statusOf(order) }}
+            <OrderPaymentBadge :contract="order.paymentContract" />
+          </td>
         </tr>
       </tbody>
     </table>

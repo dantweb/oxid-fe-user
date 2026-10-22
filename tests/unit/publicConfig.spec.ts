@@ -103,4 +103,16 @@ plugins:
   it('an empty or comment-only file renders an empty object', () => {
     expect(render('# nothing\n')).toEqual({});
   });
+
+  it('renders shop.language_ids and shop.id (allow-list)', () => {
+    const out = render(`
+shop: { graphql_url: /graphql/, id: 2, language_ids: { de: 0, en: 1 } }
+`);
+    expect(out.shop).toEqual({ graphql_url: '/graphql/', id: 2, language_ids: { de: 0, en: 1 } });
+  });
+
+  it('renders debug.errors and nothing else under debug (allow-list)', () => {
+    const out = render('debug: { errors: true, trace: all }');
+    expect(out.debug).toEqual({ errors: true });
+  });
 });

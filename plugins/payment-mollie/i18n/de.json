@@ -17,6 +17,6 @@
     "giropay": "giropay",
     "sofort": "SOFORT"
   },
-  "tokenFailed": "Die Kartendaten wurden nicht akzeptiert: {message}",
+  "tokenFailed": "Die Kartendaten wurden nicht akzeptiert. Bitte prüfen Sie sie und versuchen Sie es erneut.",
   "redirecting": "Weiterleitung zu Mollie…"
 }

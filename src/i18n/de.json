@@ -43,5 +43,28 @@
     "failed": "Das Passwort konnte nicht geändert werden — der Link ist eventuell abgelaufen.",
     "done": "Ihr Passwort wurde geändert.",
     "noKey": "Dieser Link ist unvollständig. Fordern Sie einen neuen an."
+  },
+  "errors": {
+    "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "details": "Details für Entwickler",
+    "basket_not_found": "Ihr Warenkorb wurde nicht gefunden. Bitte laden Sie die Seite neu und versuchen Sie es erneut.",
+    "payment_not_supported": "Diese Zahlungsart ist für Ihre Bestellung nicht verfügbar. Bitte wählen Sie eine andere.",
+    "terms_not_confirmed": "Bitte akzeptieren Sie die AGB, um fortzufahren.",
+    "return_url_rejected": "Die Zahlung konnte von dieser Adresse aus nicht gestartet werden. Bitte kontaktieren Sie den Shop.",
+    "provider_failed": "Der Zahlungsanbieter konnte die Zahlung nicht verarbeiten. Bitte versuchen Sie es erneut oder wählen Sie eine andere Zahlungsart.",
+    "contract_not_found": "Diese Zahlung wurde nicht gefunden. Bitte prüfen Sie Ihre Bestellungen oder kontaktieren Sie den Shop.",
+    "invalid_token": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "invalid_login": "Die E-Mail-Adresse oder das Passwort ist falsch.",
+    "account_exists": "Zu dieser E-Mail-Adresse gibt es bereits ein Konto. Bitte melden Sie sich an oder verwenden Sie eine andere E-Mail-Adresse.",
+    "guest_details_required": "Bitte geben Sie Ihre E-Mail-Adresse und Ihre Adressen an, um fortzufahren.",
+    "network_error": "Der Shop ist nicht erreichbar. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "http_error": "Der Shop hat nicht wie erwartet geantwortet. Bitte versuchen Sie es gleich noch einmal.",
+    "provider": {
+      "card_declined": "Ihre Karte wurde abgelehnt. Bitte versuchen Sie eine andere Karte oder Zahlungsart.",
+      "insufficient_funds": "Auf Ihrer Karte ist nicht genug Guthaben. Bitte versuchen Sie eine andere Karte oder Zahlungsart.",
+      "expired_card": "Ihre Karte ist abgelaufen. Bitte verwenden Sie eine andere Karte.",
+      "incorrect_cvc": "Der Sicherheitscode Ihrer Karte ist falsch. Bitte prüfen Sie ihn und versuchen Sie es erneut.",
+      "processing_error": "Ihre Karte konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut."
+    }
   }
 }

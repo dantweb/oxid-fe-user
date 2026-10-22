@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { isPaymentPlugin, type CheckoutReturnResult } from '@dantweb/oxid-fe-core';
+import { isPaymentPlugin, errorCodeOf, type CheckoutReturnResult } from '@dantweb/oxid-fe-core';
 import { onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import { dropQueryString } from '../../../src/navigation';
 import { useCartStore } from '../../shop/stores/cart';
 import { useCheckoutContext } from '../index';
 import { useCheckoutStore } from '../stores/checkout';
@@ -21,6 +22,7 @@ const { registry } = useCheckoutContext();
 const state = ref<'checking' | 'committed' | 'pending' | 'failed'>('checking');
 const orderNumber = ref<string | null>(null);
 
+const UNREACHABLE = ['network_error', 'http_error'];
 const POLLS = 5;
 const POLL_DELAY_MS = 2000;
 
@@ -34,6 +36,9 @@ function returnParams(): Record<string, string> {
 }
 
 onMounted(async () => {
+  // read once, then keep it out of history and logs: a reload works from the stored attempt (138c)
+  const params = returnParams();
+  dropQueryString();
   const attempt = checkout.attempt;
   const plugin = registry.all().find((p) => p.name === props.provider && isPaymentPlugin(p));
   if (!attempt || !plugin || !isPaymentPlugin(plugin) || attempt.provider !== props.provider) {
@@ -45,13 +50,13 @@ onMounted(async () => {
   for (let i = 0; i < POLLS; i++) {
     let result: CheckoutReturnResult;
     try {
-      result = await plugin.checkoutReturn(
-        attempt.contractId,
-        attempt.contractToken,
-        returnParams(),
-      );
-    } catch {
+      result = await plugin.checkoutReturn(attempt.contractId, attempt.contractToken, params);
+    } catch (cause) {
       state.value = 'failed';
+      // an unreachable shop is no verdict: the attempt stays, so a reload can ask again
+      if (!UNREACHABLE.includes(errorCodeOf(cause) ?? '')) {
+        checkout.clear();
+      }
       return;
     }
     if (result.status === 'committed') {
@@ -63,11 +68,13 @@ onMounted(async () => {
     }
     if (result.status === 'failed') {
       state.value = 'failed';
+      checkout.clear();
       return;
     }
     await new Promise((resolve) => setTimeout(resolve, POLL_DELAY_MS));
   }
   state.value = 'pending';
+  checkout.clear(); // waited as long as we do: the order page / mail tells the rest
 });
 </script>
 

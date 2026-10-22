@@ -9,7 +9,7 @@ import { loadInstanceConfig } from './config/load';
 import { loadConfiguredPlugins } from './config/plugins';
 import { resolveActiveTheme } from './config/theme';
 import { coreKey, createCore, instanceKey, themeKey } from './core';
-import { activeLocale, createAppI18n } from './i18n';
+import { activeLocale, createAppI18n, endpointParamsFor } from './i18n';
 import { createAppRouter } from './router';
 
 /** Plugins compiled into this app; the instance's oxid-config.yaml decides which ones load. */
@@ -67,13 +67,15 @@ async function bootstrap(options: StartStorefrontOptions): Promise<void> {
   const i18n = createAppI18n(core.registry, config);
   // the shop answers in the storefront's language (follows a language switch), not the browser's
   core.client.setLanguageProvider(() => activeLocale(i18n));
+  // ... and by the documented ids (?lang=, ?shp=), so it works with browser auto-detection off
+  core.client.setEndpointParamsProvider(() => endpointParamsFor(config.shop, activeLocale(i18n)));
   app.use(i18n);
   // the one language switch, for the host header and any layout plugin (core: useLocaleSwitch)
   app.provide(localeSwitchKey, {
     locale: i18n.global.locale as Ref<string>,
     locales: config.i18n.locales,
   });
-  app.use(createAppRouter(core.registry, core.auth));
+  app.use(createAppRouter(core.registry, core.auth, config));
   app.mount('#app');
 
   // Guest session (anonymous token) for basket work later; browsing works without it.

@@ -8,7 +8,7 @@ const props = defineProps<{ basketId: string; returnUrl: string; cancelUrl: stri
 const emit = defineEmits<{
   attempt: [InlinePaymentAttempt];
   settled: [];
-  failed: [string];
+  failed: [unknown];
 }>();
 
 type ComponentName = 'cardHolder' | 'cardNumber' | 'expiryDate' | 'verificationCode';
@@ -128,9 +128,8 @@ async function submit(): Promise<void> {
     if (isCard.value) {
       const minted = await mollie?.createToken();
       if (!minted?.token) {
-        error.value = t('payment-mollie.tokenFailed', {
-          message: minted?.error?.message ?? '',
-        });
+        // Mollie.js' own text is not shown (sprint 138f): the fields already mark what is wrong
+        error.value = t('payment-mollie.tokenFailed');
         busy.value = false;
         return;
       }
@@ -139,7 +138,7 @@ async function submit(): Promise<void> {
       await pay(selected.value);
     }
   } catch (cause) {
-    emit('failed', cause instanceof Error ? cause.message : String(cause));
+    emit('failed', cause);
   }
   // success leaves the page (or the component): keep the button locked until then
 }
@@ -167,7 +166,7 @@ onMounted(async () => {
       mountFields();
     }
   } catch (cause) {
-    emit('failed', cause instanceof Error ? cause.message : String(cause));
+    emit('failed', cause);
   }
 });
 

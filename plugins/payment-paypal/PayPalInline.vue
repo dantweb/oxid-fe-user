@@ -8,7 +8,7 @@ const props = defineProps<{ basketId: string; returnUrl: string; cancelUrl: stri
 const emit = defineEmits<{
   attempt: [InlinePaymentAttempt];
   settled: [];
-  failed: [string];
+  failed: [unknown];
   cancelled: [];
 }>();
 
@@ -90,13 +90,13 @@ onMounted(async () => {
       },
       async onError(cause) {
         await retireAttempt();
-        emit('failed', cause instanceof Error ? cause.message : String(cause));
+        emit('failed', cause);
       },
     });
     await buttons.render(container.value);
     loading.value = false;
   } catch (cause) {
-    emit('failed', cause instanceof Error ? cause.message : String(cause));
+    emit('failed', cause);
   }
 });
 

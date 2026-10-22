@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GraphqlError } from '@dantweb/oxid-fe-core';
+import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { REVIEW_DELETE, REVIEWS_QUERY, type CustomerReview } from '../api/queries';
@@ -11,7 +11,7 @@ const { t } = useI18n();
 const { client } = useDashboardContext();
 const reviews = ref<CustomerReview[]>([]);
 const loaded = ref(false);
-const error = ref<string | null>(null);
+const error = ref<unknown>(null);
 
 onMounted(load);
 
@@ -29,7 +29,7 @@ async function remove(review: CustomerReview): Promise<void> {
     await refreshSummary(client);
   } catch (cause) {
     // the shop may not let customers manage their reviews (an OXID setting): say so
-    error.value = cause instanceof GraphqlError ? cause.message : t('dashboard.reviews.failed');
+    error.value = cause ?? new Error('unknown');
   }
 }
 </script>
@@ -40,9 +40,14 @@ async function remove(review: CustomerReview): Promise<void> {
     <p v-if="loaded && reviews.length === 0" data-testid="reviews-empty">
       {{ t('dashboard.reviews.empty') }}
     </p>
-    <p v-if="error" class="alert alert-danger" role="alert" data-testid="reviews-error">
-      {{ error }}
-    </p>
+    <ErrorAlert
+      v-if="error"
+      :error="error"
+      fallback="dashboard.reviews.failed"
+      class="alert alert-danger"
+      role="alert"
+      data-testid="reviews-error"
+    />
     <ul v-if="reviews.length > 0" class="reviews">
       <li v-for="review in reviews" :key="review.id" data-testid="review-row">
         <strong v-if="review.product">{{ review.product.title }}</strong>

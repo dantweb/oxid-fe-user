@@ -88,3 +88,21 @@ and iv, expected envelope. Core must decrypt it; the PHP sealer, given the same 
 `payment-base` (shared by the three modules) owns the query, the sealing and a
 `ClientConfigProviderInterface`; each module registers one provider that returns its allow-listed
 values from its module settings and the current test/live mode.
+
+## Traces (sprint 138, 2026-10-22)
+
+What the headless flow leaves behind, and where it does not:
+
+| Where            | What is there                                                                                                                                                                    | What is not                                                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| git, build, CDN  | nothing key-shaped: provider public ids arrive sealed per session (above); gitleaks scans tree and history                                                                       | keys, test logins (local `.env` only; tests skip without them)                     |
+| the wire         | customer data in plaintext **inside TLS**, the OXID GraphQL API's own model                                                                                                      | application-layer encryption of PII (not built, on purpose)                        |
+| shop database    | the contract token as its SHA-256 only (payment-base 138b)                                                                                                                       | a reusable plaintext token                                                         |
+| URLs             | the provider's own parameters on the return URL (Stripe `session_id`, PayPal `token`/`PayerID`) until the page has read them, then `history.replaceState` drops the query string | `contract_id`, `cancelled`, `uid` kept in the address bar or in browser history    |
+| shop log         | the origin of a rejected return URL, a fixed message plus `errorCode`/`providerCode` for provider failures                                                                       | full URLs, provider text, tokens (host: `zend.exception_ignore_args=On`)           |
+| this app's nginx | `log_format headless`: method, `$uri`, status, bytes                                                                                                                             | the query string, the referrer                                                     |
+| the browser      | JWT + refresh token in `localStorage` (core 0.10.0), the checkout attempt in `sessionStorage` until its outcome or logout; logout revokes the JWT server-side (`tokenDelete`)    | the attempt after a failed, pending-timed-out or cancelled return, or after logout |
+| the screen       | messages by `errorCode` / `providerCode` (`errors.*`), a details block only with `debug.errors: true`                                                                            | raw `error.message` text                                                           |
+
+Sessions in detail: [`architecture.md`](architecture.md) "Sessions". Decisions behind the table: the
+Stripe module's developer guide, `docs/for_developer/05-headless-graphql-checkout.md` §7.

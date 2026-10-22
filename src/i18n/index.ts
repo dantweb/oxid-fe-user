@@ -49,6 +49,25 @@ export function activeLocale(i18n: I18n): string {
   return String(unref(i18n.global.locale));
 }
 
+type ShopConfig = InstanceConfig['shop'];
+
+/** The shop's numeric language id for a locale; an unmapped locale has none (no `lang` is sent). */
+export function languageIdFor(shop: ShopConfig, locale: string): number | undefined {
+  return Object.hasOwn(shop.language_ids, locale) ? shop.language_ids[locale] : undefined;
+}
+
+/** `?lang=` / `?shp=` for one request: only what is known. */
+export function endpointParamsFor(
+  shop: ShopConfig,
+  locale: string,
+): { lang?: number; shp?: number } {
+  const lang = languageIdFor(shop, locale);
+  return {
+    ...(lang === undefined ? {} : { lang }),
+    ...(shop.id === undefined ? {} : { shp: shop.id }),
+  };
+}
+
 export function createAppI18n(registry: PluginRegistry, config: InstanceConfig): I18n {
   const i18n = createI18n({
     legacy: false,

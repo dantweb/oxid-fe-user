@@ -7,6 +7,9 @@ import {
   openPaymentStep,
 } from './helpers/checkout';
 import { fillCardFields, finishOnMollieTestPage } from './helpers/mollie';
+import { TEST_USER_CONFIGURED, TEST_USER_MISSING } from './fixtures/test-data';
+
+test.skip(!TEST_USER_CONFIGURED, TEST_USER_MISSING);
 
 /**
  * Mollie in iframe mode: Mollie Components render the card fields INSIDE the checkout page (four

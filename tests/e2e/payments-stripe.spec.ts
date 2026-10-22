@@ -6,7 +6,14 @@ import {
   expectOrderInDashboard,
   openPaymentStep,
 } from './helpers/checkout';
-import { STRIPE_CARD_DETAILS, STRIPE_TEST_CARDS } from './fixtures/test-data';
+import {
+  STRIPE_CARD_DETAILS,
+  STRIPE_TEST_CARDS,
+  TEST_USER_CONFIGURED,
+  TEST_USER_MISSING,
+} from './fixtures/test-data';
+
+test.skip(!TEST_USER_CONFIGURED, TEST_USER_MISSING);
 
 /**
  * Stripe in iframe mode: Stripe's Embedded Checkout renders INSIDE the checkout page (no redirect

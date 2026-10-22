@@ -7,7 +7,7 @@ A plugin is a directory under `plugins/<name>/` whose `index.ts` default-exports
 const plugin: IPlugin = {
   name: 'shop',                 // unique; also the i18n namespace
   version: '0.1.0',
-  routes: [...],                // vue-router RouteRecordRaw[]; meta.requiresAuth honored by the host guard
+  routes: [...],                // vue-router RouteRecordRaw[]; meta.requiresAuth honored by the host guard; meta.guestCheckout marks the checkout routes (open to guests unless `checkout.guest: false`)
   navItems: [                   // rendered by the host header, sorted by order
     { labelKey: 'shop.nav.catalog', to: '/shop', order: 10 },
   ],
@@ -49,4 +49,5 @@ provider's `<provider>CheckoutStart/Return/Cancel` mutations. `startArguments` f
 the component that renders the provider's own UI inside the checkout page, or `null` for the
 hosted page (plugin `config.mode: redirect`, or the provider's public value is not configured).
 The component receives `InlinePaymentProps` and emits `attempt` / `settled` / `failed` /
-`cancelled`; see [payments.md](payments.md). Provider SDKs load through `loadScriptOnce`.
+`cancelled`; see [payments.md](payments.md). `failed` carries the **cause** (the thrown error),
+not a message: the checkout maps it by error code (`src/errors`, sprint 138f) and never shows its text. Provider SDKs load through `loadScriptOnce`.

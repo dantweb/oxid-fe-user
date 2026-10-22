@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  addressSchema,
-  GraphqlError,
-  type AddressInput,
-  type InlinePaymentAttempt,
-} from '@dantweb/oxid-fe-core';
+import { addressSchema, type AddressInput, type InlinePaymentAttempt } from '@dantweb/oxid-fe-core';
 import {
   computed,
   defineAsyncComponent,
@@ -15,6 +10,7 @@ import {
   type Component,
 } from 'vue';
 import { useHead } from '@unhead/vue';
+import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../../shop/stores/cart';
@@ -56,7 +52,7 @@ const address = reactive<AddressInput>({
   countryId: DEFAULT_COUNTRY_ID,
 });
 const addressSaved = ref(false);
-const addressError = ref<string | null>(null);
+const addressError = ref<unknown>(null);
 
 const basketId = ref<string | null>(null);
 const deliveryMethods = ref<DeliveryMethod[]>([]);
@@ -68,7 +64,9 @@ const selectedPaymentId = ref<string | null>(null);
 const termsConfirmed = ref(false);
 const busy = ref(false);
 const redirecting = ref(false);
-const error = ref<string | null>(null);
+const error = ref<unknown>(null);
+/** which sentence wraps the mapped text of `error` (checkout.errors.start | .basket) */
+const errorWrap = ref('checkout.errors.start');
 const placedOrderNumber = ref<string | null>(null);
 
 // ---- inline (iframe-mode) payment: the provider's own UI inside this page -----------------------
@@ -157,10 +155,10 @@ function retryPayment(): void {
   blocked.value = false;
 }
 
-async function onInlineFailed(message: string): Promise<void> {
+async function onInlineFailed(cause: unknown): Promise<void> {
   inlineAttempt.value = null;
   blocked.value = true;
-  error.value = t('checkout.errors.start', { message });
+  fail('checkout.errors.start', cause);
   await rebuildBasket();
 }
 
@@ -239,7 +237,7 @@ async function saveAddress(): Promise<void> {
     addressSaved.value = true;
     await prepareBasket();
   } catch (cause) {
-    addressError.value = messageOf(cause);
+    addressError.value = cause ?? new Error('unknown');
   } finally {
     busy.value = false;
   }
@@ -273,7 +271,7 @@ async function prepareBasket(): Promise<void> {
       await selectDelivery(methods.basketDeliveryMethods[0].id);
     }
   } catch (cause) {
-    error.value = t('checkout.errors.basket', { message: messageOf(cause) });
+    fail('checkout.errors.basket', cause);
   } finally {
     busy.value = false;
   }
@@ -335,7 +333,7 @@ async function pay(): Promise<void> {
     placedOrderNumber.value = String(placed.placeOrder.orderNumber);
     cart.clear();
   } catch (cause) {
-    error.value = t('checkout.errors.start', { message: messageOf(cause) });
+    fail('checkout.errors.start', cause);
     basketId.value = null; // attempt consumed the basket — prepare a fresh one
     await prepareBasket();
   } finally {
@@ -343,8 +341,10 @@ async function pay(): Promise<void> {
   }
 }
 
-function messageOf(cause: unknown): string {
-  return cause instanceof GraphqlError || cause instanceof Error ? cause.message : String(cause);
+/** The shopper sees the mapped text (src/errors); the raw cause stays for the debug details only. */
+function fail(wrapKey: string, cause: unknown): void {
+  errorWrap.value = wrapKey;
+  error.value = cause ?? new Error('unknown');
 }
 </script>
 
@@ -381,7 +381,7 @@ function messageOf(cause: unknown): string {
           >{{ t('checkout.address.zipCode') }}<input v-model="address.zipCode" name="zipCode"
         /></label>
         <label>{{ t('checkout.address.city') }}<input v-model="address.city" name="city" /></label>
-        <p v-if="addressError" role="alert" data-testid="address-error">{{ addressError }}</p>
+        <ErrorAlert v-if="addressError" :error="addressError" data-testid="address-error" />
         <button class="btn btn-primary" type="submit" :disabled="busy" data-testid="save-address">
           {{ t('checkout.address.save') }}
         </button>
@@ -400,17 +400,12 @@ function messageOf(cause: unknown): string {
             t('checkout.delivery.backToCart')
           }}</router-link>
         </div>
-        <p
-          v-if="error && !deliveryMethodId"
-          class="alert alert-danger"
-          role="alert"
-          data-testid="checkout-error"
-        >
-          {{ error }}
+        <div v-if="error && !deliveryMethodId" class="alert alert-danger">
+          <ErrorAlert :error="error" :wrap="errorWrap" data-testid="checkout-error" />
           <router-link to="/shop/cart" data-testid="checkout-error-cart">{{
             t('checkout.delivery.backToCart')
           }}</router-link>
-        </p>
+        </div>
         <label v-for="method in deliveryMethods" :key="method.id" class="choice">
           <input
             type="radio"
@@ -439,7 +434,7 @@ function messageOf(cause: unknown): string {
           <input v-model="termsConfirmed" type="checkbox" data-testid="confirm-terms" />
           {{ t('checkout.payment.terms') }}
         </label>
-        <p v-if="error" role="alert" data-testid="checkout-error">{{ error }}</p>
+        <ErrorAlert v-if="error" :error="error" :wrap="errorWrap" data-testid="checkout-error" />
         <button
           v-if="blocked"
           class="btn btn-primary"

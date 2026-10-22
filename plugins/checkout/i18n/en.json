@@ -43,5 +43,32 @@
   "errors": {
     "basket": "The basket could not be prepared: {message}",
     "start": "The payment could not start: {message}"
+  },
+  "guest": {
+    "intro": "No account needed: enter your e-mail address and where the order should go.",
+    "haveAccount": "I already have an account",
+    "detailsHeadline": "1 · Your details",
+    "email": "E-mail address",
+    "invoiceAddress": "Invoice address",
+    "deliverElsewhere": "Deliver to a different address",
+    "deliveryAddress": "Delivery address",
+    "emptyCart": "Your cart is empty.",
+    "noPayment": "No payment method is available in this shop.",
+    "logInInstead": "Log in or use another e-mail address",
+    "salutation": {
+      "label": "Salutation",
+      "MR": "Mr.",
+      "MRS": "Ms."
+    },
+    "invalid": {
+      "required": "Please fill in this field.",
+      "email": "Please enter a valid e-mail address."
+    },
+    "providers": {
+      "payment-stripe": "Card and wallets (Stripe)",
+      "payment-paypal": "PayPal",
+      "payment-mollie": "Mollie"
+    },
+    "paymentHeadline": "2 · Payment"
   }
 }

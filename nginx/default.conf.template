@@ -1,6 +1,13 @@
+# Access log without the query string (sprint 138d): nginx's default `combined` format writes the whole
+# request line, and with it a provider's `session_id` / `PayerID` / `token`, a password-reset `uid` and
+# any other value a link carries. `$uri` is the path only. No referer for the same reason.
+log_format headless '$remote_addr - [$time_local] "$request_method $uri $server_protocol" $status $body_bytes_sent';
+
 server {
     listen 80;
     server_name _;
+
+    access_log /var/log/nginx/access.log headless;
 
     # The instance (mounted at ${INSTANCE_DIR}): oxid-config.yaml, public/ overlay, plugins/
     # See docs/instance-configuration.md

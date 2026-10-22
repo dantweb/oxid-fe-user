@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GraphqlError } from '@dantweb/oxid-fe-core';
+import ErrorAlert from '../errors/ErrorAlert.vue';
 import { useHead } from '@unhead/vue';
 import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -21,7 +21,7 @@ const authStore = core.useAuthStore();
 
 const email = ref('');
 const password = ref('');
-const error = ref<string | null>(null);
+const error = ref<unknown>(null);
 const busy = ref(false);
 
 async function submit(): Promise<void> {
@@ -32,7 +32,7 @@ async function submit(): Promise<void> {
     const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/';
     await router.push(redirect);
   } catch (cause) {
-    error.value = cause instanceof GraphqlError ? cause.message : t('login.failed');
+    error.value = cause ?? new Error('unknown');
   } finally {
     busy.value = false;
   }
@@ -65,7 +65,14 @@ async function submit(): Promise<void> {
           autocomplete="current-password"
         />
       </label>
-      <p v-if="error" class="login__error" role="alert" data-testid="login-error">{{ error }}</p>
+      <ErrorAlert
+        v-if="error"
+        :error="error"
+        fallback="login.failed"
+        class="login__error"
+        role="alert"
+        data-testid="login-error"
+      />
       <button class="btn btn-primary" type="submit" :disabled="busy">
         {{ t('login.submit') }}
       </button>

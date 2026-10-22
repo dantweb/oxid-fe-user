@@ -108,3 +108,13 @@ export const PLACE_ORDER = /* GraphQL */ `
     }
   }
 `;
+
+/** Countries for the address forms — answered to an anonymous token too. */
+export const COUNTRIES_QUERY = /* GraphQL */ `
+  query checkoutCountries {
+    countries {
+      id
+      title
+    }
+  }
+`;

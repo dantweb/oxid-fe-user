@@ -58,7 +58,7 @@ function toggleSearch(): void {
   menuOpen.value = false;
 }
 function logout(): void {
-  auth.logout();
+  void auth.logout();
   menuOpen.value = false;
   void router.push('/');
 }

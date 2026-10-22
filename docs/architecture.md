@@ -94,3 +94,31 @@ locales through `localeSwitchKey`; the host header's `<select>` and peroxid's Ap
 `pickLocale`) and the page reloads — like the shop's own language links — so every view fetches its
 shop content in the new language (the request cache is keyed by language). Names come from
 `languageName()` (`Intl.DisplayNames`, upper-cased code as fallback).
+
+## Sessions: what the browser keeps, where, and for how long
+
+| Key                     | Storage          | Holds                                                                                                                                                                           | Lives until                                                                                                                                                                                                                                                                         |
+| ----------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `oxfe.token`            | `localStorage`   | the access token (a JWT) of the customer or of the anonymous guest session                                                                                                      | its `exp` (lifetime is the shop's `sJsonWebTokenLifetime`); renewed silently by the refresh flow; removed by logout, a refused refresh or a token the shop rejects                                                                                                                  |
+| `oxfe.refresh`          | `localStorage`   | the refresh token (core 0.10.0: `login` / `refresh`)                                                                                                                            | its own expiry; useless without the HttpOnly `fingerprint` cookie the shop sets at login (same-origin `/graphql/` proxy required); removed with the access token                                                                                                                    |
+| `oxfe_checkout_attempt` | `sessionStorage` | `provider`, `contractId`, `contractToken`, `orderNumber` of the open payment attempt — the proof of ownership the return/cancel pages need after the round trip to the provider | the tab; and earlier: removed by a committed, failed or (after the pending wait of 5 × 2 s) pending return, by the cancel page and by logout (`CoreEvents.AuthLogout`). A return that could not reach the shop (`network_error` / `http_error`) keeps it, so a reload can ask again |
+| `oxfe_locale`           | `localStorage`   | the language the shopper chose                                                                                                                                                  | until the shopper switches again                                                                                                                                                                                                                                                    |
+| `oxfe_shop_cart`        | `localStorage`   | the guest cart: product ids and amounts, no personal data                                                                                                                       | until the order is placed or the shopper empties it                                                                                                                                                                                                                                 |
+
+Notes:
+
+- **Logout** ends the local session at once and revokes the token on the shop (`tokenDelete`, core
+  0.10.0); the checkout attempt is dropped by the checkout plugin's `AuthLogout` handler.
+- **The e-mail claim.** graphql-base puts the customer's e-mail address (`username`) into the JWT. That is
+  the shop module's choice, not this app's; the app only reads `exp` and `useranonymous`. Anyone who can
+  read `localStorage` can read it, which is why the token lifetime is short and renewed rather than long.
+- **The refresh flow** (core 0.10.0) renews the access token at three quarters of its remaining lifetime;
+  a refused refresh drops the session and shows the "session expired" banner; a network failure keeps it
+  and retries. A shop without `login` / `refresh` rights is detected on the first login and `token` is used.
+- **Guest checkout details** (e-mail, addresses; sprint 140c) are kept in memory only — never in any
+  of these storages.
+- **URLs** carry nothing after use: the return page and the password-reset page remove their query string
+  with `history.replaceState` (sprint 138c).
+  The container's nginx logs with the `headless` format (`nginx/default.conf.template`, sprint 138d): the
+  path (`$uri`), never the request line, so a query string cannot reach the access log either. The host
+  nginx in front of it (pay1) is outside this repo: its owner must use the same format.

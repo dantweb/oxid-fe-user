@@ -9,7 +9,17 @@
     "status": "Status",
     "paid": "bezahlt",
     "open": "offen",
-    "cancelled": "storniert"
+    "cancelled": "storniert",
+    "payment": {
+      "completed": "Zahlung abgeschlossen",
+      "processing": "Zahlung wird verarbeitet",
+      "authorized": "Zahlung autorisiert",
+      "pending": "Zahlung ausstehend",
+      "failed": "Zahlung fehlgeschlagen",
+      "cancelled": "Zahlung abgebrochen",
+      "expired": "Zahlung abgelaufen",
+      "unknown": "Zahlungsstatus unbekannt"
+    }
   },
   "order": {
     "headline": "Bestellung {number}",
