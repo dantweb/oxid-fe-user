@@ -1,6 +1,7 @@
-import type { IPlugin, PluginContext } from '@dantweb/oxid-fe-core';
+import { CoreEvents, type IPlugin, type PluginContext } from '@dantweb/oxid-fe-core';
 import de from './i18n/de.json';
 import en from './i18n/en.json';
+import { useCheckoutStore } from './stores/checkout';
 
 let context: PluginContext | null = null;
 
@@ -36,6 +37,8 @@ const plugin: IPlugin = {
   messages: { en, de },
   setup(ctx) {
     context = ctx;
+    // the attempt carries the contract token: it never outlives the session it belongs to (138e E3)
+    ctx.events.on(CoreEvents.AuthLogout, () => useCheckoutStore().clear());
   },
 };
 

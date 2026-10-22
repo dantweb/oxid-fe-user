@@ -79,10 +79,10 @@ export async function mountView(component: Component, options: MountOptions = {}
   return { host, settle, unmount: () => app.unmount(), client };
 }
 
+/** Lets pending promises and renders finish; microtasks only, so fake timers stay in the test's hands. */
 export async function settle(): Promise<void> {
-  for (let i = 0; i < 6; i += 1) {
+  for (let i = 0; i < 20; i += 1) {
     await nextTick();
-    await new Promise((resolve) => setTimeout(resolve, 0));
   }
 }
 
