@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.1
+
+SEC-1 — security advisories. Needs `@dantweb/oxid-fe-core` 0.11.0 (zod 4, the `/zod-csp` entry).
+
+### Security
+
+- **zod 4.6.7** (was 3), patching GHSA-mrhx-c7xc-m3w5. `src/config/schema.ts`: `.prefault({})` for object
+  defaults (zod 4's `.default({})` no longer parses the inner defaults), two-argument `z.record`, `'custom'`
+  issue code. `scripts/public-config.mjs` uses no zod.
+- **happy-dom `^21.0.4`** (dev), patching GHSA-834v-8h66-3h79.
+- **`src/zodConfig.ts`**: the first import of `main.ts` sets zod `jitless` through core's `/zod-csp` entry. Zod 4
+  compiles parsers with `new Function`, a violation under a CSP without `'unsafe-eval'`. The storefront has no
+  CSP today; this keeps it ready for one, and matches oxid-fe-admin.
+
 ## 0.7.0
 
 Needs `@dantweb/oxid-fe-core` 0.10.0 (branch `feature/graphql-comply`) and payment-base 1.5 (guest checkout)

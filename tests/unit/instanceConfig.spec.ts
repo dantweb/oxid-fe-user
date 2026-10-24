@@ -100,3 +100,13 @@ describe('loadInstanceConfig', () => {
     expect(vi.mocked(fetchFn).mock.calls[0][0]).toBe('/oxid-config.json');
   });
 });
+
+describe('zod jitless', () => {
+  it('is switched on by the bootstrap config module: zod 4 compiles code with `new Function`, a CSP violation', async () => {
+    const { z } = await import('zod');
+    z.config({ jitless: false });
+    await import('../../src/zodConfig');
+
+    expect(z.config().jitless).toBe(true);
+  });
+});

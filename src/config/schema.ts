@@ -12,7 +12,7 @@ const BUNDLED_PLUGIN_DEFAULTS = [
 const pluginEntrySchema = z.object({
   enabled: z.boolean().default(true),
   source: z.enum(['bundled', 'external']).default('bundled'),
-  config: z.record(z.unknown()).default({}),
+  config: z.record(z.string(), z.unknown()).prefault({}),
 });
 
 type PluginEntry = z.infer<typeof pluginEntrySchema>;
@@ -27,7 +27,7 @@ export const instanceConfigSchema = z
         id: z.string().min(1).default('default'),
         name: z.string().min(1).default('OXID Storefront'),
       })
-      .default({}),
+      .prefault({}),
     shop: z
       .object({
         graphql_url: z.string().min(1).default('/graphql/'),
@@ -38,7 +38,7 @@ export const instanceConfigSchema = z
           .record(z.string().min(1), z.number().int().min(0))
           .default({ de: 0, en: 1 }),
       })
-      .default({}),
+      .prefault({}),
     i18n: z
       .object({
         default_locale: z.string().min(1).default('en'),
@@ -47,31 +47,31 @@ export const instanceConfigSchema = z
         /** first visit: use the browser's language when offered (true) or always the default (false) */
         browser_language: z.boolean().default(true),
       })
-      .default({}),
+      .prefault({}),
     theme: z
       .object({
         default: z.string().min(1).default('default'),
         active: z.string().min(1).optional(),
       })
-      .default({}),
+      .prefault({}),
     checkout: z
       .object({
         /** pay without an account (anonymous token + guest details); false: checkout needs a login */
         guest: z.boolean().default(true),
       })
-      .default({}),
+      .prefault({}),
     debug: z
       .object({
         /** show a collapsible code + raw message block under error texts (developers only) */
         errors: z.boolean().default(false),
       })
-      .default({}),
-    plugins: z.record(pluginEntrySchema).default(defaultPlugins),
+      .prefault({}),
+    plugins: z.record(z.string(), pluginEntrySchema).default(defaultPlugins),
   })
   .superRefine((config, ctx) => {
     if (!config.i18n.locales.includes(config.i18n.default_locale)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         path: ['i18n', 'default_locale'],
         message: `default_locale "${config.i18n.default_locale}" must be one of locales [${config.i18n.locales.join(', ')}]`,
       });
