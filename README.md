@@ -69,11 +69,11 @@ curl -s http://localhost:8090/oxid-config.json           # verify
 - `make dev` (hot reload on :5173) renders the YAML on every request: reload the browser tab.
 - Code or theme changes do need the image: `docker compose build oxid-fe-user-prod`, then recreate.
 
-**A project built on this package** (e.g. `hydroxid-project`, `localhost:8101`–`8103`): render the
+**A project built on this package** (e.g. `peroxid`, `localhost:8101`–`8103`): render the
 instances again and reload the tab; nginx reads them from a mounted folder and serves them `no-store`.
 
 ```bash
-cd ~/osc/strpwt7-nov26/hydroxid-project
+cd ~/osc/strpwt7-nov26/peroxid
 npm run build:instances            # instances/<id>/oxid-config.yaml → build/instances/<id>/oxid-config.json
 npm run build:nginx && docker compose restart   # only after changing a port in deploy/instances.json
 make local                         # code or theme changes: rebuild everything

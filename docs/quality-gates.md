@@ -49,7 +49,7 @@ One source of truth for local work and CI — the same commands, byte-identical
 
 ## Before every commit: `bin/pre-commit-check.sh`
 
-One script, identical in `oxid-fe-core`, `oxid-fe-user` and `hydroxid-project`. It runs every gate
+One script, identical in `oxid-fe-core`, `oxid-fe-user` and `peroxid`. It runs every gate
 above that the repo defines (lint + format, types, knip, `npm audit`, unit tests with coverage,
 build, violations report, Playwright e2e), collects all results and ends with `COMMITABLE` or
 `NON-COMMITABLE` (exit 0 / 1).
@@ -61,7 +61,7 @@ build, violations report, Playwright e2e), collects all results and ends with `C
 ```
 
 `npm audit` fails on any advisory — advisories are never waived; patch the dependency instead.
-oxid-fe-user's e2e needs a running shop (see above); hydroxid-project's e2e serves its own build.
+oxid-fe-user's e2e needs a running shop (see above); peroxid's e2e serves its own build.
 
 ## Playwright traces hold secrets
 

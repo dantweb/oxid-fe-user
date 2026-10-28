@@ -1,6 +1,6 @@
 # Sprint 14 — a stale access token must never lock the visitor out
 
-**Date:** 2026-10-19 · **Repos:** `oxid-fe-core` (`GraphqlClient`, `AuthService`, `TokenStorage`), `oxid-fe-user` (follow-through, e2e); `hydroxid-project` pin bump
+**Date:** 2026-10-19 · **Repos:** `oxid-fe-core` (`GraphqlClient`, `AuthService`, `TokenStorage`), `oxid-fe-user` (follow-through, e2e); `peroxid` pin bump
 **Binding rules:** [`_engeneering_requirements.md`](./_engeneering_requirements.md) (TDD, SOLID, DRY, Clean code, No overengineering) plus the repo-wide file it extends.
 
 ## Ask

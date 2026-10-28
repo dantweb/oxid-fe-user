@@ -48,7 +48,7 @@ when a shop has **~5 million products with near-identical names** (e.g. "metall 
 
 The ask said "remove ... from peroxid plugin to shop plugin". I read that as **move**.
 
-## Detailed sprints (written later the same day; Sprint 13 also covers peroxid, themes and hydroxid-project)
+## Detailed sprints (written later the same day; Sprint 13 also covers the peroxid plugin, themes and the peroxid repo)
 
 - Rules for both: [`../sprints/_engeneering_requirements.md`](../sprints/_engeneering_requirements.md)
 - [Sprint 12 — API request caching](../sprints/sprint-12-api-request-caching.md)

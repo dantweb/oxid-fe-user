@@ -8,7 +8,7 @@ oxid-fe-user   the storefront application (plugins: shop, checkout, payments, da
 <project>      a client's repository: depends on oxid-fe-user, brings its own plugins, themes, instances
 ```
 
-A project (e.g. `dantweb/hydroxid-project`) is its **own app shell**: an `index.html`, a `vite.config.ts`
+A project (e.g. `dantweb/peroxid`) is its **own app shell**: an `index.html`, a `vite.config.ts`
 and a `main.ts` that calls this package.
 
 ## What this package exposes (`exports`)

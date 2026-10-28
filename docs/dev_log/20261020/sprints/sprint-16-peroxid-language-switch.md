@@ -1,6 +1,6 @@
 # Sprint 16 — peroxid gets the language switch, as a dropdown like Apex
 
-**Date:** 2026-10-20 · **Repos:** `oxid-fe-core` (shared switching logic), `oxid-fe-user` (`peroxid`, host switcher), `hydroxid-project` (inherits; pin bump)
+**Date:** 2026-10-20 · **Repos:** `oxid-fe-core` (shared switching logic), `oxid-fe-user` (`peroxid`, host switcher), the `peroxid` repo (inherits; pin bump)
 **Binding rules:** [`../../20261019/sprints/_engeneering_requirements.md`](../../20261019/sprints/_engeneering_requirements.md) (TDD, SOLID, DRY, Clean code, No overengineering) plus the repo-wide file it extends.
 **Branch:** `feature/peroxid-language-switcher` (from `main` `622f63f`)
 
@@ -59,7 +59,7 @@ Two constraints found:
   theme works. New i18n group `peroxid.language.*` (label, open).
 - Compact behaviour: a full-width list in the drawer (no nested popover on a phone).
 
-**hydroxid-project**: inherits the header (it spreads `peroxid`); its `extendMessages` merges per
+**peroxid repo**: inherits the header (it spreads `peroxid`); its `extendMessages` merges per
 group, so the new `language` group arrives untouched. Pin bump after release; search screenshots per
 theme as in sprint 13.
 

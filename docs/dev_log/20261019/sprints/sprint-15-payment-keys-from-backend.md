@@ -1,6 +1,6 @@
 # Sprint 15 — payment provider keys come from the backend, over a protected exchange
 
-**Date:** 2026-10-19 · **Repos:** `oxid-fe-core` (payment plugin contract), `oxid-fe-user` (`payment-stripe`, `payment-paypal`, `payment-mollie`, instance configs, docs), the shop modules (Stripe, PayPal, Mollie) for the endpoint; `hydroxid-project` follow-through
+**Date:** 2026-10-19 · **Repos:** `oxid-fe-core` (payment plugin contract), `oxid-fe-user` (`payment-stripe`, `payment-paypal`, `payment-mollie`, instance configs, docs), the shop modules (Stripe, PayPal, Mollie) for the endpoint; `peroxid` follow-through
 **Binding rules:** [`_engeneering_requirements.md`](./_engeneering_requirements.md) (TDD, SOLID, DRY, Clean code, No overengineering) plus the repo-wide file it extends.
 **Spec to write first:** `docs/payments-keys.md`; ADR for the exchange.
 
@@ -24,7 +24,7 @@ browser's request history can read or decrypt them.
 - `plugins/payment-stripe/index.ts` reads `config.publishable_key`; `plugins/payment-paypal/index.ts`
   reads `config.client_id`; Mollie reads `profile_id`, `test_mode`.
 - `oxid-config.yaml.dist`, `instances/example-b`, `instances/example-peroxid` and the
-  `hydroxid-project` instances hold real test keys. The build renders them into
+  `peroxid` instances hold real test keys. The build renders them into
   `oxid-config.json`, which `nginx` serves **unauthenticated, uncached, to everyone** at
   `/oxid-config.json`. They are also in git.
 - `docs/payments.md` documents "public by design" values in the YAML. That text is replaced.
@@ -91,7 +91,7 @@ anonymous token, so checkout works for guests):
 | S3  | Core `fetchSealedConfig`: unit tests with fixed vectors (encrypt in the test with Node's `crypto`, decrypt through the module), tamper → error, wrong key → error, replay beyond the window → error. No key material in logs.                                                   |
 | S4  | Backend: `paymentClientConfig` in the Stripe, PayPal and Mollie shop modules (module branches, with their own tests); allow-list tested; `sk_…`-shaped values can never be returned (test).                                                                                     |
 | S5  | `payment-stripe`, `payment-paypal`, `payment-mollie` use `fetchSealedConfig`; on failure fall back to `redirect`. Unit tests with the existing fixtures swapped to the sealed source; existing `paymentProviders.spec` updated.                                                 |
-| S6  | Remove the keys from `oxid-config.yaml.dist`, `instances/*`, `hydroxid-project` instances and the rendered `oxid-config.json`; keep `mode`. `nginx` serves nothing key-shaped (test greps the built `dist/` and `oxid-config.json`).                                            |
+| S6  | Remove the keys from `oxid-config.yaml.dist`, `instances/*`, `peroxid` instances and the rendered `oxid-config.json`; keep `mode`. `nginx` serves nothing key-shaped (test greps the built `dist/` and `oxid-config.json`).                                                     |
 | S7  | e2e on the public ports (`:2053`, `:2083`, `:8443`): complete a real sandbox payment per provider; assert the HAR of the whole run contains **no** `pk_…`/client id in plaintext, and `/oxid-config.json` has none.                                                             |
 | S8  | **Rotate.** The keys quoted above were committed and served publicly. Publishable/client ids are not secret in the provider's model, but rotate them anyway and purge from history only if you decide to; record it. Docs, report, gates, release order core → user → hydroxid. |
 
@@ -132,7 +132,7 @@ Per-merchant key rotation UI, hardware-bound keys, replacing the providers' SDKs
 - **S4 (backend, local commits only, not pushed):** payment-base `0a11f50` (query `paymentClientConfig`, sealer, guard, registry; the PHP sealer reproduces the shared vector byte for byte; 47 new tests, phpcs/phpstan max/phpmd green) and one provider per module: stripe `a84373a`, paypal `2cbcaff`, mollie `95223f2`. Each lives in `<module>/.claude/worktrees/sealed-client-config` on branch `feature/sealed-client-config`.
 - **S5:** the three plugins fetch their key when the inline component mounts, before anything is started at the shop; any failure flips a reactive flag and the checkout uses the hosted page — never a built-in key.
 - **S6:** keys removed from `oxid-config.yaml.dist`, the example instances and the HydroXid instances; `test_mode` too (the shop decides). A test greps all tracked files and `dist/` for key-shaped values.
-- Gates green in core, user and hydroxid-project; user e2e (all but `payments-*`/evidence): 71 passed.
+- Gates green in core, user and peroxid; user e2e (all but `payments-*`/evidence): 71 passed.
 
 **Not done / not verified — read before relying on it**
 
