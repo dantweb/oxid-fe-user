@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+SEAL-1 — the sealed channel. Needs `@dantweb/oxid-fe-core` 0.13.0 and the shop module `oxid-sealed-channel`.
+
+### Security
+
+- Login (`sealedLogin` / `sealedToken`), password reset and change, e-mail update, address writes (delivery and invoice
+  address as one sealed JSON object) and the personal reads (account summary, address books, checkout address) travel through
+  the sealed channel (ECDH P-256, HKDF-SHA256, AES-256-GCM per session, replay-safe): no plain password, e-mail or address in a
+  request or answer body. `src/sealing.ts`, `src/core.ts`, [`docs/sealed-channel.md`](docs/sealed-channel.md). There is no
+  fallback to the plain operations. Not sealed: the bearer token, guest checkout, payments.
+
 ## 0.7.1
 
 SEC-1 — security advisories. Needs `@dantweb/oxid-fe-core` 0.11.0 (zod 4, the `/zod-csp` entry).
