@@ -1,3 +1,5 @@
+import { SEALED, sealedArguments } from '../../../src/sealing';
+
 /** GraphQL Storefront documents for the checkout flow (verified against b-7.4.x). */
 
 export interface InvoiceAddress {
@@ -24,16 +26,10 @@ export interface BasketPayment {
 export const INVOICE_ADDRESS_QUERY = /* GraphQL */ `
   query checkoutCustomer {
     customer {
-      email
+      sealedPii ${SEALED}
     }
     customerInvoiceAddress {
-      salutation
-      firstName
-      lastName
-      street
-      streetNumber
-      zipCode
-      city
+      sealedAddress ${SEALED}
       country {
         id
         title
@@ -42,10 +38,16 @@ export const INVOICE_ADDRESS_QUERY = /* GraphQL */ `
   }
 `;
 
+/** The address travels as one sealed JSON object (SEAL-1): the variable carries `JSON.stringify(address)`. */
+export const SEAL_INVOICE_ADDRESS = sealedArguments('sealedCustomerInvoiceAddressSet', [
+  'address',
+  'address',
+]);
+
 export const SET_INVOICE_ADDRESS = /* GraphQL */ `
-  mutation setInvoiceAddress($address: InvoiceAddressInput!) {
-    customerInvoiceAddressSet(invoiceAddress: $address) {
-      firstName
+  mutation setInvoiceAddress($address: SealedValueInput!) {
+    sealedCustomerInvoiceAddressSet(address: $address) {
+      salutation
     }
   }
 `;

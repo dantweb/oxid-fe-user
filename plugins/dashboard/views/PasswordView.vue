@@ -2,7 +2,7 @@
 import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PASSWORD_CHANGE } from '../api/queries';
+import { PASSWORD_CHANGE, SEAL_PASSWORD_CHANGE } from '../api/queries';
 import AccountLayout from '../components/AccountLayout.vue';
 import { useDashboardContext } from '../index';
 
@@ -24,12 +24,13 @@ async function changePassword(): Promise<void> {
   }
   busy.value = true;
   try {
-    const data = await client.execute<{ customerPasswordChange: { accessToken: string } }>(
+    const data = await client.execute<{ sealedCustomerPasswordChange: { accessToken: string } }>(
       PASSWORD_CHANGE,
       { old: oldPassword.value, new: newPassword.value },
+      SEAL_PASSWORD_CHANGE,
     );
     // the old session token dies with the old password — adopt the fresh one
-    auth.adoptToken(data.customerPasswordChange.accessToken);
+    auth.adoptToken(data.sealedCustomerPasswordChange.accessToken);
     changed.value = true;
     oldPassword.value = '';
     newPassword.value = '';

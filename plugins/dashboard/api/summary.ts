@@ -1,4 +1,5 @@
 import { createSavedListsApi, type GraphqlClient } from '@dantweb/oxid-fe-core';
+import { SEALED } from '../../../src/sealing';
 import type { AccountCounts } from '../menu';
 
 export interface AccountSummary {
@@ -12,8 +13,7 @@ export interface AccountSummary {
 const SUMMARY_QUERY = /* GraphQL */ `
   query accountSummary {
     customer {
-      firstName
-      email
+      sealedPii ${SEALED}
       newsletterStatus {
         status
       }

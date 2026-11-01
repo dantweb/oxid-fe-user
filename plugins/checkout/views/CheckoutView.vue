@@ -23,6 +23,7 @@ import {
   BASKET_SET_PAYMENT,
   INVOICE_ADDRESS_QUERY,
   PLACE_ORDER,
+  SEAL_INVOICE_ADDRESS,
   SET_INVOICE_ADDRESS,
   type DeliveryMethod,
   type InvoiceAddress,
@@ -233,7 +234,11 @@ async function saveAddress(): Promise<void> {
   }
   busy.value = true;
   try {
-    await client.execute(SET_INVOICE_ADDRESS, { address: parsed.data });
+    await client.execute(
+      SET_INVOICE_ADDRESS,
+      { address: JSON.stringify(parsed.data) },
+      SEAL_INVOICE_ADDRESS,
+    );
     addressSaved.value = true;
     await prepareBasket();
   } catch (cause) {

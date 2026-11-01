@@ -1,3 +1,5 @@
+import { SEALED, sealedArguments } from '../../../src/sealing';
+
 /** GraphQL Storefront documents for the account area (verified against b-7.4.x). */
 
 interface OrderItem {
@@ -79,23 +81,30 @@ export const ORDERS_QUERY_WITHOUT_CONTRACT = /* GraphQL */ `
   }
 `;
 
+/** The sealed variables of the account's writes (SEAL-1); the delivery address travels as one JSON object. */
+export const SEAL_DELIVERY_ADDRESS = sealedArguments('sealedCustomerDeliveryAddressAdd', [
+  'address',
+  'address',
+]);
+export const SEAL_PASSWORD_CHANGE = sealedArguments(
+  'sealedCustomerPasswordChange',
+  ['old', 'old'],
+  ['new', 'new'],
+);
+export const SEAL_EMAIL_UPDATE = sealedArguments('sealedCustomerEmailUpdate', ['email', 'email']);
+
 export const DELIVERY_ADDRESSES_QUERY = /* GraphQL */ `
   query accountDeliveryAddresses {
     customerDeliveryAddresses {
       id
-      firstName
-      lastName
-      street
-      streetNumber
-      zipCode
-      city
+      sealedAddress ${SEALED}
     }
   }
 `;
 
 export const DELIVERY_ADDRESS_ADD = /* GraphQL */ `
-  mutation accountDeliveryAddressAdd($address: DeliveryAddressInput!) {
-    customerDeliveryAddressAdd(deliveryAddress: $address) {
+  mutation accountDeliveryAddressAdd($address: SealedValueInput!) {
+    sealedCustomerDeliveryAddressAdd(address: $address) {
       id
     }
   }
@@ -108,8 +117,8 @@ export const DELIVERY_ADDRESS_DELETE = /* GraphQL */ `
 `;
 
 export const PASSWORD_CHANGE = /* GraphQL */ `
-  mutation accountPasswordChange($old: String!, $new: String!) {
-    customerPasswordChange(old: $old, new: $new) {
+  mutation accountPasswordChange($old: SealedValueInput!, $new: SealedValueInput!) {
+    sealedCustomerPasswordChange(old: $old, new: $new) {
       accessToken
     }
   }
@@ -130,9 +139,9 @@ export const NEWSLETTER_UNSUBSCRIBE = /* GraphQL */ `
 `;
 
 export const EMAIL_UPDATE = /* GraphQL */ `
-  mutation accountEmailUpdate($email: String!) {
-    customerEmailUpdate(email: $email) {
-      email
+  mutation accountEmailUpdate($email: SealedValueInput!) {
+    sealedCustomerEmailUpdate(email: $email) {
+      id
     }
   }
 `;

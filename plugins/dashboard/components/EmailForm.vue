@@ -2,7 +2,7 @@
 import ErrorAlert from '../../../src/errors/ErrorAlert.vue';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { EMAIL_UPDATE } from '../api/queries';
+import { EMAIL_UPDATE, SEAL_EMAIL_UPDATE } from '../api/queries';
 import { useDashboardContext } from '../index';
 import { refreshSummary, summary } from '../state';
 
@@ -27,7 +27,7 @@ async function save(): Promise<void> {
   saved.value = false;
   error.value = null;
   try {
-    await client.execute(EMAIL_UPDATE, { email: email.value });
+    await client.execute(EMAIL_UPDATE, { email: email.value }, SEAL_EMAIL_UPDATE);
     await refreshSummary(client);
     saved.value = true;
   } catch (cause) {

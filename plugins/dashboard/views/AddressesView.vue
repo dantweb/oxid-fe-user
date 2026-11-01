@@ -6,12 +6,14 @@ import { useHead } from '@unhead/vue';
 import { useI18n } from 'vue-i18n';
 import {
   INVOICE_ADDRESS_QUERY,
+  SEAL_INVOICE_ADDRESS,
   SET_INVOICE_ADDRESS,
   type InvoiceAddress,
 } from '../../checkout/api/queries';
 import {
   DELIVERY_ADDRESSES_QUERY,
   DELIVERY_ADDRESS_ADD,
+  SEAL_DELIVERY_ADDRESS,
   DELIVERY_ADDRESS_DELETE,
   type DeliveryAddress,
 } from '../api/queries';
@@ -94,7 +96,11 @@ async function saveInvoice(): Promise<void> {
     return;
   }
   try {
-    await client.execute(SET_INVOICE_ADDRESS, { address: parsed.data });
+    await client.execute(
+      SET_INVOICE_ADDRESS,
+      { address: JSON.stringify(parsed.data) },
+      SEAL_INVOICE_ADDRESS,
+    );
     invoiceSaved.value = true;
   } catch (cause) {
     invoiceError.value = cause ?? new Error('unknown');
@@ -106,7 +112,11 @@ async function addDelivery(): Promise<void> {
   if (!parsed.success) {
     return;
   }
-  await client.execute(DELIVERY_ADDRESS_ADD, { address: parsed.data });
+  await client.execute(
+    DELIVERY_ADDRESS_ADD,
+    { address: JSON.stringify(parsed.data) },
+    SEAL_DELIVERY_ADDRESS,
+  );
   adding.value = false;
   await loadDeliveryAddresses();
 }
