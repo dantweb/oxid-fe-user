@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { coreKey } from '../core';
 import { dropQueryString } from '../navigation';
+import { sealedArguments } from '../sealing';
 
 const core = inject(coreKey);
 if (!core) {
@@ -18,10 +19,17 @@ useHead({
 });
 
 const RESET = /* GraphQL */ `
-  mutation resetPassword($key: String!, $password: String!, $repeat: String!) {
-    customerPasswordReset(updateHash: $key, newPassword: $password, repeatPassword: $repeat)
+  mutation resetPassword($key: String!, $password: SealedValueInput!, $repeat: SealedValueInput!) {
+    sealedCustomerPasswordReset(updateHash: $key, newPassword: $password, repeatPassword: $repeat)
   }
 `;
+
+/** Both passwords travel sealed (SEAL-1); the order is the order of the operation's arguments. */
+const SEAL = sealedArguments(
+  'sealedCustomerPasswordReset',
+  ['password', 'newPassword'],
+  ['repeat', 'repeatPassword'],
+);
 
 /** The update key the shop's mail carries (`?uid=…`). */
 const route = useRoute();
@@ -42,11 +50,11 @@ async function submit(): Promise<void> {
   }
   busy.value = true;
   try {
-    await core!.client.execute(RESET, {
-      key,
-      password: password.value,
-      repeat: repeat.value,
-    });
+    await core!.client.execute(
+      RESET,
+      { key, password: password.value, repeat: repeat.value },
+      SEAL,
+    );
     done.value = true;
   } catch (cause) {
     error.value = cause ?? new Error('unknown');

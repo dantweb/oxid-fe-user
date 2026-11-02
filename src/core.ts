@@ -10,6 +10,7 @@ import {
 } from '@dantweb/oxid-fe-core';
 import type { InjectionKey } from 'vue';
 import type { InstanceConfig } from './config/schema';
+import { createSealedChannel } from './sealing';
 
 interface AppCore {
   client: GraphqlClient;
@@ -31,7 +32,10 @@ export const themeKey: InjectionKey<ResolvedTheme | null> = Symbol('oxfe-theme')
 export function createCore(graphqlUrl = '/graphql/'): AppCore {
   const client = new GraphqlClient({ url: graphqlUrl, cache: new ResponseCache() });
   const events = new EventBus();
-  const auth = new AuthService(client, new TokenStorage(), events);
+  // SEAL-1: the password, the new passwords, the e-mail and the personal data of the account travel sealed. The shop
+  // needs the oe_sealed_channel module; the channel opens on the first sealed call.
+  client.setSealing(createSealedChannel(client));
+  const auth = new AuthService(client, new TokenStorage(), events, { sealedLogin: true });
   return {
     client,
     auth,
